@@ -13,6 +13,11 @@ if (userRole !== 'restaurante') {
 
 document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || 'Restaurante';
 
+// Capturar partnerCodigo de la URL (si el dueño vino desde el link de un partner)
+const urlParams = new URLSearchParams(window.location.search);
+const partnerCodigoURL = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
+if (partnerCodigoURL) sessionStorage.setItem('lastPartner', partnerCodigoURL);
+
 // ========== COMISIONES (cargadas desde config) ==========
 let comisiones = {
   total: 2.00,
@@ -89,6 +94,7 @@ document.getElementById('btn-save-perfil')?.addEventListener('click', async () =
         ...data,
         dueñoId: userId,
         embajadorCodigo: sessionStorage.getItem('userEmbajadorCodigo') || null,
+        partnerCodigo: partnerCodigoURL || null,
         activo: true,
         aprobado: false,
         createdAt: serverTimestamp()

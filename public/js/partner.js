@@ -11,6 +11,17 @@ document.getElementById('user-info').textContent = sessionStorage.getItem('userN
 document.getElementById('mi-codigo').textContent = miCodigo;
 document.getElementById('mi-url').textContent = `https://sabores-costeros.vercel.app/?partner=${miCodigo}`;
 
+// ========== GENERAR QR REAL ==========
+function generarQR() {
+  const url = `https://sabores-costeros.vercel.app/?partner=${miCodigo}`;
+  const qrContainer = document.getElementById('mi-qr');
+  if (!qrContainer) return;
+  
+  // Usar la API de Google Charts para generar el QR
+  const qrUrl = `https://chart.googleapis.com/chart?cht=qr&chs=250x250&chld=L|0&chl=${encodeURIComponent(url)}`;
+  qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="width:250px;height:250px;">`;
+}
+
 async function loadStats() {
   try {
     let totalReservas = 0;
@@ -28,6 +39,38 @@ async function loadStats() {
     document.getElementById('stat-comision').textContent = `$${(totalCubiertos * 0.50).toFixed(2)}`;
   } catch (err) {
     console.error('Error stats:', err);
+  }
+}
+
+async function loadRestaurantes() {
+  const cont = document.getElementById('lista-restaurantes');
+  if (!cont) return;
+
+  try {
+    // Buscar restaurantes que tengan este partnerCodigo
+    const q = query(collection(db, 'restaurantes'), where('partnerCodigo', '==', miCodigo));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      cont.innerHTML = `<p style="text-align:center;color:#666;">${t('sin-restaurantes-partner') || 'Aún no hay restaurantes con tu código'}</p>`;
+      return;
+    }
+
+    cont.innerHTML = '';
+    snap.forEach(d => {
+      const data = d.data();
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <h4 style="color:#722F37;">${data.nombre}</h4>
+        <p>${data.tipoCocina || ''} · ${data.direccion || ''}</p>
+        <p>Estado: <strong>${data.aprobado ? '✅ Aprobado' : '⏳ Pendiente'}</strong></p>
+        ${data.whatsapp ? `<p><a href="https://wa.me/${data.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366;">📱 WhatsApp</a></p>` : ''}
+      `;
+      cont.appendChild(div);
+    });
+  } catch (err) {
+    cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
 
@@ -71,4 +114,8 @@ async function loadComisiones() {
 }
 
 loadStats();
+loadRestaurantes();
 loadComisiones();
+
+// Generar QR cuando se cargue la página
+setTimeout(generarQR, 500);

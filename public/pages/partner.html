@@ -37,7 +37,8 @@
   </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats">📊 Estadísticas</button>
+    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats"> Estadísticas</button>
+    <button onclick="showTab('restaurantes')">🏪 Mis Restaurantes</button>
     <button onclick="showTab('qr')" data-i18n="section-qr">📱 Mi QR</button>
     <button onclick="showTab('comision')" data-i18n="tab-comision">💰 Mi Comisión</button>
   </div>
@@ -65,6 +66,11 @@
           <div class="label" data-i18n="stat-comision-label">Comisión acumulada</div>
         </div>
       </div>
+    </div>
+
+    <div id="tab-restaurantes" class="tab-content">
+      <h2 class="section-title">🏪 Restaurantes con tu código</h2>
+      <div id="lista-restaurantes"></div>
     </div>
 
     <div id="tab-qr" class="tab-content">
@@ -135,5 +141,5 @@
     import { applyTranslations } from '/js/utils.js';
     setTimeout(() => applyTranslations(), 200);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e3d8b3fc3b49a5',t:'MTc4NzI1NDU4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e41c7ce9ce11e8',t:'MTc4NzI1NzM1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
