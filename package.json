@@ -1,0 +1,10 @@
+{
+  "name": "sabores-costeros",
+  "version": "1.0.0",
+  "description": "App de restaurantes de la costa uruguaya",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site'",
+    "deploy": "vercel --prod"
+  }
+}

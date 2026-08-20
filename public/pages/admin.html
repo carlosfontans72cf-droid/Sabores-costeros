@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Sabores Costeros</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .admin-nav { background: #023E8A; padding: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .admin-nav button { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    .admin-nav button.active { background: #FFD700; color: #1a1a2e; font-weight: bold; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+  <script>
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (role !== 'fundador' && role !== 'admin') {
+        alert('Acceso denegado');
+        window.location.href = '/index.html';
+      }
+    })();
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <h1>👑 Panel Administrador</h1>
+    <div>
+      <span class="user-info" id="user-info">Cargando...</span>
+      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;">Salir</button>
+    </div>
+  </nav>
+
+  <div class="admin-nav">
+    <button class="active" onclick="showTab('crear')"> Crear Usuario</button>
+    <button onclick="showTab('aprobaciones')">✅ Aprobaciones</button>
+    <button onclick="showTab('usuarios')">👥 Usuarios</button>
+    <button onclick="showTab('pagos')"> Comisiones</button>
+    <button onclick="showTab('sorteo')">🎉 Sorteo</button>
+  </div>
+
+  <div class="container">
+    <!-- CREAR USUARIO -->
+    <div id="tab-crear" class="tab-content active">
+      <h2 class="section-title">➕ Crear Admin / Partner / Embajador</h2>
+      <div class="card">
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="new-nombre" class="form-control" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" id="new-apellido" class="form-control" placeholder="Apellido">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="new-email" class="form-control" placeholder="email@ejemplo.com">
+          </div>
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" id="new-password" class="form-control" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-group">
+            <label>Rol</label>
+            <select id="new-role" class="form-control">
+              <option value="admin">🔑 Administrador</option>
+              <option value="partner">🤝 Partner (Revista/Influencer/Radio)</option>
+              <option value="embajador">🌟 Embajador (Promotor)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Código único</label>
+            <input type="text" id="new-codigo" class="form-control" placeholder="Ej: REVISTA01, EMB001">
+          </div>
+        </div>
+        <button id="btn-crear-usuario" class="btn btn-success">✅ Crear Usuario</button>
+      </div>
+    </div>
+
+    <!-- APROBACIONES -->
+    <div id="tab-aprobaciones" class="tab-content">
+      <h2 class="section-title">✅ Restaurantes Pendientes de Aprobación</h2>
+      <div id="lista-aprobaciones"></div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div id="tab-usuarios" class="tab-content">
+      <h2 class="section-title">👥 Gestión de Usuarios</h2>
+      <div id="lista-usuarios"></div>
+    </div>
+
+    <!-- PAGOS -->
+    <div id="tab-pagos" class="tab-content">
+      <h2 class="section-title">💰 Registro de Comisiones</h2>
+      <div id="lista-pagos"></div>
+    </div>
+
+    <!-- SORTEO -->
+    <div id="tab-sorteo" class="tab-content">
+      <h2 class="section-title">🎉 Sorteo Semanal</h2>
+      <div id="lista-sorteo"></div>
+    </div>
+  </div>
+
+  <div style="background:#023E8A; color:white; padding:20px; text-align:center; margin-top:30px;">
+    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📋 Política de Privacidad</a>
+    <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📄 Términos y Condiciones</a>
+    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;">© 2026 Sabores Costeros</div>
+  </div>
+
+  <script type="module" src="/js/admin.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e2252c6dcc0ba0',t:'MTc4NzIzNjc0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

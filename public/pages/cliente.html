@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sabores Costeros - Inicio</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <meta name="theme-color" content="#48CAE4">
+  <style>
+    .main-nav { background: #023E8A; padding: 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .main-nav button { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+    .main-nav button:hover { background: rgba(255,255,255,0.3); }
+    .main-nav button.active { background: #FFD700; color: #1a1a2e; font-weight: bold; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .banner-sorteo { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; border: 2px solid #FF6B00; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <h1>🌊️ Sabores Costeros</h1>
+    <div>
+      <span class="user-info" id="user-info">Cargando...</span>
+      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;">Salir</button>
+    </div>
+  </nav>
+
+  <div class="main-nav">
+    <button class="active" onclick="showTab('restaurantes')">🍽️ Restaurantes</button>
+    <button onclick="showTab('reservas')">📋 Mis Reservas</button>
+    <button onclick="showTab('sorteo')">🎉 Sorteo</button>
+    <button onclick="showTab('perfil')">👤 Perfil</button>
+  </div>
+
+  <div class="container">
+
+    <div class="banner-sorteo">
+      <h2 style="color:#722F37; margin:0 0 10px 0;">🎉 ¡SORTEO SEMANAL!</h2>
+      <p style="margin:0;">Validá tu código al llegar y participá por una <strong>cena gratis para 4 personas</strong></p>
+      <p style="margin:10px 0 0 0; font-size:0.9rem;">️ Sorteo todos los sábados · 📍 En los mejores restaurantes de la costa</p>
+    </div>
+
+    <div id="tab-restaurantes" class="tab-content active">
+      <h2 class="section-title">️ Restaurantes de la Costa</h2>
+      <div id="lista-restaurantes"></div>
+    </div>
+
+    <div id="tab-reservas" class="tab-content">
+      <h2 class="section-title">📋 Mis Reservas</h2>
+      <div id="lista-mis-reservas"></div>
+    </div>
+
+    <div id="tab-sorteo" class="tab-content">
+      <h2 class="section-title">🎉 Sorteo Semanal</h2>
+      <div class="card">
+        <h3 style="color:#722F37;">🍽️ Cena Gratis para 4 personas</h3>
+        <p style="margin:15px 0;">Todos los sábados sorteamos una cena completa para 4 personas en los mejores restaurantes de la costa uruguaya.</p>
+        <div style="background:#FFF3CD; padding:20px; border-radius:12px; border-left:4px solid #D4A574;">
+          <h4 style="color:#722F37; margin-top:0;">¿Cómo participar?</h4>
+          <ol style="padding-left:20px; line-height:1.8;">
+            <li>Hacé una reserva en la app</li>
+            <li>Al llegar al restaurante, <strong>validá tu código</strong> con el mozo</li>
+            <li>¡Automáticamente entrás en el sorteo del sábado!</li>
+          </ol>
+          <p style="margin:15px 0 0 0;"><strong>Cuantas más reservas valides, más chances tenés de ganar.</strong></p>
+        </div>
+        <div style="margin-top:20px; text-align:center;">
+          <p style="font-size:0.9rem; color:#666;" id="info-sorteo">🎫 Cargando participantes...</p>
+          <p style="font-size:0.9rem; color:#666;">️ Próximo sorteo: este sábado</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-perfil" class="tab-content">
+      <h2 class="section-title">👤 Mi Perfil</h2>
+      <div class="card">
+        <p><strong>Nombre:</strong> <span id="perfil-nombre"></span></p>
+        <p><strong>Email:</strong> <span id="perfil-email"></span></p>
+        <p><strong>Idioma:</strong> <span id="perfil-idioma"></span></p>
+        <div class="form-group" style="margin-top:15px;">
+          <label>Cambiar idioma</label>
+          <select id="selector-idioma" class="form-control">
+            <option value="es">🇪🇸 Español</option>
+            <option value="pt">🇧 Português</option>
+            <option value="en">🇺🇸 English</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="cambiarIdiomaSeleccionado()">Guardar idioma</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:#023E8A; color:white; padding:20px; text-align:center; margin-top:30px;">
+    <div>
+      <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📋 Política de Privacidad</a>
+      <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📄 Términos y Condiciones</a>
+    </div>
+    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;">
+      © 2026 Sabores Costeros. Todos los derechos reservados. 🇾
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function logout() { sessionStorage.clear(); window.location.href = '/index.html'; }
+
+    document.getElementById('perfil-nombre').textContent = sessionStorage.getItem('userName');
+    document.getElementById('perfil-email').textContent = sessionStorage.getItem('userEmail');
+    document.getElementById('perfil-idioma').textContent = sessionStorage.getItem('idioma') || 'es';
+    document.getElementById('selector-idioma').value = sessionStorage.getItem('idioma') || 'es';
+
+    function cambiarIdiomaSeleccionado() {
+      const idioma = document.getElementById('selector-idioma').value;
+      sessionStorage.setItem('idioma', idioma);
+      location.reload();
+    }
+  </script>
+
+  <script type="module" src="/js/cliente.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e223a948a70ba0',t:'MTc4NzIzNjY4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
