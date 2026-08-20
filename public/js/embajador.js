@@ -2,6 +2,7 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { t } from './utils.js';
+import './session.js';
 
 const userId = sessionStorage.getItem('userId');
 const miCodigo = sessionStorage.getItem('userCodigo');

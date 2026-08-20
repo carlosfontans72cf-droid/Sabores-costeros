@@ -3,6 +3,7 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { showAlert, t } from './utils.js';
+import './session.js';
 
 const userRole = sessionStorage.getItem('userRole');
 if (userRole !== 'fundador' && userRole !== 'admin') {

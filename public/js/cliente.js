@@ -2,6 +2,7 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, addDoc, doc, getDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showAlert, generarCodigoReserva, t, compartirWhatsApp, abrirGoogleMaps } from './utils.js';
+import './session.js';
 
 const userId = sessionStorage.getItem('userId');
 if (!userId) window.location.href = '/index.html';

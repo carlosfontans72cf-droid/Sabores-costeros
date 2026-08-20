@@ -9,6 +9,26 @@ const btnRegister = document.getElementById('btn-register');
 const errorDivLogin = document.getElementById('login-error');
 const errorDivRegister = document.getElementById('register-error');
 
+// Función para restaurar sesión desde Firestore cuando sessionStorage está vacío
+async function restaurarSesion(user) {
+  try {
+    const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
+    if (!userDoc.exists()) return false;
+    
+    const userData = userDoc.data();
+    sessionStorage.setItem('userId', user.uid);
+    sessionStorage.setItem('userEmail', userData.email);
+    sessionStorage.setItem('userName', `${userData.nombre} ${userData.apellido || ''}`);
+    sessionStorage.setItem('userRole', userData.role);
+    sessionStorage.setItem('userCodigo', userData.codigo || '');
+    sessionStorage.setItem('userEmbajadorCodigo', userData.embajadorCodigo || '');
+    return true;
+  } catch (err) {
+    console.error('Error restaurando sesión:', err);
+    return false;
+  }
+}
+
 // ========== LOGIN ==========
 btnLogin?.addEventListener('click', async () => {
   const email = document.getElementById('email').value.trim();
@@ -46,7 +66,7 @@ btnLogin?.addEventListener('click', async () => {
     // Guardar sesión
     sessionStorage.setItem('userId', user.uid);
     sessionStorage.setItem('userEmail', userData.email);
-    sessionStorage.setItem('userName', `${userData.nombre} ${userData.apellido}`);
+    sessionStorage.setItem('userName', `${userData.nombre} ${userData.apellido || ''}`);
     sessionStorage.setItem('userRole', userData.role);
     sessionStorage.setItem('userCodigo', userData.codigo || '');
     sessionStorage.setItem('userEmbajadorCodigo', userData.embajadorCodigo || '');
@@ -69,7 +89,6 @@ btnLogin?.addEventListener('click', async () => {
     } else if (error.code === 'auth/too-many-requests') {
       errorDivLogin.textContent = 'Demasiados intentos. Intentá más tarde.';
     }
-    // Si ya se setegó el mensaje de error, no sobrescribir
   } finally {
     btnLogin.disabled = false;
     btnLogin.textContent = t('btn-login');
@@ -109,6 +128,10 @@ btnRegister?.addEventListener('click', async () => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    // Capturar partner de la URL si viene de un link de partner
+    const urlParams = new URLSearchParams(window.location.search);
+    const partnerCodigo = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
+
     // Guardar datos en Firestore
     await setDoc(doc(db, 'usuarios', user.uid), {
       nombre,
@@ -117,10 +140,19 @@ btnRegister?.addEventListener('click', async () => {
       role,
       codigo,
       embajadorCodigo: codigoEmbajador || null,
+      partnerReferido: partnerCodigo || null,
       activo: true,
       aprobado: role === 'restaurante' ? false : true,
       createdAt: serverTimestamp()
     });
+
+    // Guardar sessionStorage
+    sessionStorage.setItem('userId', user.uid);
+    sessionStorage.setItem('userEmail', email);
+    sessionStorage.setItem('userName', `${nombre} ${apellido}`);
+    sessionStorage.setItem('userRole', role);
+    sessionStorage.setItem('userCodigo', codigo || '');
+    sessionStorage.setItem('userEmbajadorCodigo', codigoEmbajador || '');
 
     // Redirección
     let destino = '/pages/cliente.html';
@@ -144,14 +176,49 @@ btnRegister?.addEventListener('click', async () => {
   }
 });
 
-// Verificar sesión activa
-auth.onAuthStateChanged((user) => {
+// ========== VERIFICAR SESIÓN ACTIVA ==========
+let yaProcesado = false;
+auth.onAuthStateChanged(async (user) => {
+  if (yaProcesado) return;
+  yaProcesado = true;
+  
   if (user) {
     const role = sessionStorage.getItem('userRole');
-    if (role === 'fundador' || role === 'admin') window.location.href = '/pages/admin.html';
-    else if (role === 'restaurante') window.location.href = '/pages/restaurante.html';
-    else if (role === 'partner') window.location.href = '/pages/partner.html';
-    else if (role === 'embajador') window.location.href = '/pages/embajador.html';
-    else if (role === 'cliente') window.location.href = '/pages/cliente.html';
+    
+    if (!role) {
+      // sessionStorage vacío (ej: después de refresh) - restaurar desde Firestore
+      const restaurado = await restaurarSesion(user);
+      if (restaurado) {
+        const nuevoRole = sessionStorage.getItem('userRole');
+        let destino = '/pages/cliente.html';
+        if (nuevoRole === 'fundador' || nuevoRole === 'admin') destino = '/pages/admin.html';
+        else if (nuevoRole === 'restaurante') destino = '/pages/restaurante.html';
+        else if (nuevoRole === 'partner') destino = '/pages/partner.html';
+        else if (nuevoRole === 'embajador') destino = '/pages/embajador.html';
+        
+        // Solo redirigir si estamos en la página equivocada
+        const paginaActual = window.location.pathname;
+        if (!paginaActual.includes(destino.replace('/pages/', '').replace('.html', ''))) {
+          window.location.href = destino;
+        }
+      } else {
+        // No se pudo restaurar - ir al login
+        sessionStorage.clear();
+        window.location.href = '/index.html';
+      }
+    } else {
+      // sessionStorage tiene datos - verificar que la página sea la correcta
+      const paginaActual = window.location.pathname;
+      let destino = '/pages/cliente.html';
+      if (role === 'fundador' || role === 'admin') destino = '/pages/admin.html';
+      else if (role === 'restaurante') destino = '/pages/restaurante.html';
+      else if (role === 'partner') destino = '/pages/partner.html';
+      else if (role === 'embajador') destino = '/pages/embajador.html';
+      
+      // Solo redirigir si NO estamos en la página correcta y NO estamos en index.html
+      if (paginaActual !== '/index.html' && !paginaActual.includes(destino.replace('/pages/', '').replace('.html', ''))) {
+        window.location.href = destino;
+      }
+    }
   }
 });

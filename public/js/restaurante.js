@@ -1,7 +1,8 @@
 // Panel Restaurante - Sabores Costeros
 import { db } from './firebase-config.js';
-import { collection, getDocs, addDoc, doc, updateDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, getDocs, addDoc, doc, updateDoc, query, where, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showAlert, generarCodigoReserva, t } from './utils.js';
+import './session.js';
 
 const userId = sessionStorage.getItem('userId');
 const userRole = sessionStorage.getItem('userRole');
@@ -13,10 +14,33 @@ if (userRole !== 'restaurante') {
 
 document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || 'Restaurante';
 
-// Capturar partnerCodigo de la URL (si el dueño vino desde el link de un partner)
+// Capturar partner/embajador de la URL
 const urlParams = new URLSearchParams(window.location.search);
 const partnerCodigoURL = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
+const embajadorCodigoURL = urlParams.get('embajador') || sessionStorage.getItem('lastEmbajador') || null;
 if (partnerCodigoURL) sessionStorage.setItem('lastPartner', partnerCodigoURL);
+if (embajadorCodigoURL) sessionStorage.setItem('lastEmbajador', embajadorCodigoURL);
+
+// Cargar datos del usuario para ver si tiene partnerReferido o embajadorReferido
+let userPartnerCodigo = partnerCodigoURL || null;
+let userEmbajadorCodigo = embajadorCodigoURL || sessionStorage.getItem('userEmbajadorCodigo') || null;
+
+async function cargarReferidosDelUsuario() {
+  try {
+    const userDoc = await getDoc(doc(db, 'usuarios', userId));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      if (userData.partnerReferido && !userPartnerCodigo) {
+        userPartnerCodigo = userData.partnerReferido;
+      }
+      if (userData.embajadorReferido && !userEmbajadorCodigo) {
+        userEmbajadorCodigo = userData.embajadorReferido;
+      }
+    }
+  } catch (err) {
+    console.error('Error cargando referidos:', err);
+  }
+}
 
 // ========== COMISIONES (cargadas desde config) ==========
 let comisiones = {
@@ -30,7 +54,6 @@ async function loadComisionesConfig() {
   try {
     const docSnap = await getDocs(collection(db, 'configuracion'));
     if (!docSnap.empty) {
-      // Buscar el documento de comisiones
       docSnap.forEach(d => {
         if (d.id === 'comisiones') {
           const config = d.data();
@@ -74,10 +97,21 @@ async function loadRestaurante() {
 // ========== GUARDAR PERFIL ==========
 document.getElementById('btn-save-perfil')?.addEventListener('click', async () => {
   const id = document.getElementById('restaurante-id').value;
+  const nombre = document.getElementById('res-nombre').value.trim();
+  const direccion = document.getElementById('res-direccion').value.trim();
+  
+  // Validar campos obligatorios
+  if (!nombre) {
+    return showAlert('El nombre del restaurante es obligatorio', 'warning');
+  }
+  if (!direccion) {
+    return showAlert('La dirección es obligatoria', 'warning');
+  }
+  
   const data = {
-    nombre: document.getElementById('res-nombre').value.trim(),
+    nombre,
     tipoCocina: document.getElementById('res-tipo').value,
-    direccion: document.getElementById('res-direccion').value.trim(),
+    direccion,
     telefono: document.getElementById('res-telefono').value.trim(),
     whatsapp: document.getElementById('res-whatsapp').value.trim(),
     descripcion: document.getElementById('res-descripcion').value.trim(),
@@ -93,8 +127,9 @@ document.getElementById('btn-save-perfil')?.addEventListener('click', async () =
       const docRef = await addDoc(collection(db, 'restaurantes'), {
         ...data,
         dueñoId: userId,
-        embajadorCodigo: sessionStorage.getItem('userEmbajadorCodigo') || null,
-        partnerCodigo: partnerCodigoURL || null,
+        dueñoEmail: sessionStorage.getItem('userEmail') || '',
+        embajadorCodigo: userEmbajadorCodigo || null,
+        partnerCodigo: userPartnerCodigo || null,
         activo: true,
         aprobado: false,
         createdAt: serverTimestamp()
@@ -102,6 +137,7 @@ document.getElementById('btn-save-perfil')?.addEventListener('click', async () =
       document.getElementById('restaurante-id').value = docRef.id;
       showAlert(t('restaurante-registrado'), 'success');
     }
+    loadRestaurante();
   } catch (err) {
     showAlert(`${t('error-generico')}: ${err.message}`, 'danger');
   }
@@ -138,14 +174,14 @@ async function loadReservas() {
       const estadoColor = data.estado === 'confirmada' ? '#FFC107' : data.estado === 'asistida' ? '#28A745' : '#666';
       const comisionTotal = data.personas * comisiones.total;
       div.innerHTML = `
-        <h4>🎫 ${data.codigo}</h4>
+        <h4> ${data.codigo}</h4>
         <p>📅 ${data.fecha} a las ${data.hora}</p>
-        <p>👥 ${data.personas} ${t('personas')}</p>
+        <p> ${data.personas} ${t('personas')}</p>
         <p>Estado: <strong style="color:${estadoColor}">${data.estado}</strong></p>
         ${data.estado === 'confirmada' ? `
           <div style="background:#E8F5E9; padding:12px; border-radius:8px; margin:10px 0;">
-            <p style="margin:0;"><strong>💰 ${t('cobro-info').replace('${amount}', comisionTotal.toFixed(2)).replace('${personas}', data.personas)}</strong></p>
-            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#666;">${t('comision-info').replace('$0.50', '$' + comisiones.embajador.toFixed(2)).replace('$0.50 partner', '$' + comisiones.partner.toFixed(2) + ' partner').replace('$1', '$' + comisiones.fundador.toFixed(2))}</p>
+            <p style="margin:0;"><strong>💰 Cobro: $${comisionTotal.toFixed(2)} USD (${data.personas} x $${comisiones.total.toFixed(2)})</strong></p>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#666;">Comisiones: $${comisiones.embajador.toFixed(2)} embajador + $${comisiones.partner.toFixed(2)} partner + $${comisiones.fundador.toFixed(2)} fundador</p>
           </div>
           <button class="btn btn-success" onclick="confirmarAsistencia('${d.id}', '${data.codigo}', ${data.personas}, '${data.embajadorCodigo || ''}', '${data.partnerCodigo || ''}')">
             ✅ ${t('btn-confirmar-asistencia')}
@@ -170,10 +206,7 @@ async function loadReservas() {
 
 window.confirmarAsistencia = async (reservaId, codigo, personas, embajadorCodigo, partnerCodigo) => {
   const comisionTotal = (personas * comisiones.total).toFixed(2);
-  const pregunta = t('confirmar-asistencia-pregunta')
-    .replace('{codigo}', codigo)
-    .replace('{personas}', personas)
-    .replace('${amount}', comisionTotal);
+  const pregunta = `¿Confirmar asistencia del código ${codigo} (${personas} personas)?\n\nSe cobrarán $${comisionTotal} USD a tu restaurante.`;
   
   if (!confirm(pregunta)) return;
   
@@ -196,8 +229,7 @@ window.confirmarAsistencia = async (reservaId, codigo, personas, embajadorCodigo
       estado: 'pendiente',
       createdAt: serverTimestamp()
     });
-    const msg = t('asistencia-confirmada').replace('${amount}', comisionTotal);
-    showAlert(msg, 'success');
+    showAlert(`✅ Asistencia confirmada. Cobro: $${comisionTotal} USD`, 'success');
     loadReservas();
   } catch (err) {
     showAlert(`${t('error-generico')}: ${err.message}`, 'danger');
@@ -205,7 +237,8 @@ window.confirmarAsistencia = async (reservaId, codigo, personas, embajadorCodigo
 };
 
 // ========== INICIALIZACIÓN ==========
-loadComisionesConfig().then(() => {
+cargarReferidosDelUsuario().then(() => {
+  loadComisionesConfig();
   loadRestaurante();
   loadReservas();
 });
