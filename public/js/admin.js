@@ -1,8 +1,8 @@
 // Panel Admin/Fundador - Sabores Costeros
-import { auth, db } from './firebase-config.js';
+import { db } from './firebase-config.js';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { showAlert, t, applyTranslations } from './utils.js';
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { showAlert, t } from './utils.js';
 
 const userRole = sessionStorage.getItem('userRole');
 if (userRole !== 'fundador' && userRole !== 'admin') {
@@ -11,6 +11,47 @@ if (userRole !== 'fundador' && userRole !== 'admin') {
 }
 
 document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || t('nav-user-loading');
+
+// Datos del admin para re-login
+let adminPassword = '';
+
+// Pedir contraseña del admin al cargar el panel
+function pedirPasswordAdmin() {
+  return new Promise((resolve) => {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+      <div style="background:white;padding:30px;border-radius:16px;max-width:400px;width:100%;">
+        <h3 style="color:#023E8A;margin-top:0;">🔑 Verificación de Seguridad</h3>
+        <p style="color:#666;">Ingresá tu contraseña para poder crear usuarios</p>
+        <div class="form-group">
+          <label>Contraseña de administrador</label>
+          <input type="password" id="admin-pass-input" class="form-control" placeholder="Tu contraseña">
+        </div>
+        <div id="admin-pass-error" style="color:red;min-height:20px;"></div>
+        <button class="btn btn-primary btn-block" id="btn-confirmar-pass">Confirmar</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('btn-confirmar-pass').addEventListener('click', () => {
+      const pass = document.getElementById('admin-pass-input').value;
+      if (!pass) {
+        document.getElementById('admin-pass-error').textContent = 'Ingresá tu contraseña';
+        return;
+      }
+      adminPassword = pass;
+      modal.remove();
+      resolve(true);
+    });
+
+    document.getElementById('admin-pass-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('btn-confirmar-pass').click();
+      }
+    });
+  });
+}
 
 // ========== TABS ==========
 window.showTab = (tabName) => {
@@ -39,12 +80,49 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
     return showAlert(t('error-weak-password'), 'warning');
   }
 
-  try {
-    // Crear usuario en Firebase Authentication
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const uid = userCredential.user.uid;
+  // Verificar que tenemos la contraseña del admin
+  if (!adminPassword) {
+    await pedirPasswordAdmin();
+  }
 
-    // Guardar datos en Firestore usando setDoc con el UID como ID
+  // Guardar email del admin para re-login
+  const adminEmail = sessionStorage.getItem('userEmail');
+
+  try {
+    // Paso 1: Crear usuario via REST API
+    const apiKey = "AIzaSyDJVKFY4fmQ5XGh1W1SsBg0KNlboTd0ceg";
+    const response = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          returnSecureToken: true
+        })
+      }
+    );
+
+    const data = await response.json();
+    
+    if (data.error) {
+      if (data.error.message === 'EMAIL_EXISTS') {
+        return showAlert(t('error-email-exists'), 'danger');
+      }
+      throw new Error(data.error.message);
+    }
+
+    const uid = data.localId;
+
+    // Paso 2: El usuario nuevo quedó logueado. Cerrar su sesión.
+    const { auth } = await import('./firebase-config.js');
+    await auth.signOut();
+
+    // Paso 3: Re-loguear al admin
+    await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+
+    // Paso 4: Guardar datos en Firestore (ahora como admin)
     await setDoc(doc(db, 'usuarios', uid), {
       uid,
       nombre,
@@ -65,13 +143,15 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
     document.getElementById('new-password').value = '';
     document.getElementById('new-codigo').value = '';
 
-    showAlert(`${role.toUpperCase()}: ${nombre} (${codigo})`, 'success');
+    showAlert(`✅ ${role.toUpperCase()} creado: ${nombre} (${codigo})`, 'success');
     loadUsuarios();
   } catch (err) {
-    if (err.code === 'auth/email-already-in-use') {
+    if (err.message && err.message.includes('EMAIL_EXISTS')) {
       showAlert(t('error-email-exists'), 'danger');
-    } else if (err.code === 'auth/weak-password') {
-      showAlert(t('error-weak-password'), 'danger');
+    } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+      showAlert('Contraseña de admin incorrecta. Volvé a ingresarla.', 'danger');
+      adminPassword = '';
+      await pedirPasswordAdmin();
     } else {
       showAlert(`${t('error-generico')}: ${err.message}`, 'danger');
     }
@@ -150,13 +230,29 @@ async function loadUsuarios() {
       const div = document.createElement('div');
       div.className = 'card';
       const rolColor = data.role === 'fundador' ? '#023E8A' : data.role === 'admin' ? '#0077B6' : data.role === 'partner' ? '#722F37' : data.role === 'embajador' ? '#009C3B' : '#666';
-      const rolTexto = data.role.charAt(0).toUpperCase() + data.role.slice(1);
+      const rolTexto = data.role ? data.role.charAt(0).toUpperCase() + data.role.slice(1) : 'Sin rol';
+      
+      // Botón WhatsApp solo para partners y embajadores
+      let btnWhatsApp = '';
+      if ((data.role === 'partner' || data.role === 'embajador') && data.codigo) {
+        const url = `https://sabores-costeros.vercel.app/?partner=${data.codigo}`;
+        const idioma = sessionStorage.getItem('idioma') || 'es';
+        const mensajes = {
+          es: `¡Sumate a Sabores Costeros! 🌊🍽️ Usá mi código *${data.codigo}* al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis para 4 personas. Entrá acá: ${url}`,
+          pt: `Junte-se ao Sabores Costeros! 🌊🍽️ Use meu código *${data.codigo}* ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis para 4 pessoas. Entre aqui: ${url}`,
+          en: `Join Sabores Costeros! 🌊️ Use my code *${data.codigo}* when signing up. Discover the best coastal restaurants and win free dinners for 4. Enter here: ${url}`
+        };
+        const msg = encodeURIComponent(mensajes[idioma] || mensajes.es);
+        btnWhatsApp = `<a href="https://wa.me/?text=${msg}" target="_blank" class="btn btn-success" style="text-decoration:none;font-size:0.85rem;padding:6px 12px;">📱 Enviar código por WhatsApp</a>`;
+      }
+      
       div.innerHTML = `
         <h4>${data.nombre} ${data.apellido || ''}</h4>
         <p>${data.email}</p>
-        <p>Rol: <strong style="color:${rolColor}; text-transform:capitalize;">${rolTexto}</strong> ${data.activo ? '✅' : '❌'}</p>
+        <p>Rol: <strong style="color:${rolColor}; text-transform:capitalize;">${rolTexto}</strong> ${data.activo ? '✅' : ''}</p>
         ${data.codigo ? `<p>Código: <strong>${data.codigo}</strong></p>` : ''}
-        <div style="display:flex; gap:10px; margin-top:10px;">
+        <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+          ${btnWhatsApp}
           <button class="btn ${data.activo ? 'btn-warning' : 'btn-success'}" onclick="toggleUsuario('${d.id}', ${!data.activo})">
             ${data.activo ? t('btn-desactivar') : t('btn-activar')}
           </button>
@@ -208,11 +304,11 @@ async function loadPagos() {
       div.className = 'card';
       div.innerHTML = `
         <h4>🎫 ${data.codigo}</h4>
-        <p>👥 ${personas} ${t('personas')}</p>
+        <p> ${personas} ${t('personas')}</p>
         <p>💰 Total: <strong>$${monto.toFixed(2)} USD</strong></p>
         ${data.embajadorCodigo ? `<p>🌟 Embajador: <strong>${data.embajadorCodigo}</strong> - $${comisionEmbajador.toFixed(2)}</p>` : ''}
         ${data.partnerCodigo ? `<p>🤝 Partner: <strong>${data.partnerCodigo}</strong> - $${comisionPartner.toFixed(2)}</p>` : ''}
-        <p>👑 Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
+        <p> Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
       `;
       cont.appendChild(div);
     });
@@ -250,7 +346,7 @@ async function loadSorteo() {
       div.style.cssText = 'background:#FFF9C4; border-left:4px solid #FFD700;';
       div.innerHTML = `
         <p><strong>🎫 ${data.codigo}</strong> - ${data.nombreRestaurante || 'Restaurante'}</p>
-        <p>👥 ${data.personas} ${t('personas')} · 📅 ${data.fecha}</p>
+        <p> ${data.personas} ${t('personas')} · 📅 ${data.fecha}</p>
       `;
       cont.appendChild(div);
     });
@@ -269,11 +365,15 @@ async function loadConfig() {
   try {
     const docSnap = await getDocs(collection(db, 'configuracion'));
     if (!docSnap.empty) {
-      const config = docSnap.docs[0].data();
-      document.getElementById('config-total').value = config.total || 2.00;
-      document.getElementById('config-fundador').value = config.fundador || 1.00;
-      document.getElementById('config-embajador').value = config.embajador || 0.50;
-      document.getElementById('config-partner').value = config.partner || 0.50;
+      docSnap.forEach(d => {
+        if (d.id === 'comisiones') {
+          const config = d.data();
+          document.getElementById('config-total').value = config.total || 2.00;
+          document.getElementById('config-fundador').value = config.fundador || 1.00;
+          document.getElementById('config-embajador').value = config.embajador || 0.50;
+          document.getElementById('config-partner').value = config.partner || 0.50;
+        }
+      });
     }
     updateResumen();
   } catch (err) {
@@ -296,7 +396,7 @@ function updateResumen() {
   const warning = document.getElementById('resumen-warning');
   if (Math.abs(suma - total) > 0.01) {
     warning.style.display = 'block';
-    warning.textContent = `️ La suma ($${suma.toFixed(2)}) no coincide con el total ($${total.toFixed(2)})`;
+    warning.textContent = `⚠️ La suma ($${suma.toFixed(2)}) no coincide con el total ($${total.toFixed(2)})`;
   } else {
     warning.style.display = 'none';
   }
@@ -338,4 +438,3 @@ loadUsuarios();
 loadPagos();
 loadSorteo();
 loadConfig();
-applyTranslations();

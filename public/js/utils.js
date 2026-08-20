@@ -742,7 +742,8 @@ const traducciones = {
 let idiomaActual = sessionStorage.getItem('idioma') || 'es';
 
 export function t(clave) {
-  return traducciones[idiomaActual][clave] || traducciones['es'][clave] || clave;
+  const trad = traducciones[idiomaActual]?.[clave] || traducciones['es']?.[clave] || clave;
+  return trad;
 }
 
 export function cambiarIdioma(nuevoIdioma) {
@@ -757,40 +758,41 @@ export function getIdiomaActual() {
 
 // Aplicar traducciones a todos los elementos con data-i18n
 export function applyTranslations() {
-  const lang = getIdiomaActual();
-  
   // Traducir textContent
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const clave = el.getAttribute('data-i18n');
     const traduccion = t(clave);
-    if (traduccion.includes('<')) {
-      el.innerHTML = traduccion;
-    } else {
-      el.textContent = traduccion;
+    // Solo reemplazar si hay traducción disponible
+    if (traduccion && traduccion !== clave) {
+      if (traduccion.includes('<')) {
+        el.innerHTML = traduccion;
+      } else {
+        el.textContent = traduccion;
+      }
     }
   });
   
   // Traducir placeholders
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const clave = el.getAttribute('data-i18n-placeholder');
-    el.placeholder = t(clave);
+    const traduccion = t(clave);
+    if (traduccion && traduccion !== clave) {
+      el.placeholder = traduccion;
+    }
   });
   
-  // Traducir títulos
-  document.querySelectorAll('[data-i18n-title]').forEach(el => {
-    const clave = el.getAttribute('data-i18n-title');
-    el.title = t(clave);
-  });
-
   // Actualizar botones de idioma activos
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  const btnActivo = document.getElementById('btn-' + lang);
+  const btnActivo = document.getElementById('btn-' + idiomaActual);
   if (btnActivo) btnActivo.classList.add('active');
 
   // Actualizar selects de idioma
   document.querySelectorAll('#selector-idioma').forEach(sel => {
-    sel.value = lang;
+    sel.value = idiomaActual;
   });
+
+  // Actualizar el atributo lang del html
+  document.documentElement.lang = idiomaActual;
 }
 
 // ========== UTILIDADES ==========\nexport function showAlert(message, type = 'info') {
