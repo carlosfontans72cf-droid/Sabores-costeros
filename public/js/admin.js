@@ -1,16 +1,16 @@
 // Panel Admin/Fundador - Sabores Costeros
 import { auth, db } from './firebase-config.js';
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { showAlert } from './utils.js';
+import { showAlert, t, applyTranslations } from './utils.js';
 
 const userRole = sessionStorage.getItem('userRole');
 if (userRole !== 'fundador' && userRole !== 'admin') {
-  alert('Acceso denegado');
+  alert(t('acceso-denegado'));
   window.location.href = '/index.html';
 }
 
-document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || 'Admin';
+document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || t('nav-user-loading');
 
 // ========== TABS ==========
 window.showTab = (tabName) => {
@@ -32,11 +32,11 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
   const codigo = document.getElementById('new-codigo').value.trim();
 
   if (!nombre || !email || !password || !codigo) {
-    return showAlert('Completá nombre, email, contraseña y código', 'warning');
+    return showAlert(t('error-empty-fields'), 'warning');
   }
 
   if (password.length < 6) {
-    return showAlert('La contraseña debe tener mínimo 6 caracteres', 'warning');
+    return showAlert(t('error-weak-password'), 'warning');
   }
 
   try {
@@ -44,13 +44,12 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = userCredential.user.uid;
 
-    // Guardar datos en Firestore
-    await addDoc(collection(db, 'usuarios'), {
+    // Guardar datos en Firestore usando setDoc con el UID como ID
+    await setDoc(doc(db, 'usuarios', uid), {
       uid,
       nombre,
       apellido,
       email,
-      password: '',
       role,
       codigo,
       activo: true,
@@ -58,20 +57,23 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
       esAdminCreado: true,
       createdAt: serverTimestamp()
     });
+
+    // Limpiar formulario
     document.getElementById('new-nombre').value = '';
     document.getElementById('new-apellido').value = '';
     document.getElementById('new-email').value = '';
     document.getElementById('new-password').value = '';
     document.getElementById('new-codigo').value = '';
-    showAlert(`${role} creado: ${nombre} (${codigo})`, 'success');
+
+    showAlert(`${role.toUpperCase()}: ${nombre} (${codigo})`, 'success');
     loadUsuarios();
   } catch (err) {
     if (err.code === 'auth/email-already-in-use') {
-      showAlert('Email ya registrado en Authentication', 'danger');
+      showAlert(t('error-email-exists'), 'danger');
     } else if (err.code === 'auth/weak-password') {
-      showAlert('Contraseña muy débil (mínimo 6 caracteres)', 'danger');
+      showAlert(t('error-weak-password'), 'danger');
     } else {
-      showAlert(`Error: ${err.message}`, 'danger');
+      showAlert(`${t('error-generico')}: ${err.message}`, 'danger');
     }
   }
 });
@@ -86,7 +88,7 @@ async function loadAprobaciones() {
     const snap = await getDocs(q);
 
     if (snap.empty) {
-      cont.innerHTML = '<p style="color:#666;">No hay aprobaciones pendientes</p>';
+      cont.innerHTML = `<p style="color:#666;">${t('no-aprobaciones')}</p>`;
       return;
     }
 
@@ -101,33 +103,33 @@ async function loadAprobaciones() {
         <p>Dueño: ${data.email || 'N/A'}</p>
         ${data.embajadorCodigo ? `<p>Embajador: <strong>${data.embajadorCodigo}</strong></p>` : ''}
         <div style="display:flex; gap:10px; margin-top:10px;">
-          <button class="btn btn-success" onclick="aprobarRestaurante('${d.id}')">✅ Aprobar</button>
-          <button class="btn btn-danger" onclick="rechazarRestaurante('${d.id}')">❌ Rechazar</button>
+          <button class="btn btn-success" onclick="aprobarRestaurante('${d.id}')">${t('btn-aprobar')}</button>
+          <button class="btn btn-danger" onclick="rechazarRestaurante('${d.id}')">${t('btn-rechazar')}</button>
         </div>
       `;
       cont.appendChild(div);
     });
   } catch (err) {
-    cont.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
 
 window.aprobarRestaurante = async (id) => {
-  if (!confirm('¿Aprobar este restaurante?')) return;
+  if (!confirm(t('btn-aprobar') + '?')) return;
   try {
     await updateDoc(doc(db, 'restaurantes', id), { aprobado: true });
-    showAlert('Restaurante aprobado', 'success');
+    showAlert(t('restaurante-aprobado'), 'success');
     loadAprobaciones();
-  } catch (err) { showAlert(`Error: ${err.message}`, 'danger'); }
+  } catch (err) { showAlert(`${t('error-generico')}: ${err.message}`, 'danger'); }
 };
 
 window.rechazarRestaurante = async (id) => {
-  if (!confirm('¿Rechazar este restaurante?')) return;
+  if (!confirm(t('btn-rechazar') + '?')) return;
   try {
     await deleteDoc(doc(db, 'restaurantes', id));
-    showAlert('Restaurante rechazado', 'warning');
+    showAlert(t('restaurante-rechazado'), 'warning');
     loadAprobaciones();
-  } catch (err) { showAlert(`Error: ${err.message}`, 'danger'); }
+  } catch (err) { showAlert(`${t('error-generico')}: ${err.message}`, 'danger'); }
 };
 
 // ========== USUARIOS ==========
@@ -138,7 +140,7 @@ async function loadUsuarios() {
   try {
     const snap = await getDocs(collection(db, 'usuarios'));
     if (snap.empty) {
-      cont.innerHTML = '<p style="color:#666;">Sin usuarios</p>';
+      cont.innerHTML = `<p style="color:#666;">${t('no-usuarios')}</p>`;
       return;
     }
 
@@ -148,30 +150,31 @@ async function loadUsuarios() {
       const div = document.createElement('div');
       div.className = 'card';
       const rolColor = data.role === 'fundador' ? '#023E8A' : data.role === 'admin' ? '#0077B6' : data.role === 'partner' ? '#722F37' : data.role === 'embajador' ? '#009C3B' : '#666';
+      const rolTexto = data.role.charAt(0).toUpperCase() + data.role.slice(1);
       div.innerHTML = `
         <h4>${data.nombre} ${data.apellido || ''}</h4>
         <p>${data.email}</p>
-        <p>Rol: <strong style="color:${rolColor}; text-transform:capitalize;">${data.role}</strong> ${data.activo ? '✅' : '❌'}</p>
+        <p>Rol: <strong style="color:${rolColor}; text-transform:capitalize;">${rolTexto}</strong> ${data.activo ? '✅' : '❌'}</p>
         ${data.codigo ? `<p>Código: <strong>${data.codigo}</strong></p>` : ''}
         <div style="display:flex; gap:10px; margin-top:10px;">
           <button class="btn ${data.activo ? 'btn-warning' : 'btn-success'}" onclick="toggleUsuario('${d.id}', ${!data.activo})">
-            ${data.activo ? 'Desactivar' : 'Activar'}
+            ${data.activo ? t('btn-desactivar') : t('btn-activar')}
           </button>
         </div>
       `;
       cont.appendChild(div);
     });
   } catch (err) {
-    cont.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
 
 window.toggleUsuario = async (id, nuevoEstado) => {
   try {
     await updateDoc(doc(db, 'usuarios', id), { activo: nuevoEstado });
-    showAlert(nuevoEstado ? 'Usuario activado' : 'Usuario desactivado', 'info');
+    showAlert(nuevoEstado ? t('user-activado') : t('user-desactivado'), 'info');
     loadUsuarios();
-  } catch (err) { showAlert(`Error: ${err.message}`, 'danger'); }
+  } catch (err) { showAlert(`${t('error-generico')}: ${err.message}`, 'danger'); }
 };
 
 // ========== PAGOS Y COMISIONES ==========
@@ -186,7 +189,7 @@ async function loadPagos() {
     let totalPartner = 0;
 
     if (snap.empty) {
-      cont.innerHTML = '<p style="color:#666;">Sin pagos registrados</p>';
+      cont.innerHTML = `<p style="color:#666;">${t('no-pagos')}</p>`;
       return;
     }
 
@@ -205,11 +208,11 @@ async function loadPagos() {
       div.className = 'card';
       div.innerHTML = `
         <h4>🎫 ${data.codigo}</h4>
-        <p>Personas: ${personas}</p>
-        <p>Monto total: <strong>$${monto.toFixed(2)} USD</strong></p>
-        ${data.embajadorCodigo ? `<p>Embajador: <strong>${data.embajadorCodigo}</strong> - $${comisionEmbajador.toFixed(2)}</p>` : ''}
-        ${data.partnerCodigo ? `<p>Partner: <strong>${data.partnerCodigo}</strong> - $${comisionPartner.toFixed(2)}</p>` : ''}
-        <p>Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
+        <p>👥 ${personas} ${t('personas')}</p>
+        <p>💰 Total: <strong>$${monto.toFixed(2)} USD</strong></p>
+        ${data.embajadorCodigo ? `<p>🌟 Embajador: <strong>${data.embajadorCodigo}</strong> - $${comisionEmbajador.toFixed(2)}</p>` : ''}
+        ${data.partnerCodigo ? `<p>🤝 Partner: <strong>${data.partnerCodigo}</strong> - $${comisionPartner.toFixed(2)}</p>` : ''}
+        <p>👑 Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
       `;
       cont.appendChild(div);
     });
@@ -218,15 +221,15 @@ async function loadPagos() {
     resumenDiv.className = 'card';
     resumenDiv.style.cssText = 'background:#E8F5E9; border-left:4px solid #28A745;';
     resumenDiv.innerHTML = `
-      <h3 style="color:#28A745;"> Resumen de Comisiones</h3>
-      <p><strong>💰 Total recaudado:</strong> $${(totalFundador + totalEmbajador + totalPartner).toFixed(2)} USD</p>
-      <p><strong>👑 Fundador (vos):</strong> $${totalFundador.toFixed(2)} USD</p>
-      <p><strong> Embajadores:</strong> $${totalEmbajador.toFixed(2)} USD</p>
-      <p><strong>🤝 Partners:</strong> $${totalPartner.toFixed(2)} USD</p>
+      <h3 style="color:#28A745;">📊 ${t('resumen-comisiones')}</h3>
+      <p><strong>${t('total-recaudado')}:</strong> $${(totalFundador + totalEmbajador + totalPartner).toFixed(2)} USD</p>
+      <p><strong>${t('total-fundador')}:</strong> $${totalFundador.toFixed(2)} USD</p>
+      <p><strong>${t('total-embajadores')}:</strong> $${totalEmbajador.toFixed(2)} USD</p>
+      <p><strong>${t('total-partners')}:</strong> $${totalPartner.toFixed(2)} USD</p>
     `;
     cont.insertBefore(resumenDiv, cont.firstChild);
   } catch (err) {
-    cont.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
 
@@ -246,23 +249,93 @@ async function loadSorteo() {
       div.className = 'card';
       div.style.cssText = 'background:#FFF9C4; border-left:4px solid #FFD700;';
       div.innerHTML = `
-        <p><strong> 🎫 ${data.codigo}</strong> - ${data.nombreRestaurante || 'Restaurante'}</p>
-        <p> ${data.personas} personas · 📅 ${data.fecha}</p>
+        <p><strong>🎫 ${data.codigo}</strong> - ${data.nombreRestaurante || 'Restaurante'}</p>
+        <p>👥 ${data.personas} ${t('personas')} · 📅 ${data.fecha}</p>
       `;
       cont.appendChild(div);
     });
     const infoDiv = document.createElement('div');
     infoDiv.className = 'card';
     infoDiv.style.cssText = 'background:#FFF9C4; border-left:4px solid #FFD700;';
-    infoDiv.innerHTML = `<h3 style="color:#722F37;">🎉 Total participantes esta semana: ${total}</h3><p>Sorteo: todos los sábados</p>`;
+    infoDiv.innerHTML = `<h3 style="color:#722F37;"> Total participantes esta semana: ${total}</h3><p>Sorteo: todos los sábados</p>`;
     cont.insertBefore(infoDiv, cont.firstChild);
   } catch (err) {
-    cont.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
+
+// ========== CONFIGURACIÓN DE COMISIONES ==========
+async function loadConfig() {
+  try {
+    const docSnap = await getDocs(collection(db, 'configuracion'));
+    if (!docSnap.empty) {
+      const config = docSnap.docs[0].data();
+      document.getElementById('config-total').value = config.total || 2.00;
+      document.getElementById('config-fundador').value = config.fundador || 1.00;
+      document.getElementById('config-embajador').value = config.embajador || 0.50;
+      document.getElementById('config-partner').value = config.partner || 0.50;
+    }
+    updateResumen();
+  } catch (err) {
+    console.error('Error loading config:', err);
+  }
+}
+
+function updateResumen() {
+  const total = parseFloat(document.getElementById('config-total').value) || 0;
+  const fundador = parseFloat(document.getElementById('config-fundador').value) || 0;
+  const embajador = parseFloat(document.getElementById('config-embajador').value) || 0;
+  const partner = parseFloat(document.getElementById('config-partner').value) || 0;
+  const suma = fundador + embajador + partner;
+
+  document.getElementById('resumen-total').textContent = `$${total.toFixed(2)} USD`;
+  document.getElementById('resumen-fundador').textContent = `$${fundador.toFixed(2)} USD`;
+  document.getElementById('resumen-embajador').textContent = `$${embajador.toFixed(2)} USD`;
+  document.getElementById('resumen-partner').textContent = `$${partner.toFixed(2)} USD`;
+
+  const warning = document.getElementById('resumen-warning');
+  if (Math.abs(suma - total) > 0.01) {
+    warning.style.display = 'block';
+    warning.textContent = `️ La suma ($${suma.toFixed(2)}) no coincide con el total ($${total.toFixed(2)})`;
+  } else {
+    warning.style.display = 'none';
+  }
+}
+
+document.getElementById('config-total')?.addEventListener('input', updateResumen);
+document.getElementById('config-fundador')?.addEventListener('input', updateResumen);
+document.getElementById('config-embajador')?.addEventListener('input', updateResumen);
+document.getElementById('config-partner')?.addEventListener('input', updateResumen);
+
+document.getElementById('btn-guardar-config')?.addEventListener('click', async () => {
+  const total = parseFloat(document.getElementById('config-total').value) || 0;
+  const fundador = parseFloat(document.getElementById('config-fundador').value) || 0;
+  const embajador = parseFloat(document.getElementById('config-embajador').value) || 0;
+  const partner = parseFloat(document.getElementById('config-partner').value) || 0;
+  const suma = fundador + embajador + partner;
+
+  if (Math.abs(suma - total) > 0.01) {
+    return showAlert(`La suma de comisiones ($${suma.toFixed(2)}) no coincide con el total ($${total.toFixed(2)})`, 'warning');
+  }
+
+  try {
+    await setDoc(doc(db, 'configuracion', 'comisiones'), {
+      total,
+      fundador,
+      embajador,
+      partner,
+      updatedAt: serverTimestamp()
+    });
+    showAlert(t('config-saved'), 'success');
+  } catch (err) {
+    showAlert(`${t('error-generico')}: ${err.message}`, 'danger');
+  }
+});
 
 // ========== INICIALIZACIÓN ==========
 loadAprobaciones();
 loadUsuarios();
 loadPagos();
 loadSorteo();
+loadConfig();
+applyTranslations();

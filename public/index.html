@@ -16,99 +16,109 @@
         <img src="/img/logo.png" alt="Sabores Costeros" class="logo" style="max-width:200px;">
       </div>
       <h2 class="app-title">Sabores Costeros</h2>
-      <p class="app-subtitle" id="subtitle">Descubrí los mejores restaurantes de la costa</p>
+      <p class="app-subtitle" id="subtitle" data-i18n="app-subtitle">Descubrí los mejores restaurantes de la costa</p>
 
       <!-- Selector de idioma -->
       <div class="language-selector">
-        <button onclick="cambiarIdioma('es')" class="lang-btn active" id="btn-es">🇪🇸 ES</button>
-        <button onclick="cambiarIdioma('pt')" class="lang-btn" id="btn-pt">🇧🇷 PT</button>
+        <button onclick="cambiarIdioma('es')" class="lang-btn active" id="btn-es">🇸 ES</button>
+        <button onclick="cambiarIdioma('pt')" class="lang-btn" id="btn-pt">🇷 PT</button>
         <button onclick="cambiarIdioma('en')" class="lang-btn" id="btn-en">🇺🇸 EN</button>
       </div>
 
       <!-- Formulario de Login -->
       <div id="login-form">
         <div class="form-group">
-          <label id="label-email">Email</label>
-          <input type="email" id="email" class="form-control" placeholder="tu@email.com" autocomplete="off">
+          <label id="label-email" data-i18n="label-email">Email</label>
+          <input type="email" id="email" class="form-control" data-i18n-placeholder="placeholder-email" placeholder="tu@email.com" autocomplete="off">
         </div>
 
         <div class="form-group" style="position: relative;">
-          <label id="label-password">Contraseña</label>
-          <input type="password" id="password" class="form-control" placeholder="Contraseña" style="padding-right:42px;">
-          <button type="button" class="btn-toggle-password" onclick="togglePassword()">👁</button>
+          <label id="label-password" data-i18n="label-password">Contraseña</label>
+          <input type="password" id="password" class="form-control" data-i18n-placeholder="placeholder-password" placeholder="Contraseña" style="padding-right:42px;">
+          <button type="button" class="btn-toggle-password" onclick="togglePassword()"></button>
         </div>
 
         <div id="login-error" class="error-message"></div>
 
-        <button id="btn-login" class="btn btn-primary btn-block">
+        <button id="btn-login" class="btn btn-primary btn-block" data-i18n="btn-login">
           Iniciar Sesión
         </button>
 
         <p class="switch-form">
-          <span id="text-no-account">¿No tenés cuenta?</span>
-          <a href="#" onclick="showRegister()">Registrate</a>
+          <span id="text-no-account" data-i18n="text-no-account">¿No tenés cuenta?</span>
+          <a href="#" onclick="showRegister()" data-i18n="link-register">Registrate</a>
         </p>
       </div>
 
       <!-- Formulario de Registro -->
       <div id="register-form" style="display:none;">
         <div class="form-group">
-          <label id="label-nombre">Nombre</label>
-          <input type="text" id="reg-nombre" class="form-control" placeholder="Tu nombre">
+          <label id="label-nombre" data-i18n="label-nombre">Nombre</label>
+          <input type="text" id="reg-nombre" class="form-control" data-i18n-placeholder="placeholder-nombre" placeholder="Tu nombre">
         </div>
 
         <div class="form-group">
-          <label id="label-apellido">Apellido</label>
-          <input type="text" id="reg-apellido" class="form-control" placeholder="Tu apellido">
+          <label id="label-apellido" data-i18n="label-apellido">Apellido</label>
+          <input type="text" id="reg-apellido" class="form-control" data-i18n-placeholder="placeholder-apellido" placeholder="Tu apellido">
         </div>
 
         <div class="form-group">
-          <label id="label-email-reg">Email</label>
-          <input type="email" id="reg-email" class="form-control" placeholder="tu@email.com">
+          <label id="label-email-reg" data-i18n="label-email-reg">Email</label>
+          <input type="email" id="reg-email" class="form-control" data-i18n-placeholder="placeholder-email-reg" placeholder="tu@email.com">
         </div>
 
         <div class="form-group">
-          <label id="label-password-reg">Contraseña</label>
-          <input type="password" id="reg-password" class="form-control" placeholder="Mínimo 6 caracteres">
+          <label id="label-password-reg" data-i18n="label-password-reg">Contraseña</label>
+          <input type="password" id="reg-password" class="form-control" data-i18n-placeholder="placeholder-password-reg" placeholder="Mínimo 6 caracteres">
         </div>
 
         <div class="form-group">
-          <label>Quiero registrarme como:</label>
+          <label data-i18n="label-role">Quiero registrarme como:</label>
           <select id="reg-role" class="form-control">
-            <option value="cliente">️ Turista / Cliente</option>
-            <option value="restaurante">🏪 Dueño de restaurante</option>
-            <option value="embajador">🌟 Embajador (Promotor)</option>
+            <option value="cliente" data-i18n="role-cliente">🌊 Turista / Cliente</option>
+            <option value="restaurante" data-i18n="role-restaurante">🏪 Dueño de restaurante</option>
+            <option value="embajador" data-i18n="role-embajador">🌟 Embajador (Promotor)</option>
           </select>
         </div>
 
         <div class="form-group" id="codigo-promotor-group" style="display:none;">
-          <label>Tu código de Embajador (opcional)</label>
-          <input type="text" id="reg-codigo-embajador" class="form-control" placeholder="Ej: EMB001">
+          <label data-i18n="label-codigo-emb">Tu código de Embajador (opcional)</label>
+          <input type="text" id="reg-codigo-embajador" class="form-control" data-i18n-placeholder="placeholder-codigo" placeholder="Ej: EMB001">
         </div>
 
         <div id="register-error" class="error-message"></div>
 
-        <button id="btn-register" class="btn btn-primary btn-block">
+        <button id="btn-register" class="btn btn-primary btn-block" data-i18n="btn-register">
           Crear cuenta
         </button>
 
         <p class="switch-form">
-          <span id="text-have-account">¿Ya tenés cuenta?</span>
-          <a href="#" onclick="showLogin()">Iniciá sesión</a>
+          <span id="text-have-account" data-i18n="text-have-account">¿Ya tenés cuenta?</span>
+          <a href="#" onclick="showLogin()" data-i18n="link-login">Iniciá sesión</a>
         </p>
 
         <p class="legal-text">
-          Al registrarte, aceptás nuestra
-          <a href="/pages/politica-privacidad.html" target="_blank">Política de Privacidad</a>
-          y
-          <a href="/pages/terminos-condiciones.html" target="_blank">Términos y Condiciones</a>
+          <span data-i18n="legal-text">Al registrarte, aceptás nuestra</span>
+          <a href="/pages/politica-privacidad.html" target="_blank" data-i18n="footer-privacidad">Política de Privacidad</a>
+          <span data-i18n="legal-text-y"> y </span>
+          <a href="/pages/terminos-condiciones.html" target="_blank" data-i18n="footer-terminos">Términos y Condiciones</a>
         </p>
       </div>
     </div>
   </div>
 
-  <script type="module" src="/js/auth.js"></script>
-  <script type="module" src="/js/utils.js"></script>
+  <script type="module">
+    import { applyTranslations, cambiarIdioma as cambiarIdiomaMod } from '/js/utils.js';
+
+    // Hacer cambiarIdioma disponible globalmente para los onclick inline
+    window.cambiarIdioma = function(idioma) {
+      cambiarIdiomaMod(idioma);
+    };
+
+    // Aplicar traducciones al cargar la página
+    applyTranslations();
+  </script>
+
   <script>
     function togglePassword() {
       const p = document.getElementById('password');
@@ -130,12 +140,6 @@
       document.getElementById('login-form').style.display = 'block';
     }
 
-    // Función global para cambiar idioma (disponible para onclick inline)
-    window.cambiarIdioma = function(idioma) {
-      sessionStorage.setItem('idioma', idioma);
-      location.reload();
-    };
-
     // Mostrar/ocultar campo de código embajador
     document.getElementById('reg-role')?.addEventListener('change', (e) => {
       const grupo = document.getElementById('codigo-promotor-group');
@@ -153,5 +157,7 @@
       document.getElementById('btn-' + idiomaGuardado)?.classList.add('active');
     }
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e34a86b997d786',t:'MTc4NzI0ODc1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+  <script type="module" src="/js/auth.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e391a17d6b8bea',t:'MTc4NzI1MTY3MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

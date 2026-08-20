@@ -1,6 +1,7 @@
 // Panel Partner - Sabores Costeros
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { t, applyTranslations } from './utils.js';
 
 const userId = sessionStorage.getItem('userId');
 const miCodigo = sessionStorage.getItem('userCodigo');
@@ -39,7 +40,7 @@ async function loadComisiones() {
     const snap = await getDocs(q);
 
     if (snap.empty) {
-      cont.innerHTML = '<p style="text-align:center;color:#666;">Sin comisiones aún</p>';
+      cont.innerHTML = `<p style="text-align:center;color:#666;">${t('sin-comisiones')}</p>`;
       return;
     }
 
@@ -53,7 +54,7 @@ async function loadComisiones() {
       div.className = 'card';
       div.innerHTML = `
         <h4>🎫 ${data.codigo}</h4>
-        <p>${data.personas} personas · $${comision.toFixed(2)} USD</p>
+        <p>${data.personas} ${t('personas')} · $${comision.toFixed(2)} USD</p>
         <p style="color:#666; font-size:0.85rem;">${data.estado}</p>
       `;
       cont.appendChild(div);
@@ -62,12 +63,13 @@ async function loadComisiones() {
     const totalDiv = document.createElement('div');
     totalDiv.className = 'card';
     totalDiv.style.cssText = 'background:#FFF3CD; border-left:4px solid #FFD700;';
-    totalDiv.innerHTML = `<h3 style="color:#722F37;">Total acumulado: $${total.toFixed(2)} USD</h3>`;
+    totalDiv.innerHTML = `<h3 style="color:#722F37;">${t('total-acumulado')}: $${total.toFixed(2)} USD</h3>`;
     cont.insertBefore(totalDiv, cont.firstChild);
   } catch (err) {
-    cont.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
 
 loadStats();
 loadComisiones();
+applyTranslations();

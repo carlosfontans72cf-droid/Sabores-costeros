@@ -2,7 +2,7 @@
 import { auth, db } from './firebase-config.js';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { showAlert } from './utils.js';
+import { showAlert, t } from './utils.js';
 
 const btnLogin = document.getElementById('btn-login');
 const btnRegister = document.getElementById('btn-register');
@@ -20,7 +20,7 @@ btnLogin?.addEventListener('click', async () => {
 
   try {
     if (!email || !password) {
-      errorDivLogin.textContent = 'Completá todos los campos';
+      errorDivLogin.textContent = t('error-empty-fields');
       throw new Error('Faltan datos');
     }
 
@@ -30,7 +30,7 @@ btnLogin?.addEventListener('click', async () => {
     const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
 
     if (!userDoc.exists()) {
-      errorDivLogin.textContent = 'Usuario no registrado';
+      errorDivLogin.textContent = t('error-user-not-found');
       await auth.signOut();
       throw new Error('Usuario no encontrado');
     }
@@ -38,7 +38,7 @@ btnLogin?.addEventListener('click', async () => {
     const userData = userDoc.data();
 
     if (userData.activo === false) {
-      errorDivLogin.textContent = 'Cuenta desactivada';
+      errorDivLogin.textContent = t('error-account-deactivated');
       await auth.signOut();
       throw new Error('Cuenta inactiva');
     }
@@ -62,16 +62,17 @@ btnLogin?.addEventListener('click', async () => {
 
   } catch (error) {
     console.error('Error login:', error);
-    if (error.code === 'auth/invalid-credential') {
-      errorDivLogin.textContent = 'Email o contraseña incorrectos';
+    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+      errorDivLogin.textContent = t('error-wrong-password');
     } else if (error.code === 'auth/user-not-found') {
-      errorDivLogin.textContent = 'No existe cuenta con ese email';
-    } else if (error.code === 'auth/wrong-password') {
-      errorDivLogin.textContent = 'Contraseña incorrecta';
+      errorDivLogin.textContent = t('error-user-not-found');
+    } else if (error.code === 'auth/too-many-requests') {
+      errorDivLogin.textContent = 'Demasiados intentos. Intentá más tarde.';
     }
+    // Si ya se setegó el mensaje de error, no sobrescribir
   } finally {
     btnLogin.disabled = false;
-    btnLogin.textContent = 'Iniciar Sesión';
+    btnLogin.textContent = t('btn-login');
   }
 });
 
@@ -90,12 +91,12 @@ btnRegister?.addEventListener('click', async () => {
 
   try {
     if (!nombre || !apellido || !email || !password) {
-      errorDivRegister.textContent = 'Completá todos los campos';
+      errorDivRegister.textContent = t('error-empty-fields');
       throw new Error('Faltan datos');
     }
 
     if (password.length < 6) {
-      errorDivRegister.textContent = 'Contraseña mínimo 6 caracteres';
+      errorDivRegister.textContent = t('error-weak-password');
       throw new Error('Contraseña débil');
     }
 
@@ -131,15 +132,15 @@ btnRegister?.addEventListener('click', async () => {
   } catch (error) {
     console.error('Error registro:', error);
     if (error.code === 'auth/email-already-in-use') {
-      errorDivRegister.textContent = 'Email ya registrado';
+      errorDivRegister.textContent = t('error-email-exists');
     } else if (error.code === 'auth/invalid-email') {
-      errorDivRegister.textContent = 'Email inválido';
+      errorDivRegister.textContent = t('error-invalid-email');
     } else if (error.code === 'auth/weak-password') {
-      errorDivRegister.textContent = 'Contraseña muy débil';
+      errorDivRegister.textContent = t('error-weak-password');
     }
   } finally {
     btnRegister.disabled = false;
-    btnRegister.textContent = 'Crear cuenta';
+    btnRegister.textContent = t('btn-register');
   }
 });
 

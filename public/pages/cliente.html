@@ -14,78 +14,90 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .banner-sorteo { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; border: 2px solid #FF6B00; }
+    .btn-whatsapp { background:#25D366; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:0.95rem; font-weight:600; display:inline-flex; align-items:center; gap:6px; transition:all 0.3s; }
+    .btn-whatsapp:hover { background:#128C7E; transform:translateY(-2px); }
+    .btn-maps { background:#4285F4; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:0.95rem; font-weight:600; display:inline-flex; align-items:center; gap:6px; transition:all 0.3s; }
+    .btn-maps:hover { background:#3367D6; transform:translateY(-2px); }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <h1>🌊️ Sabores Costeros</h1>
+    <h1 data-i18n="nav-cliente">️ Sabores Costeros</h1>
     <div>
-      <span class="user-info" id="user-info">Cargando...</span>
-      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;">Salir</button>
+      <span class="user-info" id="user-info" data-i18n="nav-user-loading">Cargando...</span>
+      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;" data-i18n="nav-logout">Salir</button>
     </div>
   </nav>
 
   <div class="main-nav">
-    <button class="active" onclick="showTab('restaurantes')">🍽️ Restaurantes</button>
-    <button onclick="showTab('reservas')">📋 Mis Reservas</button>
-    <button onclick="showTab('sorteo')">🎉 Sorteo</button>
-    <button onclick="showTab('perfil')">👤 Perfil</button>
+    <button class="active" onclick="showTab('restaurantes')" data-i18n="tab-restaurantes">️ Restaurantes</button>
+    <button onclick="showTab('reservas')" data-i18n="tab-reservas">📋 Mis Reservas</button>
+    <button onclick="showTab('sorteo')" data-i18n="tab-sorteo-tab">🎉 Sorteo</button>
+    <button onclick="showTab('perfil')" data-i18n="tab-perfil">👤 Perfil</button>
   </div>
 
   <div class="container">
 
     <div class="banner-sorteo">
-      <h2 style="color:#722F37; margin:0 0 10px 0;">🎉 ¡SORTEO SEMANAL!</h2>
-      <p style="margin:0;">Validá tu código al llegar y participá por una <strong>cena gratis para 4 personas</strong></p>
-      <p style="margin:10px 0 0 0; font-size:0.9rem;">️ Sorteo todos los sábados · 📍 En los mejores restaurantes de la costa</p>
+      <h2 style="color:#722F37; margin:0 0 10px 0;" data-i18n="banner-sorteo-title">🎉 ¡SORTEO SEMANAL!</h2>
+      <p style="margin:0;" data-i18n="banner-sorteo-desc">Validá tu código al llegar y participá por una <strong>cena gratis para 4 personas</strong></p>
+      <p style="margin:10px 0 0 0; font-size:0.9rem;" data-i18n="banner-sorteo-sub">🏆 Sorteo todos los sábados ·  En los mejores restaurantes de la costa</p>
     </div>
 
     <div id="tab-restaurantes" class="tab-content active">
-      <h2 class="section-title">️ Restaurantes de la Costa</h2>
+      <h2 class="section-title" data-i18n="section-restaurantes">🍽️ Restaurantes de la Costa</h2>
       <div id="lista-restaurantes"></div>
     </div>
 
     <div id="tab-reservas" class="tab-content">
-      <h2 class="section-title">📋 Mis Reservas</h2>
+      <h2 class="section-title" data-i18n="section-mis-reservas">📋 Mis Reservas</h2>
       <div id="lista-mis-reservas"></div>
     </div>
 
     <div id="tab-sorteo" class="tab-content">
-      <h2 class="section-title">🎉 Sorteo Semanal</h2>
+      <h2 class="section-title" data-i18n="sorteo-titulo">🎉 Sorteo Semanal</h2>
       <div class="card">
         <h3 style="color:#722F37;">🍽️ Cena Gratis para 4 personas</h3>
-        <p style="margin:15px 0;">Todos los sábados sorteamos una cena completa para 4 personas en los mejores restaurantes de la costa uruguaya.</p>
+        <p style="margin:15px 0;" data-i18n="sorteo-desc-1">Todos los sábados sorteamos una cena completa para 4 personas en los mejores restaurantes de la costa uruguaya.</p>
         <div style="background:#FFF3CD; padding:20px; border-radius:12px; border-left:4px solid #D4A574;">
-          <h4 style="color:#722F37; margin-top:0;">¿Cómo participar?</h4>
+          <h4 style="color:#722F37; margin-top:0;" data-i18n="sorteo-como-participar">¿Cómo participar?</h4>
           <ol style="padding-left:20px; line-height:1.8;">
-            <li>Hacé una reserva en la app</li>
-            <li>Al llegar al restaurante, <strong>validá tu código</strong> con el mozo</li>
-            <li>¡Automáticamente entrás en el sorteo del sábado!</li>
+            <li data-i18n="sorteo-paso-1">Hacé una reserva en la app</li>
+            <li data-i18n="sorteo-paso-2">Al llegar al restaurante, <strong>validá tu código</strong> con el mozo</li>
+            <li data-i18n="sorteo-paso-3">¡Automáticamente entrás en el sorteo del sábado!</li>
           </ol>
-          <p style="margin:15px 0 0 0;"><strong>Cuantas más reservas valides, más chances tenés de ganar.</strong></p>
+          <p style="margin:15px 0 0 0;" data-i18n="sorteo-mas-reservas"><strong>Cuantas más reservas valides, más chances tenés de ganar.</strong></p>
         </div>
         <div style="margin-top:20px; text-align:center;">
-          <p style="font-size:0.9rem; color:#666;" id="info-sorteo">🎫 Cargando participantes...</p>
-          <p style="font-size:0.9rem; color:#666;">️ Próximo sorteo: este sábado</p>
+          <p style="font-size:0.9rem; color:#666;" id="info-sorteo" data-i18n="sorteo-participantes"> Cargando participantes...</p>
+          <p style="font-size:0.9rem; color:#666;" data-i18n="sorteo-proximo">🏆 Próximo sorteo: este sábado</p>
         </div>
       </div>
     </div>
 
     <div id="tab-perfil" class="tab-content">
-      <h2 class="section-title">👤 Mi Perfil</h2>
+      <h2 class="section-title" data-i18n="section-perfil">👤 Mi Perfil</h2>
       <div class="card">
-        <p><strong>Nombre:</strong> <span id="perfil-nombre"></span></p>
-        <p><strong>Email:</strong> <span id="perfil-email"></span></p>
-        <p><strong>Idioma:</strong> <span id="perfil-idioma"></span></p>
+        <p><strong data-i18n="perfil-nombre-label">Nombre:</strong> <span id="perfil-nombre"></span></p>
+        <p><strong data-i18n="perfil-email-label">Email:</strong> <span id="perfil-email"></span></p>
+        <p><strong data-i18n="perfil-idioma-label">Idioma:</strong> <span id="perfil-idioma"></span></p>
         <div class="form-group" style="margin-top:15px;">
-          <label>Cambiar idioma</label>
+          <label data-i18n="perfil-cambiar-idioma">Cambiar idioma</label>
           <select id="selector-idioma" class="form-control">
-            <option value="es">🇪🇸 Español</option>
-            <option value="pt">🇧 Português</option>
-            <option value="en">🇺🇸 English</option>
+            <option value="es" data-i18n="idioma-es"> Español</option>
+            <option value="pt" data-i18n="idioma-pt">🇧🇷 Português</option>
+            <option value="en" data-i18n="idioma-en">🇺🇸 English</option>
           </select>
         </div>
-        <button class="btn btn-primary" onclick="cambiarIdiomaSeleccionado()">Guardar idioma</button>
+        <button class="btn btn-primary" onclick="cambiarIdiomaSeleccionado()" data-i18n="btn-guardar-idioma">Guardar idioma</button>
+
+        <div style="margin-top:20px; padding-top:20px; border-top:2px solid #eee;">
+          <h3 style="color:#023E8A; margin-bottom:10px;">📱 Compartir Sabores Costeros</h3>
+          <p style="color:#666; margin-bottom:15px;">Invitá a tus amigos y familiares a descubrir los mejores restaurantes de la costa</p>
+          <button class="btn-whatsapp" onclick="compartirAppWhatsApp()">
+            📱 Compartir por WhatsApp
+          </button>
+        </div>
       </div>
     </div>
 
@@ -93,10 +105,10 @@
 
   <div style="background:#023E8A; color:white; padding:20px; text-align:center; margin-top:30px;">
     <div>
-      <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📋 Política de Privacidad</a>
-      <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📄 Términos y Condiciones</a>
+      <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
+      <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
     </div>
-    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;">
+    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">
       © 2026 Sabores Costeros. Todos los derechos reservados. 🇾
     </div>
   </div>
@@ -120,8 +132,19 @@
       sessionStorage.setItem('idioma', idioma);
       location.reload();
     }
+
+    function compartirAppWhatsApp() {
+      const url = 'https://sabores-costeros.vercel.app/';
+      const mensaje = encodeURIComponent('¡Descubrí los mejores restaurantes de la costa! 🌊️ Reservá tu mesa y participá por cenas gratis. Bajala ahora: ' + url);
+      window.open(`https://wa.me/?text=${mensaje}`, '_blank');
+    }
+  </script>
+
+  <script type="module">
+    import { applyTranslations } from '/js/utils.js';
+    applyTranslations();
   </script>
 
   <script type="module" src="/js/cliente.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e223a948a70ba0',t:'MTc4NzIzNjY4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e39847a88e8692',t:'MTc4NzI1MTk0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
