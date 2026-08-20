@@ -9,26 +9,6 @@ const btnRegister = document.getElementById('btn-register');
 const errorDivLogin = document.getElementById('login-error');
 const errorDivRegister = document.getElementById('register-error');
 
-// Función para restaurar sesión desde Firestore cuando sessionStorage está vacío
-async function restaurarSesion(user) {
-  try {
-    const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
-    if (!userDoc.exists()) return false;
-    
-    const userData = userDoc.data();
-    sessionStorage.setItem('userId', user.uid);
-    sessionStorage.setItem('userEmail', userData.email);
-    sessionStorage.setItem('userName', `${userData.nombre} ${userData.apellido || ''}`);
-    sessionStorage.setItem('userRole', userData.role);
-    sessionStorage.setItem('userCodigo', userData.codigo || '');
-    sessionStorage.setItem('userEmbajadorCodigo', userData.embajadorCodigo || '');
-    return true;
-  } catch (err) {
-    console.error('Error restaurando sesión:', err);
-    return false;
-  }
-}
-
 // ========== LOGIN ==========
 btnLogin?.addEventListener('click', async () => {
   const email = document.getElementById('email').value.trim();
@@ -176,49 +156,18 @@ btnRegister?.addEventListener('click', async () => {
   }
 });
 
-// ========== VERIFICAR SESIÓN ACTIVA ==========
-let yaProcesado = false;
-auth.onAuthStateChanged(async (user) => {
-  if (yaProcesado) return;
-  yaProcesado = true;
-  
-  if (user) {
+// Verificar sesión activa - solo en index.html
+auth.onAuthStateChanged((user) => {
+  if (user && window.location.pathname === '/index.html') {
     const role = sessionStorage.getItem('userRole');
-    
-    if (!role) {
-      // sessionStorage vacío (ej: después de refresh) - restaurar desde Firestore
-      const restaurado = await restaurarSesion(user);
-      if (restaurado) {
-        const nuevoRole = sessionStorage.getItem('userRole');
-        let destino = '/pages/cliente.html';
-        if (nuevoRole === 'fundador' || nuevoRole === 'admin') destino = '/pages/admin.html';
-        else if (nuevoRole === 'restaurante') destino = '/pages/restaurante.html';
-        else if (nuevoRole === 'partner') destino = '/pages/partner.html';
-        else if (nuevoRole === 'embajador') destino = '/pages/embajador.html';
-        
-        // Solo redirigir si estamos en la página equivocada
-        const paginaActual = window.location.pathname;
-        if (!paginaActual.includes(destino.replace('/pages/', '').replace('.html', ''))) {
-          window.location.href = destino;
-        }
-      } else {
-        // No se pudo restaurar - ir al login
-        sessionStorage.clear();
-        window.location.href = '/index.html';
-      }
-    } else {
-      // sessionStorage tiene datos - verificar que la página sea la correcta
-      const paginaActual = window.location.pathname;
+    if (role) {
+      // Ya hay sesión - redirigir al panel correspondiente
       let destino = '/pages/cliente.html';
       if (role === 'fundador' || role === 'admin') destino = '/pages/admin.html';
       else if (role === 'restaurante') destino = '/pages/restaurante.html';
       else if (role === 'partner') destino = '/pages/partner.html';
       else if (role === 'embajador') destino = '/pages/embajador.html';
-      
-      // Solo redirigir si NO estamos en la página correcta y NO estamos en index.html
-      if (paginaActual !== '/index.html' && !paginaActual.includes(destino.replace('/pages/', '').replace('.html', ''))) {
-        window.location.href = destino;
-      }
+      window.location.href = destino;
     }
   }
 });

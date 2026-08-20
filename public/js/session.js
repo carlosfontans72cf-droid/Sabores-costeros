@@ -1,9 +1,16 @@
 // Gestor de Sesión - Se importa en todas las páginas protegidas
-// Verifica la sesión de Firebase y restaura sessionStorage si es necesario
 import { auth, db } from './firebase-config.js';
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 async function verificarSesion() {
+  // Esperar a que Firebase Auth se inicialice
+  await new Promise(resolve => {
+    const unsub = auth.onAuthStateChanged(user => {
+      unsub();
+      resolve(user);
+    });
+  });
+
   const user = auth.currentUser;
   
   if (!user) {
@@ -42,6 +49,15 @@ async function verificarSesion() {
         return false;
       }
       
+      // Verificar que el usuario esté en la página correcta
+      const paginaActual = window.location.pathname;
+      const paginaCorrecta = getPaginaParaRol(userData.role);
+      
+      if (paginaActual !== paginaCorrecta) {
+        window.location.href = paginaCorrecta;
+        return false;
+      }
+      
       return true;
     } catch (err) {
       console.error('Error verificando sesión:', err);
@@ -51,8 +67,32 @@ async function verificarSesion() {
     }
   }
   
-  // sessionStorage tiene datos - sesión válida
+  // sessionStorage tiene datos - verificar que estemos en la página correcta
+  const paginaActual = window.location.pathname;
+  const paginaCorrecta = getPaginaParaRol(role);
+  
+  if (paginaActual !== paginaCorrecta) {
+    window.location.href = paginaCorrecta;
+    return false;
+  }
+  
   return true;
+}
+
+function getPaginaParaRol(role) {
+  switch (role) {
+    case 'fundador':
+    case 'admin':
+      return '/pages/admin.html';
+    case 'restaurante':
+      return '/pages/restaurante.html';
+    case 'partner':
+      return '/pages/partner.html';
+    case 'embajador':
+      return '/pages/embajador.html';
+    default:
+      return '/pages/cliente.html';
+  }
 }
 
 // Ejecutar inmediatamente
