@@ -17,9 +17,9 @@ function generarQR() {
   const qrContainer = document.getElementById('mi-qr');
   if (!qrContainer) return;
   
-  // Usar la API de Google Charts para generar el QR
-  const qrUrl = `https://chart.googleapis.com/chart?cht=qr&chs=250x250&chld=L|0&chl=${encodeURIComponent(url)}`;
-  qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="width:250px;height:250px;">`;
+  // Usar la API de qrserver.com (gratuita y confiable)
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=10&data=${encodeURIComponent(url)}`;
+  qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="width:250px;height:250px;border-radius:8px;">`;
 }
 
 async function loadStats() {

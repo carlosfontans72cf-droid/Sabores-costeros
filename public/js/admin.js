@@ -253,9 +253,10 @@ async function loadUsuarios() {
         ${data.codigo ? `<p>Código: <strong>${data.codigo}</strong></p>` : ''}
         <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
           ${btnWhatsApp}
-          <button class="btn ${data.activo ? 'btn-warning' : 'btn-success'}" onclick="toggleUsuario('${d.id}', ${!data.activo})">
-            ${data.activo ? t('btn-desactivar') : t('btn-activar')}
+          <button class="btn ${data.activo ? 'btn-warning' : 'btn-success'}" style="font-size:0.85rem;padding:6px 12px;" onclick="toggleUsuario('${d.id}', ${!data.activo})">
+            ${data.activo ? 'Desactivar' : 'Activar'}
           </button>
+          ${data.role !== 'fundador' ? `<button class="btn btn-danger" style="font-size:0.85rem;padding:6px 12px;" onclick="eliminarUsuario('${d.id}', '${data.nombre.replace(/'/g, "\\'")}')">🗑️ Eliminar</button>` : ''}
         </div>
       `;
       cont.appendChild(div);
@@ -264,6 +265,19 @@ async function loadUsuarios() {
     cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
+
+window.eliminarUsuario = async (id, nombre) => {
+  if (!confirm(`¿Eliminar a ${nombre}?\n\nEsta acción no se puede deshacer.`)) return;
+  if (!confirm(`¿Estás SEGURO? Se borrará el usuario de la base de datos.`)) return;
+  
+  try {
+    await deleteDoc(doc(db, 'usuarios', id));
+    showAlert(`Usuario ${nombre} eliminado`, 'success');
+    loadUsuarios();
+  } catch (err) {
+    showAlert(`${t('error-generico')}: ${err.message}`, 'danger');
+  }
+};
 
 window.toggleUsuario = async (id, nuevoEstado) => {
   try {
