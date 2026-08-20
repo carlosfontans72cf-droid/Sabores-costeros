@@ -1,6 +1,7 @@
 // Panel Admin/Fundador - Sabores Costeros
-import { db } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { showAlert } from './utils.js';
 
 const userRole = sessionStorage.getItem('userRole');
@@ -21,7 +22,7 @@ window.showTab = (tabName) => {
 
 window.logout = () => { sessionStorage.clear(); window.location.href = '/index.html'; };
 
-// ========== CREAR USUARIO (admin/partner/embajador) ==========
+// ========== CREAR USUARIO ==========
 document.getElementById('btn-crear-usuario')?.addEventListener('click', async () => {
   const nombre = document.getElementById('new-nombre').value.trim();
   const apellido = document.getElementById('new-apellido').value.trim();
@@ -34,10 +35,26 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
     return showAlert('Completá nombre, email, contraseña y código', 'warning');
   }
 
+  if (password.length < 6) {
+    return showAlert('La contraseña debe tener mínimo 6 caracteres', 'warning');
+  }
+
   try {
+    // Crear usuario en Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Guardar datos en Firestore
     await addDoc(collection(db, 'usuarios'), {
-      nombre, apellido, email, password, role, codigo,
-      activo: true, aprobado: true,
+      uid,
+      nombre,
+      apellido,
+      email,
+      password: '',
+      role,
+      codigo,
+      activo: true,
+      aprobado: true,
       esAdminCreado: true,
       createdAt: serverTimestamp()
     });
@@ -46,10 +63,16 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
     document.getElementById('new-email').value = '';
     document.getElementById('new-password').value = '';
     document.getElementById('new-codigo').value = '';
-    showAlert(`✅ ${role} creado con código: ${codigo}`, 'success');
+    showAlert(`${role} creado: ${nombre} (${codigo})`, 'success');
     loadUsuarios();
   } catch (err) {
-    showAlert(`Error: ${err.message}`, 'danger');
+    if (err.code === 'auth/email-already-in-use') {
+      showAlert('Email ya registrado en Authentication', 'danger');
+    } else if (err.code === 'auth/weak-password') {
+      showAlert('Contraseña muy débil (mínimo 6 caracteres)', 'danger');
+    } else {
+      showAlert(`Error: ${err.message}`, 'danger');
+    }
   }
 });
 
@@ -170,18 +193,23 @@ async function loadPagos() {
     cont.innerHTML = '';
     snap.forEach(d => {
       const data = d.data();
-      totalFundador += data.comisionFundador || 0;
-      totalEmbajador += data.comisionEmbajador || 0;
-      totalPartner += data.comisionPartner || 0;
+      const monto = Number(data.monto) || 0;
+      const personas = Number(data.personas) || 0;
+      const comisionFundador = Number(data.comisionFundador) || 0;
+      const comisionEmbajador = Number(data.comisionEmbajador) || 0;
+      const comisionPartner = Number(data.comisionPartner) || 0;
+      totalFundador += comisionFundador || (personas * 1);
+      totalEmbajador += comisionEmbajador || 0;
+      totalPartner += comisionPartner || 0;
       const div = document.createElement('div');
       div.className = 'card';
       div.innerHTML = `
         <h4>🎫 ${data.codigo}</h4>
-        <p>Personas: ${data.personas}</p>
-        <p>Monto total: <strong>$${(data.monto || 0).toFixed(2)} USD</strong></p>
-        ${data.embajadorCodigo ? `<p>Embajador: <strong>${data.embajadorCodigo}</strong> - $${(data.comisionEmbajador || 0).toFixed(2)}</p>` : ''}
-        ${data.partnerCodigo ? `<p>Partner: <strong>${data.partnerCodigo}</strong> - $${(data.comisionPartner || 0).toFixed(2)}</p>` : ''}
-        <p>Fundador: <strong>$${(data.comisionFundador || 0).toFixed(2)}</strong></p>
+        <p>Personas: ${personas}</p>
+        <p>Monto total: <strong>$${monto.toFixed(2)} USD</strong></p>
+        ${data.embajadorCodigo ? `<p>Embajador: <strong>${data.embajadorCodigo}</strong> - $${comisionEmbajador.toFixed(2)}</p>` : ''}
+        ${data.partnerCodigo ? `<p>Partner: <strong>${data.partnerCodigo}</strong> - $${comisionPartner.toFixed(2)}</p>` : ''}
+        <p>Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
       `;
       cont.appendChild(div);
     });
@@ -193,7 +221,7 @@ async function loadPagos() {
       <h3 style="color:#28A745;"> Resumen de Comisiones</h3>
       <p><strong>💰 Total recaudado:</strong> $${(totalFundador + totalEmbajador + totalPartner).toFixed(2)} USD</p>
       <p><strong>👑 Fundador (vos):</strong> $${totalFundador.toFixed(2)} USD</p>
-      <p><strong>🌟 Embajadores:</strong> $${totalEmbajador.toFixed(2)} USD</p>
+      <p><strong> Embajadores:</strong> $${totalEmbajador.toFixed(2)} USD</p>
       <p><strong>🤝 Partners:</strong> $${totalPartner.toFixed(2)} USD</p>
     `;
     cont.insertBefore(resumenDiv, cont.firstChild);
@@ -218,8 +246,8 @@ async function loadSorteo() {
       div.className = 'card';
       div.style.cssText = 'background:#FFF9C4; border-left:4px solid #FFD700;';
       div.innerHTML = `
-        <p><strong> ${data.codigo}</strong> - ${data.nombreRestaurante || 'Restaurante'}</p>
-        <p> ${data.personas} personas ·  ${data.fecha}</p>
+        <p><strong> 🎫 ${data.codigo}</strong> - ${data.nombreRestaurante || 'Restaurante'}</p>
+        <p> ${data.personas} personas · 📅 ${data.fecha}</p>
       `;
       cont.appendChild(div);
     });
