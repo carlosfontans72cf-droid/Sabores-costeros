@@ -49,6 +49,9 @@ async function verificarSesion() {
         return false;
       }
       
+      // Actualizar user-info en la página
+      actualizarUserInfo();
+      
       // Verificar que el usuario esté en la página correcta
       const paginaActual = window.location.pathname;
       const paginaCorrecta = getPaginaParaRol(userData.role);
@@ -67,7 +70,10 @@ async function verificarSesion() {
     }
   }
   
-  // sessionStorage tiene datos - verificar que estemos en la página correcta
+  // sessionStorage tiene datos - actualizar user-info
+  actualizarUserInfo();
+  
+  // Verificar que estemos en la página correcta
   const paginaActual = window.location.pathname;
   const paginaCorrecta = getPaginaParaRol(role);
   
@@ -77,6 +83,14 @@ async function verificarSesion() {
   }
   
   return true;
+}
+
+function actualizarUserInfo() {
+  const userName = sessionStorage.getItem('userName');
+  const userInfoEl = document.getElementById('user-info');
+  if (userInfoEl && userName) {
+    userInfoEl.textContent = userName;
+  }
 }
 
 function getPaginaParaRol(role) {

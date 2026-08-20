@@ -108,9 +108,13 @@ btnRegister?.addEventListener('click', async () => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Capturar partner de la URL si viene de un link de partner
+    // Capturar partner y embajador de la URL si viene de un link
     const urlParams = new URLSearchParams(window.location.search);
     const partnerCodigo = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
+    const embajadorCodigo = urlParams.get('embajador') || sessionStorage.getItem('lastEmbajador') || null;
+    
+    if (partnerCodigo) sessionStorage.setItem('lastPartner', partnerCodigo);
+    if (embajadorCodigo) sessionStorage.setItem('lastEmbajador', embajadorCodigo);
 
     // Guardar datos en Firestore
     await setDoc(doc(db, 'usuarios', user.uid), {
@@ -119,8 +123,9 @@ btnRegister?.addEventListener('click', async () => {
       email,
       role,
       codigo,
-      embajadorCodigo: codigoEmbajador || null,
+      embajadorCodigo: codigoEmbajador || embajadorCodigo || null,
       partnerReferido: partnerCodigo || null,
+      embajadorReferido: embajadorCodigo || null,
       activo: true,
       aprobado: role === 'restaurante' ? false : true,
       createdAt: serverTimestamp()
@@ -132,7 +137,7 @@ btnRegister?.addEventListener('click', async () => {
     sessionStorage.setItem('userName', `${nombre} ${apellido}`);
     sessionStorage.setItem('userRole', role);
     sessionStorage.setItem('userCodigo', codigo || '');
-    sessionStorage.setItem('userEmbajadorCodigo', codigoEmbajador || '');
+    sessionStorage.setItem('userEmbajadorCodigo', codigoEmbajador || embajadorCodigo || '');
 
     // Redirección
     let destino = '/pages/cliente.html';
