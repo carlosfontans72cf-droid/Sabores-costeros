@@ -795,7 +795,8 @@ export function applyTranslations() {
   document.documentElement.lang = idiomaActual;
 }
 
-// ========== UTILIDADES ==========\nexport function showAlert(message, type = 'info') {
+// ========== UTILIDADES ==========
+export function showAlert(message, type = 'info') {
   const colors = {
     success: '#28A745',
     danger: '#DC3545',
