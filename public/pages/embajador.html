@@ -17,11 +17,18 @@
     .stat-card .label { color:#666; margin-top:8px; }
     .btn-whatsapp-share { background:#25D366; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-size:1rem; font-weight:600; display:inline-flex; align-items:center; gap:8px; transition:all 0.3s; margin-top:10px; }
     .btn-whatsapp-share:hover { background:#128C7E; transform:translateY(-2px); }
+    .guia-card { background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); border-left:4px solid #009C3B; }
+    .guia-card h3 { color:#009C3B; margin-bottom:10px; }
+    .guia-card h4 { color:#023E8A; margin:15px 0 8px 0; }
+    .guia-card ul { padding-left:20px; line-height:1.8; }
+    .guia-card .tip { background:#E8F5E9; padding:12px; border-radius:8px; margin:10px 0; border-left:3px solid #009C3B; }
+    .guia-card .ejemplo { background:#FFF3CD; padding:12px; border-radius:8px; margin:10px 0; font-style:italic; }
+    .guia-card .script { background:#E3F2FD; padding:15px; border-radius:8px; margin:10px 0; border-left:3px solid #023E8A; font-family:monospace; }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <h1 data-i18n="nav-embajador">🌟 Panel Embajador</h1>
+    <h1 data-i18n="nav-embajador"> Panel Embajador</h1>
     <div>
       <span class="user-info" id="user-info" data-i18n="nav-user-loading">Cargando...</span>
       <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;" data-i18n="nav-logout">Salir</button>
@@ -29,10 +36,11 @@
   </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats">📊 Estadísticas</button>
+    <button class="active" onclick="showTab('stats')">📊 Estadísticas</button>
     <button onclick="showTab('restaurantes')">🏪 Mis Restaurantes</button>
     <button onclick="showTab('qr')">📱 Mi QR</button>
-    <button onclick="showTab('comision')" data-i18n="tab-comision">💰 Mi Comisión</button>
+    <button onclick="showTab('comision')">💰 Mi Comisión</button>
+    <button onclick="showTab('guia')">📚 Cómo vender</button>
   </div>
 
   <div class="container">
@@ -61,7 +69,7 @@
     </div>
 
     <div id="tab-restaurantes" class="tab-content">
-      <h2 class="section-title">🏪 Restaurantes que registraste</h2>
+      <h2 class="section-title"> Restaurantes que registraste</h2>
       <div id="lista-restaurantes"></div>
     </div>
 
@@ -72,15 +80,126 @@
         <div id="mi-qr" style="margin:20px auto; width:250px; height:250px; background:white; border:2px solid #009C3B; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:3rem;"></div>
         <p style="color:#666; font-size:0.9rem;">URL: <strong id="mi-url">---</strong></p>
         <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-          <button class="btn btn-primary" onclick="copiarURL()">📋 Copiar URL</button>
+          <button class="btn btn-primary" onclick="copiarURL()"> Copiar URL</button>
           <button class="btn-whatsapp-share" onclick="compartirURLWhatsApp()">📱 Compartir URL</button>
         </div>
       </div>
     </div>
 
     <div id="tab-comision" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-comision"> Detalle de Comisiones</h2>
+      <h2 class="section-title" data-i18n="tab-comision">💰 Detalle de Comisiones</h2>
       <div id="lista-comisiones"></div>
+    </div>
+
+    <div id="tab-guia" class="tab-content">
+      <h2 class="section-title">📚 Guía para registrar restaurantes</h2>
+
+      <div class="guia-card">
+        <h3>🎯 ¿Cómo funciona?</h3>
+        <p>Tu trabajo es simple: <strong>convencer a restaurantes de unirse a Sabores Costeros</strong>. Ellos no pagan nada fijo, solo $2 USD por cada persona que asista (comisión automática). Vos ganás <strong>$0.50 USD por cada cubierto</strong> que asista a los restaurantes que registres.</p>
+        <div class="tip">
+          <strong>💡 Ejemplo:</strong> Si un restaurante tiene 100 cubiertos por mes, vos ganás $50 USD/mes de ese solo restaurante. ¡Con 10 restaurantes son $500 USD/mes!
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>🚪 Paso 1: Cómo llegar al restaurante</h3>
+        <h4>Mejor horario para visitar:</h4>
+        <ul>
+          <li><strong>Martes a Jueves:</strong> entre 10:00 y 12:00 (antes del almuerzo) o 15:00 y 18:00 (entre almuerzo y cena)</li>
+          <li><strong>Evitá:</strong> viernes y sábados (días de movimiento), lunes (muchos cierran)</li>
+          <li><strong>Nunca vayas:</strong> en hora pico de almuerzo (12:30-14:30) o cena (20:00-22:00)</li>
+        </ul>
+        <div class="tip">
+          <strong>💡 Tip:</strong> Entrá con seguridad, saludá al mozo o encargado y preguntá: "¿El gerente o dueño está disponible? Soy de Sabores Costeros y tengo una propuesta que puede interesarle."
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>🗣️ Paso 2: El pitch de 30 segundos</h3>
+        <p>Cuando te atiendan, presentate así:</p>
+        <div class="script">
+          "Hola, soy [TU NOMBRE] de <strong>Sabores Costeros</strong>. Somos una plataforma que conecta turistas con los mejores restaurantes de la costa. <strong>No tiene costo fijo</strong>: solo pagás $2 USD por cada persona que venga a través de nuestra app. A cambio, te damos visibilidad, reservas confirmadas y clientes que ya vienen con ganas de consumir."
+        </div>
+        <div class="ejemplo">
+          <strong> Ejemplo real:</strong><br>
+          "Hola Don Carlos, soy Martín. ¿Le puedo robar 2 minutos? Soy de Sabores Costeros, una app que promociona restaurantes de la costa a turistas. No le cobramos nada fijo, solo $2 por cada persona que reserve y venga. A cambio le traemos clientes nuevos todos los días. ¿Le interesaría saber más?"
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>✅ Paso 3: Beneficios que debés mencionar</h3>
+        <ul>
+          <li><strong>Sin costo fijo:</strong> Solo paga si viene gente ($2/cubierto)</li>
+          <li><strong>Visibilidad:</strong> Aparece en la app con fotos, menú y reseñas</li>
+          <li><strong>Reservas confirmadas:</strong> Los clientes llegan con reserva, no al azar</li>
+          <li><strong>Turistas reales:</strong> Gente que ya quiere consumir</li>
+          <li><strong>Sorteo semanal:</strong> Los clientes participan por una cena gratis (más reservas)</li>
+          <li><strong>Multi-idioma:</strong> La app está en español, portugués e inglés</li>
+          <li><strong>Fácil de usar:</strong> El dueño solo confirma asistencia y listo</li>
+        </ul>
+      </div>
+
+      <div class="guia-card">
+        <h3>🛡️ Paso 4: Manejo de objeciones</h3>
+        <h4>❓ "¿Cuánto me cuesta?"</h4>
+        <div class="script">
+          "Cero costo fijo. Solo $2 USD por cada persona que reserve y asista. Si no viene nadie, no pagás nada. Es totalmente sin riesgo."
+        </div>
+        
+        <h4>❓ "¿Cómo funciona?"</h4>
+        <div class="script">
+          "El cliente descarga la app, ve tu restaurante, hace una reserva. Cuando llega, vos confirmás la asistencia con un clic. La comisión se calcula automáticamente. Te mandamos un resumen mensual."
+        </div>
+        
+        <h4>❓ "¿Y si no me conviene?"</h4>
+        <div class="script">
+          "Podés cancelar cuando quieras, sin penalidad. Pero te aseguro que con solo 10 personas por mes, ya estás ganando más de lo que invertís. Y la visibilidad gratis que te damos ya vale la pena."
+        </div>
+        
+        <h4>❓ "No tengo tiempo para esto"</h4>
+        <div class="script">
+          "Entiendo. Por eso lo hicimos simple: solo tenés que confirmar la asistencia cuando el cliente llega. Un clic. Te toma 5 segundos. El resto lo hacemos nosotros."
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>📱 Paso 5: Cómo registrarlos</h3>
+        <ol style="padding-left:20px; line-height:2;">
+          <li>El dueño crea su cuenta en la app como <strong>"Dueño de restaurante"</strong></li>
+          <li>Completá el formulario con los datos del local (nombre, dirección, tipo de cocina, etc.)</li>
+          <li>El restaurante queda <strong>pendiente de aprobación</strong> (nosotros lo revisamos)</li>
+          <li>Una vez aprobado, ¡ya empieza a recibir reservas!</li>
+        </ol>
+        <div class="tip">
+          <strong>💡 Tip pro:</strong> Ofrecete a ayudarle a crear la cuenta ahí mismo. "¿Le ayudo a registrarse ahora? Toma 2 minutos."
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>🔄 Paso 6: Seguimiento</h3>
+        <ul>
+          <li><strong>Después de 1 semana:</strong> Escribile por WhatsApp: "Hola [nombre], ¿cómo te fue con las primeras reservas? ¿Todo bien?"</li>
+          <li><strong>Después de 2 semanas:</strong> "¿Viste el aumento de clientes? Avísame si necesitás algo."</li>
+          <li><strong>Cada mes:</strong> "Te mandé el resumen de comisiones. ¿Seguimos para el próximo mes?"</li>
+        </ul>
+        <div class="ejemplo">
+          <strong>📱 Mensaje de ejemplo:</strong><br>
+          "Hola Don Carlos, soy Martín de Sabores Costeros. Te quería agradecer por sumarte. Ya tenés 15 reservas esta semana. ¿Todo bien con la app? Cualquier cosa estoy a las órdenes. ¡Abrazo!"
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>🏆 Tips de éxito</h3>
+        <ul>
+          <li>✅ <strong>Visitá personalmente:</strong> Los restaurantes que visitas en persona tienen 3x más chances de sumarse</li>
+          <li>✅ <strong>Sé constante:</strong> Visitá 3-5 restaurantes por semana</li>
+          <li>✅ <strong>Conocé la app:</strong> Usala vos primero para poder explicarla bien</li>
+          <li>✅ <strong>Tené paciencia:</strong> Algunos dicen que no al principio, pero después se suman</li>
+          <li>✅ <strong>Pedí referidos:</strong> Si un dueño te dice que no, preguntale: "¿Conocés algún otro restaurante que pueda interesarle?"</li>
+          <li>✅ <strong>Documentá todo:</strong> Anotá en tu celular a quién visitaste, cuándo y qué te dijo</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -101,8 +220,8 @@
       const codigo = document.getElementById('mi-codigo').textContent;
       const idioma = sessionStorage.getItem('idioma') || 'es';
       const mensajes = {
-        es: `¡Sumate a Sabores Costeros! ️ Usá mi código ${codigo} al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis: https://sabores-costeros.vercel.app/?embajador=${codigo}`,
-        pt: `Junte-se ao Sabores Costeros! ️ Use meu código ${codigo} ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis: https://sabores-costeros.vercel.app/?embajador=${codigo}`,
+        es: `¡Sumate a Sabores Costeros! 🌊️ Usá mi código ${codigo} al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis: https://sabores-costeros.vercel.app/?embajador=${codigo}`,
+        pt: `Junte-se ao Sabores Costeros! 🌊️ Use meu código ${codigo} ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis: https://sabores-costeros.vercel.app/?embajador=${codigo}`,
         en: `Join Sabores Costeros! 🌊️ Use my code ${codigo} when signing up. Discover the best coastal restaurants and win free dinners: https://sabores-costeros.vercel.app/?embajador=${codigo}`
       };
       const texto = encodeURIComponent(mensajes[idioma] || mensajes.es);
