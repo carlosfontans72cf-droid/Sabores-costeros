@@ -15,14 +15,22 @@
     .info-card { background:#E3F2FD; border-left:4px solid #023E8A; padding:20px; border-radius:8px; margin-bottom:20px; }
     .info-card h3 { color:#023E8A; margin-bottom:10px; }
     .info-card ul { padding-left:20px; line-height:1.8; }
+    .foto-upload { display:flex; align-items:center; gap:20px; margin-bottom:20px; }
+    .foto-preview { width:120px; height:120px; border-radius:12px; object-fit:cover; border:3px solid #FFD700; background:#f0f0f0; }
+    .foto-placeholder { width:120px; height:120px; border-radius:12px; background:linear-gradient(135deg, #48CAE4, #0077B6); display:flex; align-items:center; justify-content:center; color:white; font-size:3rem; border:3px solid #FFD700; }
+    .plato-card { background:white; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; gap:15px; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .plato-foto { width:80px; height:80px; border-radius:8px; object-fit:cover; background:#f0f0f0; }
+    .plato-info { flex:1; }
+    .plato-precio { font-size:1.3rem; font-weight:bold; color:#009C3B; }
+    .btn-eliminar-plato { background:#DC3545; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <h1 data-i18n="nav-restaurante">🍽️ Mi Restaurante</h1>
+    <h1>️ Mi Restaurante</h1>
     <div>
-      <span class="user-info" id="user-info" data-i18n="nav-user-loading">Cargando...</span>
-      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;" data-i18n="nav-logout">Salir</button>
+      <span class="user-info" id="user-info">Cargando...</span>
+      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;">Salir</button>
     </div>
   </nav>
 
@@ -36,138 +44,147 @@
   </div>
 
   <div class="container">
+    <!-- PERFIL -->
     <div id="tab-perfil" class="tab-content active">
-      <h2 class="section-title" data-i18n="section-datos-restaurante">🏪 Datos del Restaurante</h2>
+      <h2 class="section-title">🏪 Datos del Restaurante</h2>
       <input type="hidden" id="restaurante-id">
       <div class="card">
+        <!-- FOTO DE PERFIL -->
+        <div class="foto-upload">
+          <div id="foto-container">
+            <div class="foto-placeholder">🍽️</div>
+          </div>
+          <div>
+            <h4 style="margin-bottom:8px;">Foto del restaurante</h4>
+            <input type="file" id="foto-input" accept="image/*" style="margin-bottom:8px;">
+            <br>
+            <button class="btn btn-primary" id="btn-subir-foto" style="font-size:0.85rem;padding:8px 16px;">📤 Subir foto</button>
+          </div>
+        </div>
+
         <div class="grid grid-2">
           <div class="form-group">
-            <label data-i18n="label-nombre-rest">Nombre del restaurante</label>
-            <input type="text" id="res-nombre" class="form-control" data-i18n-placeholder="placeholder-nombre-rest" placeholder="Ej: La Parrilla del Puerto">
+            <label>Nombre del restaurante</label>
+            <input type="text" id="res-nombre" class="form-control" placeholder="Ej: La Parrilla del Puerto">
           </div>
           <div class="form-group">
-            <label data-i18n="label-tipo-cocina">Tipo de cocina</label>
+            <label>Tipo de cocina</label>
             <select id="res-tipo" class="form-control">
-              <option value="" data-i18n="tipo-cocina-select">-- Seleccionar --</option>
-              <option value="Parrilla/Uruguaya" data-i18n="tipo-parrilla">Parrilla/Uruguaya</option>
-              <option value="Mariscos" data-i18n="tipo-mariscos">Mariscos</option>
-              <option value="Italiana" data-i18n="tipo-italiana">Italiana</option>
-              <option value="Japonesa" data-i18n="tipo-japonesa">Japonesa</option>
-              <option value="Mexicana" data-i18n="tipo-mexicana">Mexicana</option>
-              <option value="Internacional" data-i18n="tipo-internacional">Internacional</option>
-              <option value="Vegetariana" data-i18n="tipo-vegetariana">Vegetariana</option>
-              <option value="Otra" data-i18n="tipo-otra">Otra</option>
+              <option value="">-- Seleccionar --</option>
+              <option value="Parrilla/Uruguaya">Parrilla/Uruguaya</option>
+              <option value="Mariscos">Mariscos</option>
+              <option value="Italiana">Italiana</option>
+              <option value="Japonesa">Japonesa</option>
+              <option value="Mexicana">Mexicana</option>
+              <option value="Internacional">Internacional</option>
+              <option value="Vegetariana">Vegetariana</option>
+              <option value="Otra">Otra</option>
             </select>
           </div>
           <div class="form-group">
-            <label data-i18n="label-direccion">Dirección</label>
-            <input type="text" id="res-direccion" class="form-control" data-i18n-placeholder="placeholder-direccion" placeholder="Av. Roosevelt...">
+            <label>Dirección</label>
+            <input type="text" id="res-direccion" class="form-control" placeholder="Av. Roosevelt...">
           </div>
           <div class="form-group">
-            <label data-i18n="label-telefono">Teléfono</label>
-            <input type="text" id="res-telefono" class="form-control" data-i18n-placeholder="placeholder-telefono" placeholder="+598...">
+            <label>Teléfono</label>
+            <input type="text" id="res-telefono" class="form-control" placeholder="+598...">
           </div>
           <div class="form-group">
-            <label data-i18n="label-whatsapp">WhatsApp</label>
-            <input type="text" id="res-whatsapp" class="form-control" data-i18n-placeholder="placeholder-whatsapp" placeholder="+598...">
+            <label>WhatsApp</label>
+            <input type="text" id="res-whatsapp" class="form-control" placeholder="+598...">
           </div>
           <div class="form-group">
-            <label data-i18n="label-rango-precio">Rango de precio</label>
+            <label>Rango de precio</label>
             <select id="res-rango" class="form-control">
-              <option value="$" data-i18n="rango-economico">$ (Económico)</option>
-              <option value="$$" selected data-i18n="rango-moderado">$$ (Moderado)</option>
-              <option value="$$$" data-i18n="rango-premium">$$$ (Premium)</option>
+              <option value="$">$ (Económico)</option>
+              <option value="$$" selected>$$ (Moderado)</option>
+              <option value="$$$">$$$ (Premium)</option>
             </select>
           </div>
           <div class="form-group" style="grid-column: span 2;">
-            <label data-i18n="label-descripcion">Descripción</label>
-            <textarea id="res-descripcion" class="form-control" rows="4" data-i18n-placeholder="placeholder-descripcion" placeholder="Contá sobre tu restaurante..."></textarea>
+            <label>Descripción</label>
+            <textarea id="res-descripcion" class="form-control" rows="4" placeholder="Contá sobre tu restaurante..."></textarea>
           </div>
         </div>
-        <button id="btn-save-perfil" class="btn btn-success" data-i18n="btn-guardar-perfil">💾 Guardar Perfil</button>
+        <button id="btn-save-perfil" class="btn btn-success">💾 Guardar Perfil</button>
       </div>
     </div>
 
+    <!-- RESERVAS -->
     <div id="tab-reservas" class="tab-content">
-      <h2 class="section-title" data-i18n="section-reservas-recibidas">📋 Reservas Recibidas</h2>
+      <h2 class="section-title">📋 Reservas Recibidas</h2>
       <div id="lista-reservas"></div>
     </div>
 
+    <!-- MENÚ -->
     <div id="tab-menu" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-menu"> Menú</h2>
+      <h2 class="section-title">📖 Menú del Restaurante</h2>
       <div class="card">
-        <p style="color:#666;" data-i18n="menu-proximamente">Próximamente: cargar platos, precios y fotos</p>
+        <h3 style="color:#023E8A;margin-bottom:15px;">➕ Agregar plato</h3>
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label>Nombre del plato</label>
+            <input type="text" id="plato-nombre" class="form-control" placeholder="Ej: Asado de tira">
+          </div>
+          <div class="form-group">
+            <label>Precio (USD)</label>
+            <input type="number" id="plato-precio" class="form-control" placeholder="15.00" step="0.01" min="0">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Descripción</label>
+            <input type="text" id="plato-descripcion" class="form-control" placeholder="Ej: 500gr de asado con guarnición">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Foto del plato</label>
+            <input type="file" id="plato-foto" accept="image/*" class="form-control">
+          </div>
+        </div>
+        <button id="btn-agregar-plato" class="btn btn-primary">➕ Agregar plato</button>
       </div>
+      <h3 style="color:#023E8A;margin:20px 0 10px 0;">🍽️ Platos cargados</h3>
+      <div id="lista-platos"></div>
     </div>
 
+    <!-- RESEÑAS -->
     <div id="tab-resenas" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-resenas">⭐ Reseñas</h2>
+      <h2 class="section-title">⭐ Reseñas</h2>
       <div class="card">
-        <p style="color:#666;" data-i18n="resenas-proximamente">Próximamente: moderar reseñas de clientes</p>
+        <p style="color:#666;">Próximamente: moderar reseñas de clientes</p>
       </div>
     </div>
 
+    <!-- EVENTOS -->
     <div id="tab-eventos" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-eventos">🎉 Eventos Especiales</h2>
+      <h2 class="section-title">🎉 Eventos Especiales</h2>
       <div class="card">
-        <p style="color:#666;" data-i18n="eventos-proximamente">Próximamente: publicar cenas show, degustaciones, etc.</p>
+        <p style="color:#666;">Próximamente: publicar cenas show, degustaciones, etc.</p>
       </div>
     </div>
 
+    <!-- ABOUT -->
     <div id="tab-about" class="tab-content">
       <h2 class="section-title">ℹ️ Acerca de Sabores Costeros</h2>
-      
       <div class="info-card">
         <h3> Bienvenido a la familia</h3>
         <p>Gracias por ser parte de <strong>Sabores Costeros</strong>, la plataforma líder en conexión de turistas con los mejores restaurantes de la costa uruguaya.</p>
       </div>
-
       <div class="card">
         <h3 style="color:#023E8A;">🏢 ¿Quiénes somos?</h3>
         <p>Sabores Costeros fue creada con una misión clara: <strong>impulsar el turismo gastronómico de Uruguay</strong>. Somos creadores de aplicaciones de trabajo pensadas para el sector turístico, y seguimos expandiéndonos en el mercado.</p>
-        
         <p>Nuestro modelo es simple y justo: <strong>no cobramos cuotas fijas</strong>. Solo $2 USD por cada cubierto que asista. Si no viene gente, no pagás nada.</p>
       </div>
-
-      <div class="card">
-        <h3 style="color:#023E8A;">🚀 Nuestras otras apps</h3>
-        <p>Somos desarrolladores de múltiples aplicaciones turísticas:</p>
-        <ul>
-          <li><strong>Sabores Costeros</strong> - Restaurantes de la costa</li>
-          <li><strong>Precios Chuy</strong> - Comparador de precios en la frontera</li>
-          <li><strong>TaxUber</strong> - Transporte turístico</li>
-          <li><strong>Más apps en desarrollo...</strong></li>
-        </ul>
-        <p style="margin-top:15px;">Nuestro ecosistema de apps está diseñado para cubrir todas las necesidades del turista en Uruguay.</p>
-      </div>
-
-      <div class="card">
-        <h3 style="color:#023E8A;">📊 Beneficios para tu restaurante</h3>
-        <ul>
-          <li>✅ <strong>Visibilidad:</strong> Aparecés en la app que usan turistas argentinos, brasileños y uruguayos</li>
-          <li>✅ <strong>Reservas confirmadas:</strong> Clientes que ya vienen con ganas de consumir</li>
-          <li>✅ <strong>Sin riesgo:</strong> Solo pagás si viene gente</li>
-          <li>✅ <strong>Sorteo semanal:</strong> Los clientes participan por una cena gratis (más reservas para vos)</li>
-          <li>✅ <strong>Multi-idioma:</strong> App en español, portugués e inglés</li>
-          <li>✅ <strong>Soporte:</strong> Estamos disponibles para ayudarte en lo que necesites</li>
-        </ul>
-      </div>
-
       <div class="card">
         <h3 style="color:#023E8A;">📞 Contacto y soporte</h3>
-        <p>¿Tenés dudas o necesitás ayuda? Estamos acá:</p>
         <ul>
           <li>📧 Email: carlosfontans72.cf@gmail.com</li>
           <li>📱 WhatsApp: +598 95205598</li>
-          <li>🕐 Horario: Lunes a Viernes de 9:00 a 18:00</li>
         </ul>
-        <p style="margin-top:15px;"><strong>Gracias por confiar en nosotros. Juntos hacemos crecer el turismo uruguayo. 🇺🇾</strong></p>
       </div>
     </div>
   </div>
 
   <div style="background:#722F37; color:white; padding:20px; text-align:center; margin-top:30px;">
-    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📋 Política de Privacidad</a>
+    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;"> Política de Privacidad</a>
     <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📄 Términos y Condiciones</a>
     <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;">© 2026 Sabores Costeros</div>
   </div>
@@ -183,10 +200,5 @@
   </script>
 
   <script type="module" src="/js/restaurante.js"></script>
-  
-  <script type="module">
-    import { applyTranslations } from '/js/utils.js';
-    setTimeout(() => applyTranslations(), 200);
-  </script>
 </body>
 </html>
