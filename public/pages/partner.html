@@ -17,6 +17,12 @@
     .stat-card .label { color:#666; margin-top:8px; }
     .btn-whatsapp-share { background:#25D366; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-size:1rem; font-weight:600; display:inline-flex; align-items:center; gap:8px; transition:all 0.3s; margin-top:10px; }
     .btn-whatsapp-share:hover { background:#128C7E; transform:translateY(-2px); }
+    .guia-card { background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); border-left:4px solid #722F37; }
+    .guia-card h3 { color:#722F37; margin-bottom:10px; }
+    .guia-card h4 { color:#023E8A; margin:15px 0 8px 0; }
+    .guia-card ul { padding-left:20px; line-height:1.8; }
+    .guia-card .tip { background:#FFF3CD; padding:12px; border-radius:8px; margin:10px 0; border-left:3px solid #FFD700; }
+    .guia-card .ejemplo { background:#E3F2FD; padding:12px; border-radius:8px; margin:10px 0; font-style:italic; }
   </style>
 </head>
 <body>
@@ -29,10 +35,11 @@
   </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats">📊 Estadísticas</button>
+    <button class="active" onclick="showTab('stats')">📊 Estadísticas</button>
     <button onclick="showTab('restaurantes')">🏪 Mis Restaurantes</button>
-    <button onclick="showTab('qr')" data-i18n="section-qr">📱 Mi QR</button>
-    <button onclick="showTab('comision')" data-i18n="tab-comision">💰 Mi Comisión</button>
+    <button onclick="showTab('qr')"> Mi QR</button>
+    <button onclick="showTab('comision')">💰 Mi Comisión</button>
+    <button onclick="showTab('guia')">📚 Guía Partner</button>
   </div>
 
   <div class="container">
@@ -72,7 +79,7 @@
         <div id="mi-qr" style="margin:20px auto; width:250px; height:250px; background:white; border:2px solid #722F37; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:3rem;">📱</div>
         <p style="color:#666; font-size:0.9rem;">URL: <strong id="mi-url">---</strong></p>
         <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-          <button class="btn btn-primary" onclick="copiarURL()">📋 <span data-i18n="btn-copiar-url">Copiar URL</span></button>
+          <button class="btn btn-primary" onclick="copiarURL()"> <span data-i18n="btn-copiar-url">Copiar URL</span></button>
           <button class="btn-whatsapp-share" onclick="compartirURLWhatsApp()">📱 Compartir URL</button>
         </div>
       </div>
@@ -82,10 +89,85 @@
       <h2 class="section-title" data-i18n="tab-comision">💰 Detalle de Comisiones</h2>
       <div id="lista-comisiones"></div>
     </div>
+
+    <div id="tab-guia" class="tab-content">
+      <h2 class="section-title">📚 Guía para Partners</h2>
+
+      <div class="guia-card">
+        <h3>🎯 ¿Qué es un Partner?</h3>
+        <p>Sos un Partner porque tenés un <strong>medio de comunicación</strong> (revista, radio, blog, redes sociales con seguidores) o un <strong>negocio complementario</strong> (agencia de turismo, hotel, taxi). Tu rol es <strong>promocionar Sabores Costeros</strong> entre tu audiencia y ganar <strong>$0.50 USD por cada cubierto</strong> que venga a través de tu código.</p>
+        <div class="tip">
+          <strong>💡 Diferencia con Embajador:</strong> El Embajador va restaurante por restaurante. Vos, como Partner, promocionás la app a tu audiencia y traés tanto clientes como restaurantes.
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>📢 Cómo promocionar Sabores Costeros</h3>
+        <h4>Si tenés una revista o blog:</h4>
+        <ul>
+          <li>Escribí un artículo sobre "Los mejores restaurantes de la costa"</li>
+          <li>Incluí tu código o QR en el artículo</li>
+          <li>Mencioná que los lectores pueden reservar y ganar una cena gratis</li>
+        </ul>
+        <h4>Si tenés radio o podcast:</h4>
+        <ul>
+          <li>Mencioná la app en tus programas</li>
+          <li>Dá tu código al aire: "Usá el código [TU CÓDIGO] al registrarte"</li>
+          <li>Hacé un concurso con cenas gratis</li>
+        </ul>
+        <h4>Si tenés redes sociales:</h4>
+        <ul>
+          <li>Publicá fotos de restaurantes con tu link en la bio</li>
+          <li>Hacé stories mostrando la app</li>
+          <li>Compartí el sorteo semanal de cenas gratis</li>
+        </ul>
+        <h4>Si tenés un negocio (taxi, hotel, agencia):</h4>
+        <ul>
+          <li>Dejá flyers con tu QR en tu local</li>
+          <li>Recomendá la app a tus clientes</li>
+          <li>Ofercé descuentos exclusivos con tu código</li>
+        </ul>
+      </div>
+
+      <div class="guia-card">
+        <h3>🎨 Material de promoción</h3>
+        <p>Usá tu <strong>QR personalizado</strong> en la pestaña "Mi QR". Imprimilo en:</p>
+        <ul>
+          <li>✅ Flyers y folletos</li>
+          <li>✅ Tarjetas personales</li>
+          <li>✅ Carteles en tu local</li>
+          <li>✅ Stickers para mesas</li>
+          <li>✅ Publicaciones en redes sociales</li>
+        </ul>
+        <div class="tip">
+          <strong>💡 Tip:</strong> Cuanto más visible sea tu QR, más gente lo escanea y más comisiones ganás. ¡Ponelo en todos lados!
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3>📝 Texto para publicaciones</h3>
+        <div class="ejemplo">
+          <strong> Para redes sociales:</strong><br>
+          "¿Buscás los mejores restaurantes de la costa uruguaya? ️ Descubrí lugares increíbles, reservá tu mesa y participá por una <strong>cena gratis para 4 personas</strong> todos los sábados. Descargá la app y usá mi código [TU CÓDIGO] para apoyarme. ¡Nos vemos en la costa! 🍽️"
+        </div>
+        <div class="ejemplo">
+          <strong> Para radio o podcast:</strong><br>
+          "Sabores Costeros es la nueva app que conecta turistas con los mejores restaurantes de la costa. Reservá tu mesa, ganá puntos y participá por cenas gratis. Usá el código [TU CÓDIGO] al registrarte y apoyá este programa."
+        </div>
+      </div>
+
+      <div class="guia-card">
+        <h3> Traer restaurantes también</h3>
+        <p>Además de promocionar la app, podés <strong>traer restaurantes</strong> como lo hace un Embajador. Si un restaurante se registra con tu código, vos también ganás comisión de sus cubiertos.</p>
+        <div class="tip">
+          <strong>💡 Doble ganancia:</strong> Si traés un restaurante Y promocionás la app a tus clientes, ganás de ambos lados.
+        </div>
+      </div>
+    </div>
   </div>
 
   <div style="background:#722F37; color:white; padding:20px; text-align:center; margin-top:30px;">
-    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
+    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad"> Política de Privacidad</a>
     <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
     <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">© 2026 Sabores Costeros</div>
   </div>

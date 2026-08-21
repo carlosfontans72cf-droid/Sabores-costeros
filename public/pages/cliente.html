@@ -14,11 +14,15 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .banner-sorteo { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; border: 2px solid #FF6B00; }
+    .benefit-card { background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); border-left:4px solid #48CAE4; }
+    .benefit-card h3 { color:#023E8A; margin-bottom:10px; }
+    .benefit-card ul { padding-left:20px; line-height:1.8; }
+    .benefit-card .tip { background:#E8F5E9; padding:12px; border-radius:8px; margin:10px 0; border-left:3px solid #28A745; }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <h1 data-i18n="nav-cliente">🌊️ Sabores Costeros</h1>
+    <h1 data-i18n="nav-cliente">️ Sabores Costeros</h1>
     <div>
       <span class="user-info" id="user-info" data-i18n="nav-user-loading">Cargando...</span>
       <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;" data-i18n="nav-logout">Salir</button>
@@ -26,18 +30,19 @@
   </nav>
 
   <div class="main-nav">
-    <button class="active" onclick="showTab('restaurantes')" data-i18n="tab-restaurantes">🍽️ Restaurantes</button>
-    <button onclick="showTab('reservas')" data-i18n="tab-reservas">📋 Mis Reservas</button>
-    <button onclick="showTab('sorteo')" data-i18n="tab-sorteo-tab">🎉 Sorteo</button>
-    <button onclick="showTab('perfil')" data-i18n="tab-perfil"> Perfil</button>
+    <button class="active" onclick="showTab('restaurantes')">️ Restaurantes</button>
+    <button onclick="showTab('reservas')">📋 Mis Reservas</button>
+    <button onclick="showTab('sorteo')">🎉 Sorteo</button>
+    <button onclick="showTab('beneficios')">💡 Beneficios</button>
+    <button onclick="showTab('perfil')">👤 Perfil</button>
   </div>
 
   <div class="container">
 
     <div class="banner-sorteo">
-      <h2 style="color:#722F37; margin:0 0 10px 0;" data-i18n="banner-sorteo-title">🎉 ¡SORTEO SEMANAL!</h2>
-      <p style="margin:0;" data-i18n="banner-sorteo-desc">Validá tu código al llegar y participá por una <strong>cena gratis para 4 personas</strong></p>
-      <p style="margin:10px 0 0 0; font-size:0.9rem;" data-i18n="banner-sorteo-sub">🏆 Sorteo todos los sábados ·  En los mejores restaurantes de la costa</p>
+      <h2 style="color:#722F37; margin:0 0 10px 0;">🎉 ¡SORTEO SEMANAL!</h2>
+      <p style="margin:0;">Validá tu código al llegar y participá por una <strong>cena gratis para 4 personas</strong></p>
+      <p style="margin:10px 0 0 0; font-size:0.9rem;"> Sorteo todos los sábados · 📍 En los mejores restaurantes de la costa</p>
     </div>
 
     <div id="tab-restaurantes" class="tab-content active">
@@ -54,20 +59,85 @@
       <h2 class="section-title" data-i18n="sorteo-titulo">🎉 Sorteo Semanal</h2>
       <div class="card">
         <h3 style="color:#722F37;">🍽️ Cena Gratis para 4 personas</h3>
-        <p style="margin:15px 0;" data-i18n="sorteo-desc-1">Todos los sábados sorteamos una cena completa para 4 personas en los mejores restaurantes de la costa uruguaya.</p>
+        <p style="margin:15px 0;">Todos los sábados sorteamos una cena completa para 4 personas en los mejores restaurantes de la costa uruguaya.</p>
         <div style="background:#FFF3CD; padding:20px; border-radius:12px; border-left:4px solid #D4A574;">
-          <h4 style="color:#722F37; margin-top:0;" data-i18n="sorteo-como-participar">¿Cómo participar?</h4>
+          <h4 style="color:#722F37; margin-top:0;">¿Cómo participar?</h4>
           <ol style="padding-left:20px; line-height:1.8;">
-            <li data-i18n="sorteo-paso-1">Hacé una reserva en la app</li>
-            <li data-i18n="sorteo-paso-2">Al llegar al restaurante, <strong>validá tu código</strong> con el mozo</li>
-            <li data-i18n="sorteo-paso-3">¡Automáticamente entrás en el sorteo del sábado!</li>
+            <li>Hacé una reserva en la app</li>
+            <li>Al llegar al restaurante, <strong>validá tu código</strong> con el mozo</li>
+            <li>¡Automáticamente entrás en el sorteo del sábado!</li>
           </ol>
-          <p style="margin:15px 0 0 0;" data-i18n="sorteo-mas-reservas"><strong>Cuantas más reservas valides, más chances tenés de ganar.</strong></p>
+          <p style="margin:15px 0 0 0;"><strong>Cuantas más reservas valides, más chances tenés de ganar.</strong></p>
         </div>
         <div style="margin-top:20px; text-align:center;">
-          <p style="font-size:0.9rem; color:#666;" id="info-sorteo" data-i18n="sorteo-participantes">🎫 Cargando participantes...</p>
-          <p style="font-size:0.9rem; color:#666;" data-i18n="sorteo-proximo"> Próximo sorteo: este sábado</p>
+          <p style="font-size:0.9rem; color:#666;" id="info-sorteo">🎫 Cargando participantes...</p>
+          <p style="font-size:0.9rem; color:#666;">🏆 Próximo sorteo: este sábado</p>
         </div>
+      </div>
+    </div>
+
+    <div id="tab-beneficios" class="tab-content">
+      <h2 class="section-title">💡 ¿Por qué usar Sabores Costeros?</h2>
+      
+      <div class="benefit-card">
+        <h3>🌊 ¿Qué es Sabores Costeros?</h3>
+        <p>Somos la <strong>plataforma líder</strong> que conecta turistas con los mejores restaurantes de la costa uruguaya. Nuestra misión es impulsar el turismo gastronómico de Uruguay.</p>
+      </div>
+
+      <div class="benefit-card">
+        <h3>✅ Beneficios para vos</h3>
+        <ul>
+          <li><strong>Descubrí</strong> los mejores restaurantes de la costa</li>
+          <li><strong>Reservá</strong> tu mesa sin llamadas ni esperas</li>
+          <li><strong>Participá</strong> del sorteo semanal de cenas gratis</li>
+          <li><strong>Dejá reseñas</strong> y ayudá a otros turistas</li>
+          <li><strong>Multi-idioma:</strong> Disponible en español, portugués e inglés</li>
+          <li><strong>100% gratis:</strong> No te cobramos nada, nunca</li>
+        </ul>
+      </div>
+
+      <div class="benefit-card">
+        <h3>🎯 Cómo usar la app</h3>
+        <ol style="padding-left:20px; line-height:2;">
+          <li><strong>Elegí un restaurante</strong> de la lista</li>
+          <li><strong>Hacé una reserva</strong> con fecha, hora y cantidad de personas</li>
+          <li><strong>Recibí tu código</strong> único de reserva</li>
+          <li><strong>Presentá el código</strong> al llegar al restaurante</li>
+          <li><strong>¡Disfrutá tu experiencia!</strong> y validá tu código para el sorteo</li>
+        </ol>
+        <div class="tip">
+          <strong> Tip:</strong> Cuantas más reservas valides, más chances tenés de ganar la cena gratis.
+        </div>
+      </div>
+
+      <div class="benefit-card">
+        <h3>🏆 Sorteo Semanal</h3>
+        <p>Todos los sábados sorteamos una <strong>cena completa para 4 personas</strong> en los mejores restaurantes de la costa.</p>
+        <ul>
+          <li>Participación automática al validar tu código</li>
+          <li>Sin costos ocultos</li>
+          <li>Ganador notificado por email</li>
+        </ul>
+      </div>
+
+      <div class="benefit-card">
+        <h3>📱 Compartí con amigos</h3>
+        <p>Invitá a tus amigos y familiares a descubrir los mejores restaurantes. Cuantos más seamos, más beneficios para todos.</p>
+        <button class="btn btn-primary" onclick="compartirAppWhatsApp()" style="margin-top:10px;">
+          📱 Compartir por WhatsApp
+        </button>
+      </div>
+
+      <div class="benefit-card">
+        <h3>🏢 Nuestra empresa</h3>
+        <p>Somos creadores de múltiples aplicaciones turísticas pensadas para mejorar la experiencia del visitante en Uruguay:</p>
+        <ul>
+          <li><strong>Sabores Costeros</strong> - Restaurantes de la costa</li>
+          <li><strong>Precios Chuy</strong> - Comparador de precios</li>
+          <li><strong>TaxUber</strong> - Transporte turístico</li>
+          <li><strong>Y más apps en desarrollo...</strong></li>
+        </ul>
+        <p style="margin-top:15px;"><strong>Seguimos expandiéndonos para ofrecerte la mejor experiencia turística. 🇺🇾</strong></p>
       </div>
     </div>
 
@@ -82,7 +152,7 @@
           <select id="selector-idioma" class="form-control">
             <option value="es" data-i18n="idioma-es">🇪🇸 Español</option>
             <option value="pt" data-i18n="idioma-pt">🇧 Português</option>
-            <option value="en" data-i18n="idioma-en">🇸 English</option>
+            <option value="en" data-i18n="idioma-en">🇺🇸 English</option>
           </select>
         </div>
         <button class="btn btn-primary" onclick="cambiarIdiomaSeleccionado()" data-i18n="btn-guardar-idioma">Guardar idioma</button>
@@ -101,10 +171,10 @@
 
   <div style="background:#023E8A; color:white; padding:20px; text-align:center; margin-top:30px;">
     <div>
-      <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
-      <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
+      <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;"> Política de Privacidad</a>
+      <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📄 Términos y Condiciones</a>
     </div>
-    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">
+    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;">
       © 2026 Sabores Costeros. Todos los derechos reservados. 🇺🇾
     </div>
   </div>

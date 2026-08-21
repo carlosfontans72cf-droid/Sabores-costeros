@@ -12,6 +12,9 @@
     .admin-nav button.active { background: #FFD700; color: #1a1a2e; font-weight: bold; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+    .info-card { background:#E3F2FD; border-left:4px solid #023E8A; padding:20px; border-radius:8px; margin-bottom:20px; }
+    .info-card h3 { color:#023E8A; margin-bottom:10px; }
+    .info-card ul { padding-left:20px; line-height:1.8; }
   </style>
 </head>
 <body>
@@ -24,11 +27,12 @@
   </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('perfil')" data-i18n="tab-perfil-res">🏪 Mi Perfil</button>
-    <button onclick="showTab('reservas')" data-i18n="tab-reservas-res">📋 Reservas</button>
-    <button onclick="showTab('menu')" data-i18n="tab-menu"> Menú</button>
-    <button onclick="showTab('resenas')" data-i18n="tab-resenas">⭐ Reseñas</button>
-    <button onclick="showTab('eventos')" data-i18n="tab-eventos"> Eventos</button>
+    <button class="active" onclick="showTab('perfil')">🏪 Mi Perfil</button>
+    <button onclick="showTab('reservas')">📋 Reservas</button>
+    <button onclick="showTab('menu')">📖 Menú</button>
+    <button onclick="showTab('resenas')">⭐ Reseñas</button>
+    <button onclick="showTab('eventos')">🎉 Eventos</button>
+    <button onclick="showTab('about')">ℹ️ Acerca de</button>
   </div>
 
   <div class="container">
@@ -85,12 +89,12 @@
     </div>
 
     <div id="tab-reservas" class="tab-content">
-      <h2 class="section-title" data-i18n="section-reservas-recibidas"> Reservas Recibidas</h2>
+      <h2 class="section-title" data-i18n="section-reservas-recibidas">📋 Reservas Recibidas</h2>
       <div id="lista-reservas"></div>
     </div>
 
     <div id="tab-menu" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-menu">📖 Menú</h2>
+      <h2 class="section-title" data-i18n="tab-menu"> Menú</h2>
       <div class="card">
         <p style="color:#666;" data-i18n="menu-proximamente">Próximamente: cargar platos, precios y fotos</p>
       </div>
@@ -109,12 +113,63 @@
         <p style="color:#666;" data-i18n="eventos-proximamente">Próximamente: publicar cenas show, degustaciones, etc.</p>
       </div>
     </div>
+
+    <div id="tab-about" class="tab-content">
+      <h2 class="section-title">ℹ️ Acerca de Sabores Costeros</h2>
+      
+      <div class="info-card">
+        <h3> Bienvenido a la familia</h3>
+        <p>Gracias por ser parte de <strong>Sabores Costeros</strong>, la plataforma líder en conexión de turistas con los mejores restaurantes de la costa uruguaya.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;">🏢 ¿Quiénes somos?</h3>
+        <p>Sabores Costeros fue creada con una misión clara: <strong>impulsar el turismo gastronómico de Uruguay</strong>. Somos creadores de aplicaciones de trabajo pensadas para el sector turístico, y seguimos expandiéndonos en el mercado.</p>
+        
+        <p>Nuestro modelo es simple y justo: <strong>no cobramos cuotas fijas</strong>. Solo $2 USD por cada cubierto que asista. Si no viene gente, no pagás nada.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;">🚀 Nuestras otras apps</h3>
+        <p>Somos desarrolladores de múltiples aplicaciones turísticas:</p>
+        <ul>
+          <li><strong>Sabores Costeros</strong> - Restaurantes de la costa</li>
+          <li><strong>Precios Chuy</strong> - Comparador de precios en la frontera</li>
+          <li><strong>TaxUber</strong> - Transporte turístico</li>
+          <li><strong>Más apps en desarrollo...</strong></li>
+        </ul>
+        <p style="margin-top:15px;">Nuestro ecosistema de apps está diseñado para cubrir todas las necesidades del turista en Uruguay.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;">📊 Beneficios para tu restaurante</h3>
+        <ul>
+          <li>✅ <strong>Visibilidad:</strong> Aparecés en la app que usan turistas argentinos, brasileños y uruguayos</li>
+          <li>✅ <strong>Reservas confirmadas:</strong> Clientes que ya vienen con ganas de consumir</li>
+          <li>✅ <strong>Sin riesgo:</strong> Solo pagás si viene gente</li>
+          <li>✅ <strong>Sorteo semanal:</strong> Los clientes participan por una cena gratis (más reservas para vos)</li>
+          <li>✅ <strong>Multi-idioma:</strong> App en español, portugués e inglés</li>
+          <li>✅ <strong>Soporte:</strong> Estamos disponibles para ayudarte en lo que necesites</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;">📞 Contacto y soporte</h3>
+        <p>¿Tenés dudas o necesitás ayuda? Estamos acá:</p>
+        <ul>
+          <li>📧 Email: carlosfontans72.cf@gmail.com</li>
+          <li>📱 WhatsApp: +598 95205598</li>
+          <li>🕐 Horario: Lunes a Viernes de 9:00 a 18:00</li>
+        </ul>
+        <p style="margin-top:15px;"><strong>Gracias por confiar en nosotros. Juntos hacemos crecer el turismo uruguayo. 🇺🇾</strong></p>
+      </div>
+    </div>
   </div>
 
   <div style="background:#722F37; color:white; padding:20px; text-align:center; margin-top:30px;">
-    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
-    <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
-    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">© 2026 Sabores Costeros</div>
+    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📋 Política de Privacidad</a>
+    <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;">📄 Términos y Condiciones</a>
+    <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;">© 2026 Sabores Costeros</div>
   </div>
 
   <script>
