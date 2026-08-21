@@ -24,6 +24,40 @@ let userPartnerCodigo = partnerCodigoURL || null;
 let userEmbajadorCodigo = embajadorCodigoURL || sessionStorage.getItem('userEmbajadorCodigo') || null;
 let restauranteIdActual = '';
 
+// ========== COMPRIMIR IMAGEN ==========
+function comprimirImagen(file, maxWidth = 800, calidad = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Error al comprimir'));
+        }, 'image/jpeg', calidad);
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 async function cargarReferidosDelUsuario() {
   try {
     const userDoc = await getDoc(doc(db, 'usuarios', userId));
@@ -73,7 +107,6 @@ async function loadRestaurante() {
       document.getElementById('res-descripcion').value = data.descripcion || '';
       document.getElementById('res-rango').value = data.rangoPrecio || '$$';
       
-      // Cargar foto si existe
       if (data.fotoUrl) {
         const container = document.getElementById('foto-container');
         container.innerHTML = `<img src="${data.fotoUrl}" class="foto-preview" alt="Foto del restaurante">`;
@@ -87,23 +120,21 @@ document.getElementById('btn-subir-foto')?.addEventListener('click', async () =>
   const fileInput = document.getElementById('foto-input');
   const file = fileInput.files[0];
   
-  if (!file) {
-    return showAlert('Seleccioná una imagen primero', 'warning');
-  }
-  
-  if (!restauranteIdActual) {
-    return showAlert('Primero guardá el perfil del restaurante', 'warning');
-  }
+  if (!file) return showAlert('Seleccioná una imagen primero', 'warning');
+  if (!restauranteIdActual) return showAlert('Primero guardá el perfil', 'warning');
   
   const btn = document.getElementById('btn-subir-foto');
   btn.disabled = true;
-  btn.textContent = '⏳ Subiendo...';
+  btn.textContent = ' Comprimiendo...';
   
   try {
-    const ext = file.name.split('.').pop();
+    const blobComprimido = await comprimirImagen(file, 800, 0.7);
+    showAlert('✅ Imagen comprimida, subiendo...', 'info');
+    
+    const ext = 'jpg';
     const fileName = `restaurantes/${restauranteIdActual}/foto.${ext}`;
     const storageRef = ref(storage, fileName);
-    const snapshot = await uploadBytes(storageRef, file);
+    const snapshot = await uploadBytes(storageRef, blobComprimido);
     const fotoUrl = await getDownloadURL(snapshot.ref);
     
     await updateDoc(doc(db, 'restaurantes', restauranteIdActual), { fotoUrl });
@@ -111,9 +142,9 @@ document.getElementById('btn-subir-foto')?.addEventListener('click', async () =>
     const container = document.getElementById('foto-container');
     container.innerHTML = `<img src="${fotoUrl}" class="foto-preview" alt="Foto del restaurante">`;
     
-    showAlert('✅ Foto actualizada correctamente', 'success');
+    showAlert('✅ Foto actualizada', 'success');
   } catch (err) {
-    showAlert(`Error al subir: ${err.message}`, 'danger');
+    showAlert(`Error: ${err.message}`, 'danger');
   } finally {
     btn.disabled = false;
     btn.textContent = '📤 Subir foto';
@@ -169,26 +200,24 @@ document.getElementById('btn-agregar-plato')?.addEventListener('click', async ()
   const fotoInput = document.getElementById('plato-foto');
   const fotoFile = fotoInput.files[0];
   
-  if (!nombre || !precio) {
-    return showAlert('Nombre y precio son obligatorios', 'warning');
-  }
-  
-  if (!restauranteIdActual) {
-    return showAlert('Primero guardá el perfil del restaurante', 'warning');
-  }
+  if (!nombre || !precio) return showAlert('Nombre y precio son obligatorios', 'warning');
+  if (!restauranteIdActual) return showAlert('Primero guardá el perfil', 'warning');
   
   const btn = document.getElementById('btn-agregar-plato');
   btn.disabled = true;
-  btn.textContent = '⏳ Agregando...';
+  btn.textContent = '⏳ Procesando...';
   
   try {
     let fotoUrl = null;
     
     if (fotoFile) {
-      const ext = fotoFile.name.split('.').pop();
+      btn.textContent = '⏳ Comprimiendo foto...';
+      const blobComprimido = await comprimirImagen(fotoFile, 600, 0.7);
+      
+      const ext = 'jpg';
       const fileName = `platos/${restauranteIdActual}/${Date.now()}.${ext}`;
       const storageRef = ref(storage, fileName);
-      const snapshot = await uploadBytes(storageRef, fotoFile);
+      const snapshot = await uploadBytes(storageRef, blobComprimido);
       fotoUrl = await getDownloadURL(snapshot.ref);
     }
     

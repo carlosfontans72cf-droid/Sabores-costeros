@@ -10,7 +10,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const partnerCodigo = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
 if (partnerCodigo) sessionStorage.setItem('lastPartner', partnerCodigo);
 
-// ========== CARGAR RESTAURANTES ==========
 async function loadRestaurantes() {
   const cont = document.getElementById('lista-restaurantes');
   if (!cont) return;
@@ -62,7 +61,6 @@ async function loadRestaurantes() {
   }
 }
 
-// ========== MIS RESERVAS ==========
 async function loadMisReservas() {
   const cont = document.getElementById('lista-mis-reservas');
   if (!cont) return;
@@ -92,12 +90,12 @@ async function loadMisReservas() {
         <p><strong>Estado:</strong> <span style="color:${estadoColor}; font-weight:bold;">${estadoTexto}</span></p>
         ${data.estado === 'confirmada' ? `
           <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
-            ${data.direccionRestaurante ? `<button class="btn btn-primary" style="flex:1; min-width:150px;" onclick="abrirGoogleMaps('${data.direccionRestaurante.replace(/'/g, "\\'")}')">🗺️ Cómo llegar</button>` : ''}
-            <button class="btn btn-success" style="flex:1; min-width:150px;" onclick="compartirReservaWhatsApp('${data.codigo}', '${(data.nombreRestaurante || 'Restaurante').replace(/'/g, "\\'")}')">📱 Compartir</button>
+            ${data.direccionRestaurante ? `<button class="btn btn-primary" style="flex:1; min-width:150px;" onclick="abrirGoogleMaps('${data.direccionRestaurante.replace(/'/g, "\\'")}')">️ Cómo llegar</button>` : ''}
+            <button class="btn btn-success" style="flex:1; min-width:150px;" onclick="compartirReservaWhatsApp('${data.codigo}', '${(data.nombreRestaurante || 'Restaurante').replace(/'/g, "\\'")}')"> Compartir</button>
           </div>
           <div style="background:#FFF3CD; padding:12px; border-radius:8px; margin-top:10px; border-left:4px solid #D4A574;">
             <p style="margin:0;"><strong>📱 Presentá este código al llegar</strong></p>
-            <p style="margin:5px 0 0 0; font-size:0.9rem;">🎉 Validalo para participar del sorteo semanal</p>
+            <p style="margin:5px 0 0 0; font-size:0.9rem;"> Validalo para participar del sorteo semanal</p>
           </div>
         ` : ''}
       `;
@@ -109,19 +107,17 @@ async function loadMisReservas() {
 }
 
 window.compartirReservaWhatsApp = function(codigo, nombreRestaurante) {
-  const msg = `¡Hice una reserva en ${nombreRestaurante}! ️ Código: ${codigo}. Usá Sabores Costeros para descubrir los mejores restaurantes de la costa `;
+  const msg = `¡Hice una reserva en ${nombreRestaurante}! 🍽️ Código: ${codigo}. Usá Sabores Costeros para descubrir los mejores restaurantes de la costa 🌊`;
   const url = 'https://sabores-costeros.vercel.app/';
   const texto = encodeURIComponent(msg + '\n' + url);
   window.open(`https://wa.me/?text=${texto}`, '_blank');
 };
 
-// ========== DETALLE RESTAURANTE + MENÚ ==========
 window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
   const docSnap = await getDoc(doc(db, 'restaurantes', restauranteId));
   if (!docSnap.exists()) return showAlert('Restaurante no encontrado', 'danger');
   const r = docSnap.data();
 
-  // Cargar menú del restaurante
   let menuHtml = '';
   try {
     const menuQ = query(collection(db, 'menus'), where('restauranteId', '==', restauranteId));
@@ -157,7 +153,7 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
   
   const fotoHeader = r.fotoUrl 
     ? `<img src="${r.fotoUrl}" style="width:100%;height:200px;object-fit:cover;border-radius:12px;">`
-    : `<div style="height:200px; background:linear-gradient(135deg, #48CAE4, #0077B6); border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:5rem;">️</div>`;
+    : `<div style="height:200px; background:linear-gradient(135deg, #48CAE4, #0077B6); border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:5rem;">🍽️</div>`;
   
   modal.innerHTML = `
     <div style="background:white;padding:30px;border-radius:16px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;">
@@ -165,10 +161,10 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
       <h2 style="color:#722F37; margin:20px 0 10px 0;">${r.nombre}</h2>
       <p style="color:#666;">${r.tipoCocina || ''} · ${r.rangoPrecio || '$$'} · ${r.ciudad || ''}</p>
       <p style="margin:15px 0; color:#333;">${r.descripcion || 'Sin descripción'}</p>
-      ${r.direccion ? `<p>📍 ${r.direccion}</p>` : ''}
-      ${r.whatsapp ? `<p><a href="https://wa.me/${r.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366; font-weight:bold;"> WhatsApp directo</a></p>` : ''}
+      ${r.direccion ? `<p> ${r.direccion}</p>` : ''}
+      ${r.whatsapp ? `<p><a href="https://wa.me/${r.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366; font-weight:bold;">📱 WhatsApp directo</a></p>` : ''}
       <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-        ${r.direccion ? `<button class="btn btn-primary" onclick="abrirGoogleMaps('${direccionEncoded}')">️ Cómo llegar</button>` : ''}
+        ${r.direccion ? `<button class="btn btn-primary" onclick="abrirGoogleMaps('${direccionEncoded}')">🗺️ Cómo llegar</button>` : ''}
       </div>
       ${menuHtml}
       
@@ -223,10 +219,9 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
         createdAt: serverTimestamp()
       });
 
-      // WhatsApp automático al restaurante
       if (r.whatsapp) {
         const userName = sessionStorage.getItem('userName') || 'Un cliente';
-        const waMsg = `️ *Nueva reserva en Sabores Costeros*\n\n👤 ${userName}\n📅 ${fecha}\n ${hora}\n👥 ${personas} personas\n🎫 Código: ${codigo}\n\n¡Gracias!`;
+        const waMsg = `🎉 *Nueva reserva en Sabores Costeros*\n\n👤 ${userName}\n📅 ${fecha}\n🕐 ${hora}\n👥 ${personas} personas\n🎫 Código: ${codigo}\n\n¡Gracias!`;
         const waUrl = `https://wa.me/${r.whatsapp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(waMsg)}`;
         window.open(waUrl, '_blank');
       }
@@ -243,11 +238,11 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
             <p>👥 ${personas} personas</p>
           </div>
           <div style="background:#FFF3CD; padding:15px; border-radius:8px; border-left:4px solid #D4A574; margin:15px 0;">
-            <p style="margin:0;"><strong>📱 Presentá este código al llegar</strong></p>
+            <p style="margin:0;"><strong> Presentá este código al llegar</strong></p>
             <p style="margin:5px 0 0 0; font-size:0.9rem;">🎉 Validalo al llegar y participá del sorteo semanal</p>
           </div>
           ${r.direccion ? `<button class="btn btn-primary btn-block" style="margin-bottom:10px;" onclick="abrirGoogleMaps('${direccionEncoded}')">🗺️ Cómo llegar</button>` : ''}
-          <button class="btn btn-success btn-block" style="margin-bottom:10px;" onclick="compartirReservaWhatsApp('${codigo}', '${r.nombre.replace(/'/g, "\\'")}')">📱 Compartir reserva</button>
+          <button class="btn btn-success btn-block" style="margin-bottom:10px;" onclick="compartirReservaWhatsApp('${codigo}', '${r.nombre.replace(/'/g, "\\'")}')"> Compartir reserva</button>
           <button class="btn btn-block" style="background:#ddd;" onclick="location.reload()">Entendido</button>
         </div>
       `;
@@ -257,7 +252,6 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
   });
 };
 
-// ========== SORTEO SEMANAL ==========
 async function loadSorteo() {
   const cont = document.getElementById('info-sorteo');
   if (!cont) return;
@@ -270,7 +264,6 @@ async function loadSorteo() {
   }
 }
 
-// ========== INICIALIZACIÓN ==========
 loadRestaurantes();
 loadMisReservas();
 loadSorteo();
