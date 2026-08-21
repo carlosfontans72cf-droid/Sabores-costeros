@@ -1,4 +1,3 @@
-// Panel Admin/Fundador - Sabores Costeros
 import { db } from './firebase-config.js';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, where, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -11,12 +10,8 @@ if (userRole !== 'fundador' && userRole !== 'admin') {
   window.location.href = '/index.html';
 }
 
-document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || t('nav-user-loading');
-
-// Datos del admin para re-login
 let adminPassword = '';
 
-// Pedir contraseña del admin al cargar el panel
 function pedirPasswordAdmin() {
   return new Promise((resolve) => {
     const modal = document.createElement('div');
@@ -54,7 +49,6 @@ function pedirPasswordAdmin() {
   });
 }
 
-// ========== TABS ==========
 window.showTab = (tabName) => {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-nav button').forEach(b => b.classList.remove('active'));
@@ -64,7 +58,6 @@ window.showTab = (tabName) => {
 
 window.logout = () => { sessionStorage.clear(); window.location.href = '/index.html'; };
 
-// ========== CREAR USUARIO ==========
 document.getElementById('btn-crear-usuario')?.addEventListener('click', async () => {
   const nombre = document.getElementById('new-nombre').value.trim();
   const apellido = document.getElementById('new-apellido').value.trim();
@@ -81,16 +74,13 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
     return showAlert(t('error-weak-password'), 'warning');
   }
 
-  // Verificar que tenemos la contraseña del admin
   if (!adminPassword) {
     await pedirPasswordAdmin();
   }
 
-  // Guardar email del admin para re-login
   const adminEmail = sessionStorage.getItem('userEmail');
 
   try {
-    // Paso 1: Crear usuario via REST API
     const apiKey = "AIzaSyDJVKFY4fmQ5XGh1W1SsBg0KNlboTd0ceg";
     const response = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
@@ -116,14 +106,11 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
 
     const uid = data.localId;
 
-    // Paso 2: El usuario nuevo quedó logueado. Cerrar su sesión.
     const { auth } = await import('./firebase-config.js');
     await auth.signOut();
 
-    // Paso 3: Re-loguear al admin
     await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
 
-    // Paso 4: Guardar datos en Firestore (ahora como admin)
     await setDoc(doc(db, 'usuarios', uid), {
       uid,
       nombre,
@@ -137,7 +124,6 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
       createdAt: serverTimestamp()
     });
 
-    // Limpiar formulario
     document.getElementById('new-nombre').value = '';
     document.getElementById('new-apellido').value = '';
     document.getElementById('new-email').value = '';
@@ -159,7 +145,6 @@ document.getElementById('btn-crear-usuario')?.addEventListener('click', async ()
   }
 });
 
-// ========== APROBACIONES ==========
 async function loadAprobaciones() {
   const cont = document.getElementById('lista-aprobaciones');
   if (!cont) return;
@@ -213,7 +198,6 @@ window.rechazarRestaurante = async (id) => {
   } catch (err) { showAlert(`${t('error-generico')}: ${err.message}`, 'danger'); }
 };
 
-// ========== USUARIOS ==========
 async function loadUsuarios() {
   const cont = document.getElementById('lista-usuarios');
   if (!cont) return;
@@ -233,15 +217,14 @@ async function loadUsuarios() {
       const rolColor = data.role === 'fundador' ? '#023E8A' : data.role === 'admin' ? '#0077B6' : data.role === 'partner' ? '#722F37' : data.role === 'embajador' ? '#009C3B' : '#666';
       const rolTexto = data.role ? data.role.charAt(0).toUpperCase() + data.role.slice(1) : 'Sin rol';
       
-      // Botón WhatsApp solo para partners y embajadores
       let btnWhatsApp = '';
       if ((data.role === 'partner' || data.role === 'embajador') && data.codigo) {
         const url = `https://sabores-costeros.vercel.app/?partner=${data.codigo}`;
         const idioma = sessionStorage.getItem('idioma') || 'es';
         const mensajes = {
-          es: `¡Sumate a Sabores Costeros! 🌊🍽️ Usá mi código *${data.codigo}* al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis para 4 personas. Entrá acá: ${url}`,
-          pt: `Junte-se ao Sabores Costeros! 🌊🍽️ Use meu código *${data.codigo}* ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis para 4 pessoas. Entre aqui: ${url}`,
-          en: `Join Sabores Costeros! 🌊️ Use my code *${data.codigo}* when signing up. Discover the best coastal restaurants and win free dinners for 4. Enter here: ${url}`
+          es: `¡Sumate a Sabores Costeros! 🌊️ Usá mi código *${data.codigo}* al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis para 4 personas. Entrá acá: ${url}`,
+          pt: `Junte-se ao Sabores Costeros! 🌊️ Use meu código *${data.codigo}* ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis para 4 pessoas. Entre aqui: ${url}`,
+          en: `Join Sabores Costeros! ️ Use my code *${data.codigo}* when signing up. Discover the best coastal restaurants and win free dinners for 4. Enter here: ${url}`
         };
         const msg = encodeURIComponent(mensajes[idioma] || mensajes.es);
         btnWhatsApp = `<a href="https://wa.me/?text=${msg}" target="_blank" class="btn btn-success" style="text-decoration:none;font-size:0.85rem;padding:6px 12px;">📱 Enviar código por WhatsApp</a>`;
@@ -288,7 +271,6 @@ window.toggleUsuario = async (id, nuevoEstado) => {
   } catch (err) { showAlert(`${t('error-generico')}: ${err.message}`, 'danger'); }
 };
 
-// ========== PAGOS Y COMISIONES ==========
 async function loadPagos() {
   const cont = document.getElementById('lista-pagos');
   if (!cont) return;
@@ -319,11 +301,11 @@ async function loadPagos() {
       div.className = 'card';
       div.innerHTML = `
         <h4>🎫 ${data.codigo}</h4>
-        <p> ${personas} ${t('personas')}</p>
+        <p>👥 ${personas} ${t('personas')}</p>
         <p>💰 Total: <strong>$${monto.toFixed(2)} USD</strong></p>
-        ${data.embajadorCodigo ? `<p>🌟 Embajador: <strong>${data.embajadorCodigo}</strong> - $${comisionEmbajador.toFixed(2)}</p>` : ''}
+        ${data.embajadorCodigo ? `<p> Embajador: <strong>${data.embajadorCodigo}</strong> - $${comisionEmbajador.toFixed(2)}</p>` : ''}
         ${data.partnerCodigo ? `<p>🤝 Partner: <strong>${data.partnerCodigo}</strong> - $${comisionPartner.toFixed(2)}</p>` : ''}
-        <p> Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
+        <p>👑 Fundador: <strong>$${(comisionFundador || personas).toFixed(2)}</strong></p>
       `;
       cont.appendChild(div);
     });
@@ -344,7 +326,6 @@ async function loadPagos() {
   }
 }
 
-// ========== SORTEO SEMANAL ==========
 async function loadSorteo() {
   const cont = document.getElementById('lista-sorteo');
   if (!cont) return;
@@ -361,21 +342,20 @@ async function loadSorteo() {
       div.style.cssText = 'background:#FFF9C4; border-left:4px solid #FFD700;';
       div.innerHTML = `
         <p><strong>🎫 ${data.codigo}</strong> - ${data.nombreRestaurante || 'Restaurante'}</p>
-        <p> ${data.personas} ${t('personas')} · 📅 ${data.fecha}</p>
+        <p>👥 ${data.personas} ${t('personas')} · 📅 ${data.fecha}</p>
       `;
       cont.appendChild(div);
     });
     const infoDiv = document.createElement('div');
     infoDiv.className = 'card';
     infoDiv.style.cssText = 'background:#FFF9C4; border-left:4px solid #FFD700;';
-    infoDiv.innerHTML = `<h3 style="color:#722F37;"> Total participantes esta semana: ${total}</h3><p>Sorteo: todos los sábados</p>`;
+    infoDiv.innerHTML = `<h3 style="color:#722F37;">🎉 Total participantes esta semana: ${total}</h3><p>Sorteo: todos los sábados</p>`;
     cont.insertBefore(infoDiv, cont.firstChild);
   } catch (err) {
     cont.innerHTML = `<p style="color:red;">${t('error-generico')}: ${err.message}</p>`;
   }
 }
 
-// ========== CONFIGURACIÓN DE COMISIONES ==========
 async function loadConfig() {
   try {
     const docSnap = await getDocs(collection(db, 'configuracion'));
@@ -447,7 +427,6 @@ document.getElementById('btn-guardar-config')?.addEventListener('click', async (
   }
 });
 
-// ========== INICIALIZACIÓN ==========
 loadAprobaciones();
 loadUsuarios();
 loadPagos();

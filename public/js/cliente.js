@@ -1,4 +1,3 @@
-// Panel Cliente/Turista - Sabores Costeros
 import { db } from './firebase-config.js';
 import { collection, getDocs, addDoc, doc, getDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showAlert, generarCodigoReserva, t, compartirWhatsApp, abrirGoogleMaps } from './utils.js';
@@ -7,14 +6,10 @@ import './session.js';
 const userId = sessionStorage.getItem('userId');
 if (!userId) window.location.href = '/index.html';
 
-// Capturar partner del QR escaneado
 const urlParams = new URLSearchParams(window.location.search);
 const partnerCodigo = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
 if (partnerCodigo) sessionStorage.setItem('lastPartner', partnerCodigo);
 
-document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || 'Cliente';
-
-// ========== CARGAR RESTAURANTES ==========
 async function loadRestaurantes() {
   const cont = document.getElementById('lista-restaurantes');
   if (!cont) return;
@@ -40,7 +35,7 @@ async function loadRestaurantes() {
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <div style="height:150px; background:linear-gradient(135deg, #48CAE4, #0077B6); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🍽️</div>
+        <div style="height:150px; background:linear-gradient(135deg, #48CAE4, #0077B6); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">️</div>
         <h3 style="margin:15px 0 5px 0; color:#722F37;">${r.nombre}</h3>
         <p style="color:#666; font-size:0.9rem;">${r.tipoCocina || 'Cocina variada'}</p>
         <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
@@ -49,7 +44,7 @@ async function loadRestaurantes() {
         </div>
         <p style="color:#666; font-size:0.85rem; margin-top:10px; font-style:italic;">"${r.descripcion || 'Sin descripción'}"</p>
         <div style="display:flex; gap:8px; margin-top:12px;">
-          ${r.direccion ? `<button class="btn-maps" style="flex:1; padding:8px; font-size:0.85rem;" onclick="abrirMapa('${r.direccion.replace(/'/g, "\\'")}')">🗺️ ${t('btn-como-llegar')}</button>` : ''}
+          ${r.direccion ? `<button class="btn-maps" style="flex:1; padding:8px; font-size:0.85rem;" onclick="abrirMapa('${r.direccion.replace(/'/g, "\\'")}')">️ ${t('btn-como-llegar')}</button>` : ''}
           ${r.whatsapp ? `<button class="btn-whatsapp" style="flex:1; padding:8px; font-size:0.85rem;" onclick="abrirWhatsApp('${r.whatsapp.replace(/[^0-9]/g, '')}')">📱 WhatsApp</button>` : ''}
         </div>
         <button class="btn btn-primary btn-block" style="margin-top:10px;" onclick="mostrarDetalleRestaurante('${r.id}', '${r.embajadorCodigo || ''}')">${t('btn-reservar')}</button>
@@ -62,7 +57,6 @@ async function loadRestaurantes() {
   }
 }
 
-// Funciones globales para botones
 window.abrirMapa = function(direccion) {
   abrirGoogleMaps(direccion);
 };
@@ -71,7 +65,6 @@ window.abrirWhatsApp = function(numero) {
   window.open(`https://wa.me/${numero}`, '_blank');
 };
 
-// ========== MIS RESERVAS ==========
 async function loadMisReservas() {
   const cont = document.getElementById('lista-mis-reservas');
   if (!cont) return;
@@ -93,24 +86,21 @@ async function loadMisReservas() {
       const estadoColor = data.estado === 'confirmada' ? '#FFC107' : data.estado === 'asistida' ? '#28A745' : '#DC3545';
       const estadoTexto = data.estado === 'confirmada' ? t('reserva-estado-confirmada') : data.estado === 'asistida' ? t('reserva-estado-asistida') : t('reserva-estado-cancelada');
       
-      // Buscar dirección del restaurante para el botón "Cómo llegar"
       const restauranteAddr = data.direccionRestaurante || '';
-      const shareMsg = t('whatsapp-share-reserva').replace('{restaurante}', data.nombreRestaurante || 'Restaurante').replace('{codigo}', data.codigo);
-      const shareUrl = 'https://sabores-costeros.vercel.app/';
 
       div.innerHTML = `
         <h4 style="color:#722F37;">${data.nombreRestaurante || 'Restaurante'}</h4>
-        <p><strong>📅</strong> ${data.fecha} a las ${data.hora}</p>
+        <p><strong></strong> ${data.fecha} a las ${data.hora}</p>
         <p><strong>👥</strong> ${data.personas} ${t('personas')}</p>
         <p><strong>🎫 Código:</strong> <span style="font-size:1.5rem; color:#023E8A; font-weight:bold;">${data.codigo}</span></p>
-        <p><strong data-i18n="estado-label">Estado:</strong> <span style="color:${estadoColor}; font-weight:bold;">${estadoTexto}</span></p>
+        <p><strong>Estado:</strong> <span style="color:${estadoColor}; font-weight:bold;">${estadoTexto}</span></p>
         ${data.estado === 'confirmada' ? `
           <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
             ${restauranteAddr ? `<button class="btn-maps" style="flex:1; min-width:150px;" onclick="abrirMapa('${restauranteAddr.replace(/'/g, "\\'")}')">🗺️ ${t('btn-como-llegar')}</button>` : ''}
             <button class="btn-whatsapp" style="flex:1; min-width:150px;" onclick="compartirReservaWhatsApp('${data.codigo}', '${data.nombreRestaurante || 'Restaurante'}')">📱 ${t('btn-compartir-whatsapp')}</button>
           </div>
           <div style="background:#FFF3CD; padding:12px; border-radius:8px; margin-top:10px; border-left:4px solid #D4A574;">
-            <p style="margin:0;"><strong>📱 ${t('reserva-presentar-banner')}</strong></p>
+            <p style="margin:0;"><strong> ${t('reserva-presentar-banner')}</strong></p>
             <p style="margin:5px 0 0 0; font-size:0.9rem;">🎉 ${t('reserva-sorteo-banner')}</p>
           </div>
         ` : ''}
@@ -122,14 +112,12 @@ async function loadMisReservas() {
   }
 }
 
-// Función global para compartir reserva por WhatsApp
 window.compartirReservaWhatsApp = function(codigo, nombreRestaurante) {
   const msg = t('whatsapp-share-reserva').replace('{restaurante}', nombreRestaurante).replace('{codigo}', codigo);
   const url = 'https://sabores-costeros.vercel.app/';
   compartirWhatsApp(msg, url);
 };
 
-// ========== DETALLE RESTAURANTE ==========
 window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
   const docSnap = await getDoc(doc(db, 'restaurantes', restauranteId));
   if (!docSnap.exists()) return showAlert('Restaurante no encontrado', 'danger');
@@ -146,7 +134,7 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
       <p style="color:#666;">${r.tipoCocina || ''} · ${r.rangoPrecio || '$$'} · ${r.ciudad || ''}</p>
       <p style="margin:15px 0; color:#333;">${r.descripcion || 'Sin descripción'}</p>
       ${r.direccion ? `<p>📍 ${r.direccion}</p>` : ''}
-      ${r.horarios ? `<p>️ ${JSON.stringify(r.horarios)}</p>` : ''}
+      ${r.horarios ? `<p>🕐 ${JSON.stringify(r.horarios)}</p>` : ''}
       ${r.whatsapp ? `<p><a href="https://wa.me/${r.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366; font-weight:bold;">📱 WhatsApp directo</a></p>` : ''}
       
       <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
@@ -156,15 +144,15 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
       <div style="margin-top:20px; background:#F8F9FA; padding:20px; border-radius:12px;">
         <h3 style="color:#023E8A; margin-top:0;">📅 ${t('btn-reservar')}</h3>
         <div class="form-group">
-          <label data-i18n="label-fecha">${t('label-fecha')}</label>
+          <label>${t('label-fecha')}</label>
           <input type="date" id="res-fecha" class="form-control">
         </div>
         <div class="form-group">
-          <label data-i18n="label-hora">${t('label-hora')}</label>
+          <label>${t('label-hora')}</label>
           <input type="time" id="res-hora" class="form-control">
         </div>
         <div class="form-group">
-          <label data-i18n="label-personas">${t('label-personas')}</label>
+          <label>${t('label-personas')}</label>
           <input type="number" id="res-personas" class="form-control" value="2" min="1" max="20">
         </div>
         <div id="res-error" style="color:red; min-height:20px;"></div>
@@ -177,7 +165,6 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
   document.body.appendChild(modal);
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 
-  // Función global para el botón de mapas dentro del modal
   window.abrirMapaModal = function(dir) {
     abrirGoogleMaps(dir);
   };
@@ -209,12 +196,9 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
         createdAt: serverTimestamp()
       });
 
-      const shareMsg = t('whatsapp-share-reserva').replace('{restaurante}', r.nombre).replace('{codigo}', codigo);
-      const shareUrl = 'https://sabores-costeros.vercel.app/';
-
       modal.innerHTML = `
         <div style="background:white;padding:40px;border-radius:16px;max-width:500px;width:100%;text-align:center;">
-          <div style="font-size:5rem; margin-bottom:20px;"></div>
+          <div style="font-size:5rem; margin-bottom:20px;">🎉</div>
           <h2 style="color:#28A745;">${t('reserva-confirmada-title')}</h2>
           <div style="background:#E8F5E9; padding:20px; border-radius:12px; margin:20px 0;">
             <p style="font-size:0.9rem; color:#666;">${t('reserva-codigo-label')}</p>
@@ -228,8 +212,8 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
             <p style="margin:5px 0 0 0; font-size:0.9rem;">🎉 ${t('reserva-sorteo-info')}</p>
           </div>
           <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:15px;">
-            ${r.direccion ? `<button class="btn-maps" onclick="abrirGoogleMaps('${r.direccion.replace(/'/g, "\\'")}')">️ ${t('btn-como-llegar')}</button>` : ''}
-            <button class="btn-whatsapp" onclick="compartirReservaDesdeModal('${codigo}', '${r.nombre.replace(/'/g, "\\'")}')">📱 ${t('btn-compartir-whatsapp')}</button>
+            ${r.direccion ? `<button class="btn-maps" onclick="abrirGoogleMaps('${r.direccion.replace(/'/g, "\\'")}')">🗺️ ${t('btn-como-llegar')}</button>` : ''}
+            <button class="btn-whatsapp" onclick="compartirReservaDesdeModal('${codigo}', '${r.nombre.replace(/'/g, "\\'")}')"> ${t('btn-compartir-whatsapp')}</button>
           </div>
           <button class="btn btn-primary btn-block" style="margin-top:15px;" onclick="location.reload()">${t('btn-entendido')}</button>
         </div>
@@ -240,14 +224,12 @@ window.mostrarDetalleRestaurante = async (restauranteId, embajadorCodigo) => {
   });
 };
 
-// Función global para compartir desde el modal de confirmación
 window.compartirReservaDesdeModal = function(codigo, nombreRestaurante) {
   const msg = t('whatsapp-share-reserva').replace('{restaurante}', nombreRestaurante).replace('{codigo}', codigo);
   const url = 'https://sabores-costeros.vercel.app/';
   compartirWhatsApp(msg, url);
 };
 
-// ========== SORTEO SEMANAL ==========
 async function loadSorteo() {
   const cont = document.getElementById('info-sorteo');
   if (!cont) return;
@@ -260,7 +242,6 @@ async function loadSorteo() {
   }
 }
 
-// ========== INICIALIZACIÓN ==========
 loadRestaurantes();
 loadMisReservas();
 loadSorteo();

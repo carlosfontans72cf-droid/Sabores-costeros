@@ -20,10 +20,17 @@
   </style>
 </head>
 <body>
+  <nav class="navbar">
+    <h1 data-i18n="nav-embajador">🌟 Panel Embajador</h1>
+    <div>
+      <span class="user-info" id="user-info" data-i18n="nav-user-loading">Cargando...</span>
+      <button class="btn btn-sm btn-danger" onclick="logout()" style="margin-left:10px;" data-i18n="nav-logout">Salir</button>
+    </div>
+  </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats"> Estadísticas</button>
-    <button onclick="showTab('restaurantes')" data-i18n="tab-restaurantes">🏪 Mis Restaurantes</button>
+    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats">📊 Estadísticas</button>
+    <button onclick="showTab('restaurantes')">🏪 Mis Restaurantes</button>
     <button onclick="showTab('qr')">📱 Mi QR</button>
     <button onclick="showTab('comision')" data-i18n="tab-comision">💰 Mi Comisión</button>
   </div>
@@ -54,7 +61,7 @@
     </div>
 
     <div id="tab-restaurantes" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-restaurantes">🏪 Restaurantes que registraste</h2>
+      <h2 class="section-title">🏪 Restaurantes que registraste</h2>
       <div id="lista-restaurantes"></div>
     </div>
 
@@ -72,14 +79,14 @@
     </div>
 
     <div id="tab-comision" class="tab-content">
-      <h2 class="section-title" data-i18n="tab-comision">💰 Detalle de Comisiones</h2>
+      <h2 class="section-title" data-i18n="tab-comision"> Detalle de Comisiones</h2>
       <div id="lista-comisiones"></div>
     </div>
   </div>
 
   <div style="background:#009C3B; color:white; padding:20px; text-align:center; margin-top:30px;">
     <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
-    <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos"> Términos y Condiciones</a>
+    <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
     <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">© 2026 Sabores Costeros</div>
   </div>
 
@@ -94,9 +101,9 @@
       const codigo = document.getElementById('mi-codigo').textContent;
       const idioma = sessionStorage.getItem('idioma') || 'es';
       const mensajes = {
-        es: `¡Sumate a Sabores Costeros! 🌊️ Usá mi código ${codigo} al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis: https://sabores-costeros.vercel.app/`,
-        pt: `Junte-se ao Sabores Costeros! 🌊️ Use meu código ${codigo} ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis: https://sabores-costeros.vercel.app/`,
-        en: `Join Sabores Costeros! 🌊️ Use my code ${codigo} when signing up. Discover the best coastal restaurants and win free dinners: https://sabores-costeros.vercel.app/`
+        es: `¡Sumate a Sabores Costeros! ️ Usá mi código ${codigo} al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis: https://sabores-costeros.vercel.app/?embajador=${codigo}`,
+        pt: `Junte-se ao Sabores Costeros! ️ Use meu código ${codigo} ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis: https://sabores-costeros.vercel.app/?embajador=${codigo}`,
+        en: `Join Sabores Costeros! 🌊️ Use my code ${codigo} when signing up. Discover the best coastal restaurants and win free dinners: https://sabores-costeros.vercel.app/?embajador=${codigo}`
       };
       const texto = encodeURIComponent(mensajes[idioma] || mensajes.es);
       window.open(`https://wa.me/?text=${texto}`, '_blank');

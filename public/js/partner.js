@@ -1,4 +1,3 @@
-// Panel Partner - Sabores Costeros
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { t } from './utils.js';
@@ -12,13 +11,11 @@ document.getElementById('user-info').textContent = sessionStorage.getItem('userN
 document.getElementById('mi-codigo').textContent = miCodigo;
 document.getElementById('mi-url').textContent = `https://sabores-costeros.vercel.app/?partner=${miCodigo}`;
 
-// ========== GENERAR QR REAL ==========
 function generarQR() {
   const url = `https://sabores-costeros.vercel.app/?partner=${miCodigo}`;
   const qrContainer = document.getElementById('mi-qr');
   if (!qrContainer) return;
   
-  // Usar la API de qrserver.com (gratuita y confiable)
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=10&data=${encodeURIComponent(url)}`;
   qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="width:250px;height:250px;border-radius:8px;">`;
 }
@@ -48,7 +45,6 @@ async function loadRestaurantes() {
   if (!cont) return;
 
   try {
-    // Buscar restaurantes que tengan este partnerCodigo
     const q = query(collection(db, 'restaurantes'), where('partnerCodigo', '==', miCodigo));
     const snap = await getDocs(q);
 
@@ -66,7 +62,7 @@ async function loadRestaurantes() {
         <h4 style="color:#722F37;">${data.nombre}</h4>
         <p>${data.tipoCocina || ''} · ${data.direccion || ''}</p>
         <p>Estado: <strong>${data.aprobado ? '✅ Aprobado' : '⏳ Pendiente'}</strong></p>
-        ${data.whatsapp ? `<p><a href="https://wa.me/${data.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366;">📱 WhatsApp</a></p>` : ''}
+        ${data.whatsapp ? `<p><a href="https://wa.me/${data.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366;"> WhatsApp</a></p>` : ''}
       `;
       cont.appendChild(div);
     });
@@ -118,5 +114,4 @@ loadStats();
 loadRestaurantes();
 loadComisiones();
 
-// Generar QR cuando se cargue la página
 setTimeout(generarQR, 500);

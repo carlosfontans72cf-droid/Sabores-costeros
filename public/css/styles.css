@@ -1,4 +1,3 @@
-/* Sabores Costeros - Estilos Globales */
 :root {
   --primary-blue: #023E8A;
   --secondary-blue: #0077B6;
@@ -27,7 +26,6 @@ body {
   min-height: 100vh;
 }
 
-/* ========== LOGIN ========== */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -71,7 +69,6 @@ body {
   font-size: 0.95rem;
 }
 
-/* ========== SELECTOR DE IDIOMA ========== */
 .language-selector {
   display: flex;
   justify-content: center;
@@ -100,7 +97,6 @@ body {
   color: var(--white);
 }
 
-/* ========== FORMULARIOS ========== */
 .form-group {
   margin-bottom: 20px;
 }
@@ -150,7 +146,6 @@ select.form-control {
   font-size: 0.9rem;
 }
 
-/* ========== BOTONES ========== */
 .btn {
   padding: 12px 24px;
   border: none;
@@ -198,7 +193,11 @@ select.form-control {
   width: 100%;
 }
 
-/* ========== SWITCH FORM ========== */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
 .switch-form {
   text-align: center;
   margin-top: 20px;
@@ -228,7 +227,6 @@ select.form-control {
   text-decoration: none;
 }
 
-/* ========== NAVBAR ========== */
 .navbar {
   background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
   color: var(--white);
@@ -251,14 +249,18 @@ select.form-control {
   border-radius: 20px;
 }
 
-/* ========== CONTENEDOR ========== */
 .container {
   max-width: 1200px;
   margin: 20px auto;
   padding: 0 20px;
 }
 
-/* ========== CARDS ========== */
+.section-title {
+  color: var(--primary-blue);
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
 .card {
   background: var(--white);
   border-radius: 12px;
@@ -267,16 +269,6 @@ select.form-control {
   box-shadow: 0 2px 15px rgba(0,0,0,0.08);
 }
 
-.card-header {
-  font-weight: bold;
-  color: var(--primary-blue);
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  border-bottom: 2px solid var(--gray);
-  padding-bottom: 10px;
-}
-
-/* ========== GRID ========== */
 .grid {
   display: grid;
   gap: 15px;
@@ -290,7 +282,6 @@ select.form-control {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-/* ========== TABLAS ========== */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -312,7 +303,6 @@ table tr:hover {
   background: #F8F9FA;
 }
 
-/* ========== BADGES ========== */
 .badge {
   display: inline-block;
   padding: 4px 10px;
@@ -336,7 +326,6 @@ table tr:hover {
   color: var(--dark);
 }
 
-/* ========== WHATSAPP & MAPS BUTTONS ========== */
 .btn-whatsapp {
   background: #25D366;
   color: white;
@@ -352,11 +341,12 @@ table tr:hover {
   transition: all 0.3s;
   text-decoration: none;
 }
+
 .btn-whatsapp:hover {
   background: #128C7E;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37,211,102,0.3);
 }
+
 .btn-maps {
   background: #4285F4;
   color: white;
@@ -372,49 +362,12 @@ table tr:hover {
   transition: all 0.3s;
   text-decoration: none;
 }
+
 .btn-maps:hover {
   background: #3367D6;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(66,133,244,0.3);
-}
-.btn-whatsapp-share {
-  background: #25D366;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s;
-}
-.btn-whatsapp-share:hover {
-  background: #128C7E;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37,211,102,0.3);
 }
 
-/* ========== CONFIG INPUTS ========== */
-.config-input {
-  width: 100px;
-  padding: 8px;
-  border: 2px solid #023E8A;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  text-align: center;
-}
-.config-card {
-  background: #E3F2FD;
-  border-left: 4px solid #023E8A;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -428,10 +381,5 @@ table tr:hover {
 
   .login-card {
     padding: 30px 20px;
-  }
-
-  .btn-whatsapp, .btn-maps {
-    padding: 8px 14px;
-    font-size: 0.85rem;
   }
 }

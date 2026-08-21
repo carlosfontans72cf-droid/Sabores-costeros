@@ -1,9 +1,7 @@
-// Gestor de Sesión - Se importa en todas las páginas protegidas
 import { auth, db } from './firebase-config.js';
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 async function verificarSesion() {
-  // Esperar a que Firebase Auth se inicialice
   await new Promise(resolve => {
     const unsub = auth.onAuthStateChanged(user => {
       unsub();
@@ -14,7 +12,6 @@ async function verificarSesion() {
   const user = auth.currentUser;
   
   if (!user) {
-    // No hay sesión de Firebase - ir al login
     sessionStorage.clear();
     window.location.href = '/index.html';
     return false;
@@ -23,7 +20,6 @@ async function verificarSesion() {
   const role = sessionStorage.getItem('userRole');
   
   if (!role) {
-    // sessionStorage vacío - restaurar desde Firestore
     try {
       const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
       if (!userDoc.exists()) {
@@ -41,7 +37,6 @@ async function verificarSesion() {
       sessionStorage.setItem('userCodigo', userData.codigo || '');
       sessionStorage.setItem('userEmbajadorCodigo', userData.embajadorCodigo || '');
       
-      // Verificar que el usuario esté activo
       if (userData.activo === false) {
         sessionStorage.clear();
         await auth.signOut();
@@ -49,10 +44,8 @@ async function verificarSesion() {
         return false;
       }
       
-      // Actualizar user-info en la página
       actualizarUserInfo();
       
-      // Verificar que el usuario esté en la página correcta
       const paginaActual = window.location.pathname;
       const paginaCorrecta = getPaginaParaRol(userData.role);
       
@@ -70,10 +63,8 @@ async function verificarSesion() {
     }
   }
   
-  // sessionStorage tiene datos - actualizar user-info
   actualizarUserInfo();
   
-  // Verificar que estemos en la página correcta
   const paginaActual = window.location.pathname;
   const paginaCorrecta = getPaginaParaRol(role);
   
@@ -109,5 +100,4 @@ function getPaginaParaRol(role) {
   }
 }
 
-// Ejecutar inmediatamente
 verificarSesion();

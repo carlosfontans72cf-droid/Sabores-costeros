@@ -18,14 +18,6 @@
     .btn-whatsapp-share { background:#25D366; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-size:1rem; font-weight:600; display:inline-flex; align-items:center; gap:8px; transition:all 0.3s; margin-top:10px; }
     .btn-whatsapp-share:hover { background:#128C7E; transform:translateY(-2px); }
   </style>
-  <script>
-    (function() {
-      if (sessionStorage.getItem('userRole') !== 'partner') {
-        alert('Acceso denegado');
-        window.location.href = '/index.html';
-      }
-    })();
-  </script>
 </head>
 <body>
   <nav class="navbar">
@@ -37,7 +29,7 @@
   </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats"> Estadísticas</button>
+    <button class="active" onclick="showTab('stats')" data-i18n="tab-stats">📊 Estadísticas</button>
     <button onclick="showTab('restaurantes')">🏪 Mis Restaurantes</button>
     <button onclick="showTab('qr')" data-i18n="section-qr">📱 Mi QR</button>
     <button onclick="showTab('comision')" data-i18n="tab-comision">💰 Mi Comisión</button>
@@ -45,7 +37,7 @@
 
   <div class="container">
     <div class="card" style="background:#FFF3CD; border-left:4px solid #FFD700;">
-      <h3 style="color:#722F37; margin-top:0;"> Tu código de Partner</h3>
+      <h3 style="color:#722F37; margin-top:0;">🎫 Tu código de Partner</h3>
       <p style="font-size:2rem; color:#023E8A; font-weight:bold; margin:10px 0;" id="mi-codigo">---</p>
       <p style="color:#666;" data-i18n="codigo-partner-desc">Usá este código en tus publicaciones, revistas, radios. Ganás <strong>$0.50 USD</strong> por cada cubierto asistido.</p>
       <button class="btn-whatsapp-share" onclick="compartirCodigoWhatsApp()">📱 <span data-i18n="btn-compartir-codigo">Compartir código por WhatsApp</span></button>
@@ -105,7 +97,6 @@
       document.getElementById('tab-' + tabName).classList.add('active');
       event.target.classList.add('active');
     }
-    function logout() { sessionStorage.clear(); window.location.href = '/index.html'; }
     function copiarURL() {
       const url = document.getElementById('mi-url').textContent;
       navigator.clipboard.writeText(url);
@@ -127,8 +118,8 @@
       const idioma = sessionStorage.getItem('idioma') || 'es';
       const mensajes = {
         es: `¡Mirá esta app de restaurantes de la costa! 🌊️ Descubrí los mejores lugares y participá por cenas gratis. Usá mi código: ${url}`,
-        pt: `Olhe este app de restaurantes da costa! ️ Descubra os melhores lugares e participe de jantares grátis. Use meu código: ${url}`,
-        en: `Check out this coastal restaurant app! ️ Discover the best spots and win free dinners. Use my code: ${url}`
+        pt: `Olhe este app de restaurantes da costa! 🌊️ Descubra os melhores lugares e participe de jantares grátis. Use meu código: ${url}`,
+        en: `Check out this coastal restaurant app! 🌊️ Discover the best spots and win free dinners. Use my code: ${url}`
       };
       const texto = encodeURIComponent(mensajes[idioma] || mensajes.es);
       window.open(`https://wa.me/?text=${texto}`, '_blank');
@@ -141,5 +132,5 @@
     import { applyTranslations } from '/js/utils.js';
     setTimeout(() => applyTranslations(), 200);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e41c7ce9ce11e8',t:'MTc4NzI1NzM1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

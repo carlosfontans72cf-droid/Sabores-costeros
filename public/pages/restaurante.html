@@ -13,15 +13,6 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
   </style>
-  <script>
-    (function() {
-      const role = sessionStorage.getItem('userRole');
-      if (role !== 'restaurante') {
-        alert('Acceso denegado');
-        window.location.href = '/index.html';
-      }
-    })();
-  </script>
 </head>
 <body>
   <nav class="navbar">
@@ -35,14 +26,14 @@
   <div class="admin-nav">
     <button class="active" onclick="showTab('perfil')" data-i18n="tab-perfil-res">🏪 Mi Perfil</button>
     <button onclick="showTab('reservas')" data-i18n="tab-reservas-res">📋 Reservas</button>
-    <button onclick="showTab('menu')" data-i18n="tab-menu">📖 Menú</button>
+    <button onclick="showTab('menu')" data-i18n="tab-menu"> Menú</button>
     <button onclick="showTab('resenas')" data-i18n="tab-resenas">⭐ Reseñas</button>
-    <button onclick="showTab('eventos')" data-i18n="tab-eventos">🎉 Eventos</button>
+    <button onclick="showTab('eventos')" data-i18n="tab-eventos"> Eventos</button>
   </div>
 
   <div class="container">
     <div id="tab-perfil" class="tab-content active">
-      <h2 class="section-title" data-i18n="section-datos-restaurante"> Datos del Restaurante</h2>
+      <h2 class="section-title" data-i18n="section-datos-restaurante">🏪 Datos del Restaurante</h2>
       <input type="hidden" id="restaurante-id">
       <div class="card">
         <div class="grid grid-2">
@@ -94,7 +85,7 @@
     </div>
 
     <div id="tab-reservas" class="tab-content">
-      <h2 class="section-title" data-i18n="section-reservas-recibidas">📋 Reservas Recibidas</h2>
+      <h2 class="section-title" data-i18n="section-reservas-recibidas"> Reservas Recibidas</h2>
       <div id="lista-reservas"></div>
     </div>
 
@@ -121,7 +112,7 @@
   </div>
 
   <div style="background:#722F37; color:white; padding:20px; text-align:center; margin-top:30px;">
-    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad"> Política de Privacidad</a>
+    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
     <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
     <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">© 2026 Sabores Costeros</div>
   </div>
@@ -142,5 +133,5 @@
     import { applyTranslations } from '/js/utils.js';
     setTimeout(() => applyTranslations(), 200);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e3d613cb0c9803',t:'MTc4NzI1NDQ3NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

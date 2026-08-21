@@ -14,15 +14,6 @@
     .config-card { background: #E3F2FD; border-left: 4px solid #023E8A; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
     .config-input { width: 100px; padding: 8px; border: 2px solid #023E8A; border-radius: 6px; font-size: 1.1rem; text-align: center; }
   </style>
-  <script>
-    (function() {
-      const role = sessionStorage.getItem('userRole');
-      if (role !== 'fundador' && role !== 'admin') {
-        alert('Acceso denegado');
-        window.location.href = '/index.html';
-      }
-    })();
-  </script>
 </head>
 <body>
   <nav class="navbar">
@@ -34,16 +25,15 @@
   </nav>
 
   <div class="admin-nav">
-    <button class="active" onclick="showTab('crear')" data-i18n="tab-crear"> Crear Usuario</button>
+    <button class="active" onclick="showTab('crear')" data-i18n="tab-crear">➕ Crear Usuario</button>
     <button onclick="showTab('aprobaciones')" data-i18n="tab-aprobaciones">✅ Aprobaciones</button>
-    <button onclick="showTab('usuarios')" data-i18n="tab-usuarios"> Usuarios</button>
+    <button onclick="showTab('usuarios')" data-i18n="tab-usuarios">👥 Usuarios</button>
     <button onclick="showTab('pagos')" data-i18n="tab-pagos">💰 Comisiones</button>
-    <button onclick="showTab('sorteo')" data-i18n="tab-sorteo"> Sorteo</button>
+    <button onclick="showTab('sorteo')" data-i18n="tab-sorteo">🎉 Sorteo</button>
     <button onclick="showTab('configuracion')" data-i18n="tab-configuracion">⚙️ Configuración</button>
   </div>
 
   <div class="container">
-    <!-- CREAR USUARIO -->
     <div id="tab-crear" class="tab-content active">
       <h2 class="section-title" data-i18n="section-crear">➕ Crear Admin / Partner / Embajador</h2>
       <div class="card">
@@ -69,7 +59,7 @@
             <select id="new-role" class="form-control">
               <option value="admin" data-i18n="role-admin">🔑 Administrador</option>
               <option value="partner" data-i18n="role-partner">🤝 Partner (Revista/Influencer/Radio)</option>
-              <option value="embajador" data-i18n="role-embajador-select"> Embajador (Promotor)</option>
+              <option value="embajador" data-i18n="role-embajador-select">🌟 Embajador (Promotor)</option>
             </select>
           </div>
           <div class="form-group">
@@ -81,38 +71,32 @@
       </div>
     </div>
 
-    <!-- APROBACIONES -->
     <div id="tab-aprobaciones" class="tab-content">
       <h2 class="section-title" data-i18n="section-aprobaciones">✅ Restaurantes Pendientes de Aprobación</h2>
       <div id="lista-aprobaciones"></div>
     </div>
 
-    <!-- USUARIOS -->
     <div id="tab-usuarios" class="tab-content">
       <h2 class="section-title" data-i18n="section-usuarios">👥 Gestión de Usuarios</h2>
       <div id="lista-usuarios"></div>
     </div>
 
-    <!-- PAGOS -->
     <div id="tab-pagos" class="tab-content">
       <h2 class="section-title" data-i18n="section-pagos">💰 Registro de Comisiones</h2>
       <div id="lista-pagos"></div>
     </div>
 
-    <!-- SORTEO -->
     <div id="tab-sorteo" class="tab-content">
       <h2 class="section-title" data-i18n="section-sorteo">🎉 Sorteo Semanal</h2>
       <div id="lista-sorteo"></div>
     </div>
 
-    <!-- CONFIGURACIÓN -->
     <div id="tab-configuracion" class="tab-content">
       <h2 class="section-title" data-i18n="section-config">⚙️ Configuración de Comisiones</h2>
       <div class="card">
         <div class="config-card">
           <h3 style="color:#023E8A; margin-top:0;">💰 Comisiones por Cubierto</h3>
           <p style="color:#666; margin-bottom:15px;">Configurá cuánto se cobra por cada persona que asiste a un restaurante.</p>
-          
           <div class="grid grid-3" style="margin-bottom: 20px;">
             <div class="form-group">
               <label data-i18n="config-comision-total">Comisión total por cubierto (USD)</label>
@@ -131,28 +115,25 @@
               <input type="number" id="config-partner" class="config-input" value="0.50" step="0.10" min="0">
             </div>
           </div>
-
           <div style="background:#FFF9C4; padding:12px; border-radius:8px; margin-bottom:15px; border-left:4px solid #FFD700;">
-            <p style="margin:0; font-size:0.9rem; color:#722F37;"><strong>️ Importante:</strong> La suma de las 3 comisiones (Fundador + Embajador + Partner) debe ser igual a la comisión total.</p>
+            <p style="margin:0; font-size:0.9rem; color:#722F37;"><strong>⚠️ Importante:</strong> La suma de las 3 comisiones (Fundador + Embajador + Partner) debe ser igual a la comisión total.</p>
           </div>
-
           <button id="btn-guardar-config" class="btn btn-primary" data-i18n="btn-guardar-config">💾 Guardar Configuración</button>
         </div>
-
         <div class="config-card" style="background:#E8F5E9; border-left-color:#28A745;">
-          <h3 style="color:#28A745; margin-top:0;"> Resumen actual</h3>
+          <h3 style="color:#28A745; margin-top:0;">📊 Resumen actual</h3>
           <p>Comisión total: <strong id="resumen-total">$2.00 USD</strong> por cubierto</p>
           <p>Fundador: <strong id="resumen-fundador">$1.00 USD</strong> por cubierto</p>
           <p>Embajador: <strong id="resumen-embajador">$0.50 USD</strong> por cubierto</p>
           <p>Partner: <strong id="resumen-partner">$0.50 USD</strong> por cubierto</p>
-          <p id="resumen-warning" style="color:red; display:none; font-weight:bold;">️ La suma no coincide con el total</p>
+          <p id="resumen-warning" style="color:red; display:none; font-weight:bold;">⚠️ La suma no coincide con el total</p>
         </div>
       </div>
     </div>
   </div>
 
   <div style="background:#023E8A; color:white; padding:20px; text-align:center; margin-top:30px;">
-    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad">📋 Política de Privacidad</a>
+    <a href="/pages/politica-privacidad.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-privacidad"> Política de Privacidad</a>
     <a href="/pages/terminos-condiciones.html" target="_blank" style="color:#FFD700; text-decoration:none; margin: 0 10px;" data-i18n="footer-terminos">📄 Términos y Condiciones</a>
     <div style="margin-top:10px; font-size:0.8rem; opacity:0.8;" data-i18n="footer-copy">© 2026 Sabores Costeros</div>
   </div>
@@ -171,8 +152,7 @@
   
   <script type="module">
     import { applyTranslations } from '/js/utils.js';
-    // Aplicar traducciones después de que admin.js cargue
     setTimeout(() => applyTranslations(), 200);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e3d49ecc0ee845',t:'MTc4NzI1NDQxNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

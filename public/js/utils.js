@@ -1,9 +1,5 @@
-// Utilidades y Multi-idioma - Sabores Costeros
-
-// ========== SISTEMA DE TRADUCCIONES COMPLETO ==========
 const traducciones = {
   es: {
-    // Login
     'app-subtitle': 'Descubrí los mejores restaurantes de la costa',
     'label-email': 'Email',
     'label-password': 'Contraseña',
@@ -26,7 +22,7 @@ const traducciones = {
     'link-login': 'Iniciá sesión',
     'role-cliente': ' Turista / Cliente',
     'role-restaurante': '🏪 Dueño de restaurante',
-    'role-embajador': '🌟 Embajador (Promotor)',
+    'role-embajador': ' Embajador (Promotor)',
     'label-role': 'Quiero registrarme como:',
     'label-codigo-emb': 'Tu código de Embajador (opcional)',
     'legal-text': 'Al registrarte, aceptás nuestra',
@@ -37,18 +33,14 @@ const traducciones = {
     'error-wrong-password': 'Email o contraseña incorrectos',
     'error-user-not-found': 'No existe cuenta con ese email',
     'error-account-deactivated': 'Cuenta desactivada',
-
-    // Navbar y botones globales
     'nav-logout': 'Salir',
     'nav-admin': '👑 Panel Administrador',
     'nav-cliente': '️ Sabores Costeros',
     'nav-restaurante': '🍽️ Mi Restaurante',
     'nav-partner': '🤝 Panel Partner',
-    'nav-embajador': '🌟 Panel Embajador',
+    'nav-embajador': ' Panel Embajador',
     'nav-promotor': '💼 Panel Promotor',
     'nav-user-loading': 'Cargando...',
-
-    // Admin tabs
     'tab-crear': '➕ Crear Usuario',
     'tab-aprobaciones': '✅ Aprobaciones',
     'tab-usuarios': '👥 Usuarios',
@@ -76,8 +68,8 @@ const traducciones = {
     'placeholder-new-password': 'Mínimo 6 caracteres',
     'placeholder-new-codigo': 'Ej: REVISTA01, EMB001',
     'role-admin': '🔑 Administrador',
-    'role-partner': '🤝 Partner (Revista/Influencer/Radio)',
-    'role-embajador-select': ' Embajador (Promotor)',
+    'role-partner': ' Partner (Revista/Influencer/Radio)',
+    'role-embajador-select': '🌟 Embajador (Promotor)',
     'btn-crear': '✅ Crear Usuario',
     'btn-activar': 'Activar',
     'btn-desactivar': 'Desactivar',
@@ -87,7 +79,7 @@ const traducciones = {
     'config-comision-fundador': 'Comisión Fundador (USD)',
     'config-comision-embajador': 'Comisión Embajador (USD)',
     'config-comision-partner': 'Comisión Partner (USD)',
-    'btn-guardar-config': ' Guardar Configuración',
+    'btn-guardar-config': '💾 Guardar Configuración',
     'config-saved': 'Configuración guardada correctamente',
     'user-activado': 'Usuario activado',
     'user-desactivado': 'Usuario desactivado',
@@ -96,17 +88,15 @@ const traducciones = {
     'resumen-comisiones': '📊 Resumen de Comisiones',
     'total-recaudado': '💰 Total recaudado',
     'total-fundador': '👑 Fundador (vos)',
-    'total-embajadores': ' Embajadores',
+    'total-embajadores': '🌟 Embajadores',
     'total-partners': '🤝 Partners',
-
-    // Cliente tabs
     'tab-restaurantes': '🍽️ Restaurantes',
     'tab-reservas': '📋 Mis Reservas',
     'tab-sorteo-tab': '🎉 Sorteo',
     'tab-perfil': '👤 Perfil',
-    'banner-sorteo-title': ' ¡SORTEO SEMANAL!',
+    'banner-sorteo-title': '🎉 ¡SORTEO SEMANAL!',
     'banner-sorteo-desc': 'Validá tu código al llegar y participá por una <strong>cena gratis para 4 personas</strong>',
-    'banner-sorteo-sub': '🏆 Sorteo todos los sábados · 📍 En los mejores restaurantes de la costa',
+    'banner-sorteo-sub': '🏆 Sorteo todos los sábados ·  En los mejores restaurantes de la costa',
     'section-restaurantes': '🍽️ Restaurantes de la Costa',
     'section-mis-reservas': '📋 Mis Reservas',
     'section-perfil': '👤 Mi Perfil',
@@ -120,16 +110,16 @@ const traducciones = {
     'reserva-confirmada-title': '🎉 ¡Reserva Confirmada!',
     'reserva-codigo-label': 'Tu código de reserva:',
     'reserva-presentar': '📱 Presentá este código al llegar',
-    'reserva-sorteo-info': '🎉 Validalo al llegar y participá del <strong>sorteo semanal</strong> de una cena gratis',
+    'reserva-sorteo-info': ' Validalo al llegar y participá del <strong>sorteo semanal</strong> de una cena gratis',
     'btn-entendido': 'Entendido',
     'btn-cerrar': 'Cerrar',
     'reserva-estado-confirmada': 'Confirmada',
     'reserva-estado-asistida': 'Asistida ✅',
     'reserva-estado-cancelada': 'Cancelada',
     'estado-label': 'Estado',
-    'reserva-presentar-banner': ' Presentá este código al llegar',
-    'reserva-sorteo-banner': '🎉 Validalo para participar del sorteo semanal de una cena gratis',
-    'btn-compartir-whatsapp': ' Compartir por WhatsApp',
+    'reserva-presentar-banner': '📱 Presentá este código al llegar',
+    'reserva-sorteo-banner': ' Validalo para participar del sorteo semanal de una cena gratis',
+    'btn-compartir-whatsapp': '📱 Compartir por WhatsApp',
     'btn-como-llegar': '🗺️ Cómo llegar',
     'perfil-nombre-label': 'Nombre',
     'perfil-email-label': 'Email',
@@ -137,10 +127,8 @@ const traducciones = {
     'perfil-cambiar-idioma': 'Cambiar idioma',
     'btn-guardar-idioma': 'Guardar idioma',
     'idioma-es': '🇪🇸 Español',
-    'idioma-pt': '🇧 Português',
+    'idioma-pt': '🇷 Português',
     'idioma-en': '🇺🇸 English',
-
-    // Sorteo
     'sorteo-titulo': '🎉 Sorteo Semanal',
     'sorteo-desc-1': 'Todos los sábados sorteamos una cena completa para 4 personas en los mejores restaurantes de la costa uruguaya.',
     'sorteo-como-participar': '¿Cómo participar?',
@@ -150,15 +138,13 @@ const traducciones = {
     'sorteo-mas-reservas': 'Cuantas más reservas valides, más chances tenés de ganar.',
     'sorteo-participantes': '🎫 Cargando participantes...',
     'sorteo-proximo': '🏆 Próximo sorteo: este sábado',
-    'sorteo-participantes-count': '🎫 {count} reservas participaron esta semana',
-
-    // Restaurante
+    'sorteo-participantes-count': ' {count} reservas participaron esta semana',
     'tab-perfil-res': '🏪 Mi Perfil',
-    'tab-reservas-res': ' Reservas',
-    'tab-menu': '📖 Menú',
+    'tab-reservas-res': '📋 Reservas',
+    'tab-menu': ' Menú',
     'tab-resenas': '⭐ Reseñas',
     'tab-eventos': '🎉 Eventos',
-    'section-datos-restaurante': ' Datos del Restaurante',
+    'section-datos-restaurante': '🏪 Datos del Restaurante',
     'label-nombre-rest': 'Nombre del restaurante',
     'label-tipo-cocina': 'Tipo de cocina',
     'label-direccion': 'Dirección',
@@ -189,50 +175,35 @@ const traducciones = {
     'section-reservas-recibidas': '📋 Reservas Recibidas',
     'sin-reservas': 'No hay reservas',
     'registro-primero': 'Primero registrá tu restaurante en "Mi Perfil"',
-    'cobro-info': '💰 Cobro: ${amount} USD (${personas} x $2)',
-    'comision-info': 'Comisiones automáticas: $0.50 partner + $0.50 embajador + $1 fundador',
     'btn-confirmar-asistencia': '✅ Confirmar Asistencia',
     'total-pagar': '💰 Total a pagar este mes',
-    'confirmar-asistencia-pregunta': '¿Confirmar asistencia del código {codigo} ({personas} personas)?\n\nSe cobrarán ${amount} USD a tu restaurante.',
-    'asistencia-confirmada': '✅ Asistencia confirmada. Cobro: ${amount} USD',
     'menu-proximamente': 'Próximamente: cargar platos, precios y fotos',
     'resenas-proximamente': 'Próximamente: moderar reseñas de clientes',
     'eventos-proximamente': 'Próximamente: publicar cenas show, degustaciones, etc.',
-
-    // Partner
     'section-qr': '📱 Mi QR Personalizado',
     'qr-desc': 'Este QR lleva a los usuarios a la app con tu código integrado',
     'btn-copiar-url': '📋 Copiar URL',
     'url-copiada': 'URL copiada',
-
-    // Embajador
     'tab-stats': '📊 Estadísticas',
-    'tab-restaurantes': ' Mis Restaurantes',
+    'tab-restaurantes-emb': ' Mis Restaurantes',
     'tab-comision': '💰 Mi Comisión',
-    'tab-mis-restaurantes': '🏪 Mis Restaurantes',
     'stat-restaurantes-label': 'Restaurantes registrados',
     'stat-cubiertos-label': 'Cubiertos asistidos',
     'stat-comision-label': 'Comisión acumulada',
     'stat-reservas-label': 'Reservas generadas',
     'sin-comisiones': 'Sin comisiones aún',
     'sin-restaurantes-emb': 'Aún no trajiste restaurantes',
-    'sin-restaurantes-partner': 'Aún no hay restaurantes con tu código. Compartí tu QR para que los restaurantes se registren con tu código.',
+    'sin-restaurantes-partner': 'Aún no hay restaurantes con tu código',
     'total-acumulado': 'Total acumulado',
     'codigo-embajador-desc': 'Compartí este código con los restaurantes. Ganás <strong>$0.50 USD</strong> por cada cubierto que asista.',
     'codigo-partner-desc': 'Usá este código en tus publicaciones, revistas, radios. Ganás <strong>$0.50 USD</strong> por cada cubierto asistido.',
     'btn-compartir-codigo': '📱 Compartir código por WhatsApp',
-
-    // Footer
     'footer-privacidad': '📋 Política de Privacidad',
     'footer-terminos': '📄 Términos y Condiciones',
     'footer-copy': '© 2026 Sabores Costeros. Todos los derechos reservados.',
-
-    // WhatsApp share messages
-    'whatsapp-share-cliente': '¡Mirá esta app de restaurantes de la costa! 🌊️ Descubrí los mejores lugares y participá por cenas gratis. Bajala ahora:',
+    'whatsapp-share-cliente': '¡Mirá esta app de restaurantes de la costa! ️ Descubrí los mejores lugares y participá por cenas gratis. Bajala ahora:',
     'whatsapp-share-reserva': '¡Hice una reserva en {restaurante}! 🍽️ Código: {codigo}. Usá Sabores Costeros para descubrir los mejores restaurantes de la costa 🌊',
     'whatsapp-share-codigo': '¡Sumate a Sabores Costeros! 🌊🍽️ Usá mi código {codigo} al registrarte. Descubrí los mejores restaurantes de la costa y participá por cenas gratis',
-
-    // Misc
     'personas': 'personas',
     'confirmar': 'Confirmar',
     'cancelar': 'Cancelar',
@@ -250,21 +221,11 @@ const traducciones = {
     'error-generico': 'Error'
   },
   pt: {
-    // Login
     'app-subtitle': 'Descubra os melhores restaurantes da costa',
     'label-email': 'Email',
     'label-password': 'Senha',
     'label-nombre': 'Nome',
     'label-apellido': 'Sobrenome',
-    'label-email-reg': 'Email',
-    'label-password-reg': 'Senha',
-    'placeholder-email': 'seu@email.com',
-    'placeholder-password': 'Senha',
-    'placeholder-nombre': 'Seu nome',
-    'placeholder-apellido': 'Seu sobrenome',
-    'placeholder-email-reg': 'seu@email.com',
-    'placeholder-password-reg': 'Mínimo 6 caracteres',
-    'placeholder-codigo': 'Ex: EMB001',
     'btn-login': 'Entrar',
     'btn-register': 'Criar conta',
     'text-no-account': 'Não tem conta?',
@@ -284,18 +245,14 @@ const traducciones = {
     'error-wrong-password': 'Email ou senha incorretos',
     'error-user-not-found': 'Não existe conta com esse email',
     'error-account-deactivated': 'Conta desativada',
-
-    // Navbar y botones globales
     'nav-logout': 'Sair',
-    'nav-admin': ' Painel Administrador',
+    'nav-admin': '👑 Painel Administrador',
     'nav-cliente': '🌊️ Sabores Costeros',
-    'nav-restaurante': '️ Meu Restaurante',
+    'nav-restaurante': '🍽️ Meu Restaurante',
     'nav-partner': '🤝 Painel Parceiro',
     'nav-embajador': '🌟 Painel Embaixador',
     'nav-promotor': '💼 Painel Promotor',
     'nav-user-loading': 'Carregando...',
-
-    // Admin tabs
     'tab-crear': '➕ Criar Usuário',
     'tab-aprobaciones': '✅ Aprovações',
     'tab-usuarios': '👥 Usuários',
@@ -307,7 +264,7 @@ const traducciones = {
     'section-usuarios': '👥 Gestão de Usuários',
     'section-pagos': '💰 Registro de Comissões',
     'section-sorteo': '🎉 Sorteio Semanal',
-    'section-config': '⚙️ Configuração de Comissões',
+    'section-config': '️ Configuração de Comissões',
     'no-aprobaciones': 'Não há aprovações pendentes',
     'no-usuarios': 'Sem usuários',
     'no-pagos': 'Sem pagamentos registrados',
@@ -322,7 +279,7 @@ const traducciones = {
     'placeholder-new-email': 'email@exemplo.com',
     'placeholder-new-password': 'Mínimo 6 caracteres',
     'placeholder-new-codigo': 'Ex: REVISTA01, EMB001',
-    'role-admin': ' Administrador',
+    'role-admin': '🔑 Administrador',
     'role-partner': '🤝 Parceiro (Revista/Influencer/Rádio)',
     'role-embajador-select': '🌟 Embaixador (Promotor)',
     'btn-crear': '✅ Criar Usuário',
@@ -341,22 +298,20 @@ const traducciones = {
     'restaurante-aprobado': 'Restaurante aprovado',
     'restaurante-rechazado': 'Restaurante rejeitado',
     'resumen-comisiones': '📊 Resumo de Comissões',
-    'total-recaudado': '💰 Total arrecadado',
+    'total-recaudado': ' Total arrecadado',
     'total-fundador': '👑 Fundador (você)',
-    'total-embajadores': '🌟 Embaixadores',
+    'total-embajadores': ' Embaixadores',
     'total-partners': '🤝 Parceiros',
-
-    // Cliente tabs
-    'tab-restaurantes': '️ Restaurantes',
+    'tab-restaurantes': '🍽️ Restaurantes',
     'tab-reservas': '📋 Minhas Reservas',
     'tab-sorteo-tab': '🎉 Sorteio',
-    'tab-perfil': ' Perfil',
+    'tab-perfil': '👤 Perfil',
     'banner-sorteo-title': '🎉 SORTEIO SEMANAL!',
     'banner-sorteo-desc': 'Valide seu código ao chegar e participe de um <strong>jantar grátis para 4 pessoas</strong>',
-    'banner-sorteo-sub': '🏆 Sorteio todos os sábados · 📍 Nos melhores restaurantes da costa',
+    'banner-sorteo-sub': ' Sorteio todos os sábados · 📍 Nos melhores restaurantes da costa',
     'section-restaurantes': '🍽️ Restaurantes da Costa',
-    'section-mis-reservas': '📋 Minhas Reservas',
-    'section-perfil': ' Meu Perfil',
+    'section-mis-reservas': ' Minhas Reservas',
+    'section-perfil': '👤 Meu Perfil',
     'no-restaurantes': 'Ainda não há restaurantes disponíveis',
     'no-reservas': 'Você não tem reservas ativas',
     'btn-reservar': 'Reservar Mesa',
@@ -366,8 +321,8 @@ const traducciones = {
     'btn-confirmar-reserva': 'Confirmar Reserva',
     'reserva-confirmada-title': '🎉 Reserva Confirmada!',
     'reserva-codigo-label': 'Seu código de reserva:',
-    'reserva-presentar': ' Apresente este código ao chegar',
-    'reserva-sorteo-info': '🎉 Valide ao chegar e participe do <strong>sorteio semanal</strong> de um jantar grátis',
+    'reserva-presentar': '📱 Apresente este código ao chegar',
+    'reserva-sorteo-info': ' Valide ao chegar e participe do <strong>sorteio semanal</strong> de um jantar grátis',
     'btn-entendido': 'Entendido',
     'btn-cerrar': 'Fechar',
     'reserva-estado-confirmada': 'Confirmada',
@@ -384,10 +339,8 @@ const traducciones = {
     'perfil-cambiar-idioma': 'Mudar idioma',
     'btn-guardar-idioma': 'Salvar idioma',
     'idioma-es': '🇪🇸 Español',
-    'idioma-pt': '🇧 Português',
-    'idioma-en': '🇸 English',
-
-    // Sorteo
+    'idioma-pt': '🇷 Português',
+    'idioma-en': '🇺🇸 English',
     'sorteo-titulo': '🎉 Sorteio Semanal',
     'sorteo-desc-1': 'Todos os sábados sorteamos um jantar completo para 4 pessoas nos melhores restaurantes da costa uruguaia.',
     'sorteo-como-participar': 'Como participar?',
@@ -398,13 +351,11 @@ const traducciones = {
     'sorteo-participantes': '🎫 Carregando participantes...',
     'sorteo-proximo': '🏆 Próximo sorteio: este sábado',
     'sorteo-participantes-count': '🎫 {count} reservas participaram esta semana',
-
-    // Restaurante
     'tab-perfil-res': '🏪 Meu Perfil',
-    'tab-reservas-res': ' Reservas',
+    'tab-reservas-res': '📋 Reservas',
     'tab-menu': '📖 Cardápio',
     'tab-resenas': '⭐ Avaliações',
-    'tab-eventos': '🎉 Eventos',
+    'tab-eventos': ' Eventos',
     'section-datos-restaurante': '🏪 Dados do Restaurante',
     'label-nombre-rest': 'Nome do restaurante',
     'label-tipo-cocina': 'Tipo de cozinha',
@@ -430,56 +381,41 @@ const traducciones = {
     'rango-economico': '$ (Econômico)',
     'rango-moderado': '$$ (Moderado)',
     'rango-premium': '$$$ (Premium)',
-    'btn-guardar-perfil': ' Salvar Perfil',
+    'btn-guardar-perfil': '💾 Salvar Perfil',
     'perfil-actualizado': 'Perfil atualizado',
     'restaurante-registrado': 'Restaurante registrado (pendente de aprovação)',
     'section-reservas-recibidas': '📋 Reservas Recebidas',
     'sin-reservas': 'Não há reservas',
     'registro-primero': 'Primeiro registre seu restaurante em "Meu Perfil"',
-    'cobro-info': '💰 Cobrança: ${amount} USD (${personas} x $2)',
-    'comision-info': 'Comissões automáticas: $0.50 parceiro + $0.50 embaixador + $1 fundador',
     'btn-confirmar-asistencia': '✅ Confirmar Presença',
     'total-pagar': '💰 Total a pagar este mês',
-    'confirmar-asistencia-pregunta': 'Confirmar presença do código {codigo} ({personas} pessoas)?\n\nSerão cobrados ${amount} USD do seu restaurante.',
-    'asistencia-confirmada': '✅ Presença confirmada. Cobrança: ${amount} USD',
     'menu-proximamente': 'Em breve: carregar pratos, preços e fotos',
     'resenas-proximamente': 'Em breve: moderar avaliações de clientes',
     'eventos-proximamente': 'Em breve: publicar jantares show, degustações, etc.',
-
-    // Partner
     'section-qr': '📱 Meu QR Personalizado',
     'qr-desc': 'Este QR leva os usuários ao app com seu código integrado',
     'btn-copiar-url': ' Copiar URL',
     'url-copiada': 'URL copiada',
-
-    // Embajador
-    'tab-stats': ' Estatísticas',
-    'tab-restaurantes': '🏪 Meus Restaurantes',
+    'tab-stats': '📊 Estatísticas',
+    'tab-restaurantes-emb': '🏪 Meus Restaurantes',
     'tab-comision': '💰 Minha Comissão',
-    'tab-mis-restaurantes': '🏪 Meus Restaurantes',
     'stat-restaurantes-label': 'Restaurantes registrados',
     'stat-cubiertos-label': 'Cobertos presentes',
     'stat-comision-label': 'Comissão acumulada',
     'stat-reservas-label': 'Reservas geradas',
     'sin-comisiones': 'Sem comissões ainda',
     'sin-restaurantes-emb': 'Ainda não trouxe restaurantes',
-    'sin-restaurantes-partner': 'Ainda não há restaurantes com seu código. Compartilhe seu QR para que os restaurantes se registrem com seu código.',
+    'sin-restaurantes-partner': 'Ainda não há restaurantes com seu código',
     'total-acumulado': 'Total acumulado',
     'codigo-embajador-desc': 'Compartilhe este código com os restaurantes. Ganhe <strong>$0.50 USD</strong> por cada coberto presente.',
     'codigo-partner-desc': 'Use este código em suas publicações, revistas, rádios. Ganhe <strong>$0.50 USD</strong> por cada coberto presente.',
     'btn-compartir-codigo': '📱 Compartilhar código pelo WhatsApp',
-
-    // Footer
     'footer-privacidad': '📋 Política de Privacidade',
     'footer-terminos': '📄 Termos e Condições',
     'footer-copy': '© 2026 Sabores Costeros. Todos os direitos reservados.',
-
-    // WhatsApp share messages
-    'whatsapp-share-cliente': 'Olhe este app de restaurantes da costa! 🌊🍽️ Descubra os melhores lugares e participe de jantares grátis. Baixe agora:',
+    'whatsapp-share-cliente': 'Olhe este app de restaurantes da costa! 🌊️ Descubra os melhores lugares e participe de jantares grátis. Baixe agora:',
     'whatsapp-share-reserva': 'Fiz uma reserva no {restaurante}! 🍽️ Código: {codigo}. Use Sabores Costeros para descobrir os melhores restaurantes da costa 🌊',
-    'whatsapp-share-codigo': 'Junte-se ao Sabores Costeros! 🌊🍽️ Use meu código {codigo} ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis',
-
-    // Misc
+    'whatsapp-share-codigo': 'Junte-se ao Sabores Costeros! 🌊️ Use meu código {codigo} ao se cadastrar. Descubra os melhores restaurantes da costa e participe de jantares grátis',
     'personas': 'pessoas',
     'confirmar': 'Confirmar',
     'cancelar': 'Cancelar',
@@ -497,29 +433,19 @@ const traducciones = {
     'error-generico': 'Erro'
   },
   en: {
-    // Login
     'app-subtitle': 'Discover the best restaurants on the coast',
     'label-email': 'Email',
     'label-password': 'Password',
     'label-nombre': 'First Name',
     'label-apellido': 'Last Name',
-    'label-email-reg': 'Email',
-    'label-password-reg': 'Password',
-    'placeholder-email': 'your@email.com',
-    'placeholder-password': 'Password',
-    'placeholder-nombre': 'Your name',
-    'placeholder-apellido': 'Your last name',
-    'placeholder-email-reg': 'your@email.com',
-    'placeholder-password-reg': 'Minimum 6 characters',
-    'placeholder-codigo': 'Eg: EMB001',
     'btn-login': 'Sign In',
     'btn-register': 'Create Account',
     'text-no-account': "Don't have an account?",
     'link-register': 'Sign Up',
     'text-have-account': 'Already have an account?',
     'link-login': 'Sign In',
-    'role-cliente': '🌊 Tourist / Customer',
-    'role-restaurante': ' Restaurant Owner',
+    'role-cliente': ' Tourist / Customer',
+    'role-restaurante': '🏪 Restaurant Owner',
     'role-embajador': '🌟 Ambassador (Promoter)',
     'label-role': 'I want to register as:',
     'label-codigo-emb': 'Your Ambassador code (optional)',
@@ -531,30 +457,26 @@ const traducciones = {
     'error-wrong-password': 'Incorrect email or password',
     'error-user-not-found': 'No account with that email',
     'error-account-deactivated': 'Account deactivated',
-
-    // Navbar y botones globales
     'nav-logout': 'Logout',
     'nav-admin': '👑 Admin Panel',
     'nav-cliente': '🌊️ Sabores Costeros',
-    'nav-restaurante': '️ My Restaurant',
+    'nav-restaurante': '🍽️ My Restaurant',
     'nav-partner': '🤝 Partner Panel',
     'nav-embajador': '🌟 Ambassador Panel',
     'nav-promotor': '💼 Promoter Panel',
     'nav-user-loading': 'Loading...',
-
-    // Admin tabs
     'tab-crear': '➕ Create User',
     'tab-aprobaciones': '✅ Approvals',
     'tab-usuarios': '👥 Users',
     'tab-pagos': '💰 Commissions',
-    'tab-sorteo': ' Raffle',
+    'tab-sorteo': '🎉 Raffle',
     'tab-configuracion': '⚙️ Settings',
     'section-crear': '➕ Create Admin / Partner / Ambassador',
     'section-aprobaciones': '✅ Restaurants Pending Approval',
     'section-usuarios': '👥 User Management',
     'section-pagos': '💰 Commission Records',
     'section-sorteo': '🎉 Weekly Raffle',
-    'section-config': '⚙️ Commission Settings',
+    'section-config': '️ Commission Settings',
     'no-aprobaciones': 'No pending approvals',
     'no-usuarios': 'No users',
     'no-pagos': 'No payments registered',
@@ -592,15 +514,13 @@ const traducciones = {
     'total-fundador': '👑 Founder (you)',
     'total-embajadores': '🌟 Ambassadors',
     'total-partners': '🤝 Partners',
-
-    // Cliente tabs
-    'tab-restaurantes': '🍽️ Restaurants',
-    'tab-reservas': ' My Reservations',
+    'tab-restaurantes': '️ Restaurants',
+    'tab-reservas': '📋 My Reservations',
     'tab-sorteo-tab': '🎉 Raffle',
     'tab-perfil': '👤 Profile',
     'banner-sorteo-title': ' WEEKLY RAFFLE!',
     'banner-sorteo-desc': 'Validate your code upon arrival and enter for a <strong>free dinner for 4 people</strong>',
-    'banner-sorteo-sub': '🏆 Raffle every Saturday · 📍 At the best coastal restaurants',
+    'banner-sorteo-sub': '🏆 Raffle every Saturday ·  At the best coastal restaurants',
     'section-restaurantes': '🍽️ Coastal Restaurants',
     'section-mis-reservas': '📋 My Reservations',
     'section-perfil': '👤 My Profile',
@@ -624,17 +544,15 @@ const traducciones = {
     'reserva-presentar-banner': '📱 Present this code upon arrival',
     'reserva-sorteo-banner': '🎉 Validate to enter the weekly free dinner raffle',
     'btn-compartir-whatsapp': '📱 Share via WhatsApp',
-    'btn-como-llegar': '🗺️ How to get there',
+    'btn-como-llegar': '️ How to get there',
     'perfil-nombre-label': 'Name',
     'perfil-email-label': 'Email',
     'perfil-idioma-label': 'Language',
     'perfil-cambiar-idioma': 'Change language',
     'btn-guardar-idioma': 'Save language',
-    'idioma-es': '🇸 Español',
-    'idioma-pt': '🇧🇷 Português',
-    'idioma-en': '🇺 English',
-
-    // Sorteo
+    'idioma-es': '🇪🇸 Español',
+    'idioma-pt': '🇷 Português',
+    'idioma-en': '🇺🇸 English',
     'sorteo-titulo': '🎉 Weekly Raffle',
     'sorteo-desc-1': 'Every Saturday we raffle a complete dinner for 4 people at the best restaurants on the Uruguayan coast.',
     'sorteo-como-participar': 'How to participate?',
@@ -642,11 +560,9 @@ const traducciones = {
     'sorteo-paso-2': 'When arriving at the restaurant, <strong>validate your code</strong> with the waiter',
     'sorteo-paso-3': 'You automatically enter the Saturday raffle!',
     'sorteo-mas-reservas': 'The more reservations you validate, the more chances you have to win.',
-    'sorteo-participantes': '🎫 Loading participants...',
+    'sorteo-participantes': ' Loading participants...',
     'sorteo-proximo': '🏆 Next raffle: this Saturday',
-    'sorteo-participantes-count': '🎫 {count} reservations participated this week',
-
-    // Restaurante
+    'sorteo-participantes-count': ' {count} reservations participated this week',
     'tab-perfil-res': '🏪 My Profile',
     'tab-reservas-res': ' Reservations',
     'tab-menu': '📖 Menu',
@@ -683,50 +599,35 @@ const traducciones = {
     'section-reservas-recibidas': '📋 Reservations Received',
     'sin-reservas': 'No reservations',
     'registro-primero': 'First register your restaurant in "My Profile"',
-    'cobro-info': '💰 Charge: ${amount} USD (${personas} x $2)',
-    'comision-info': 'Automatic commissions: $0.50 partner + $0.50 ambassador + $1 founder',
     'btn-confirmar-asistencia': '✅ Confirm Attendance',
     'total-pagar': '💰 Total to pay this month',
-    'confirmar-asistencia-pregunta': 'Confirm attendance for code {codigo} ({personas} people)?\n\n${amount} USD will be charged to your restaurant.',
-    'asistencia-confirmada': '✅ Attendance confirmed. Charge: ${amount} USD',
     'menu-proximamente': 'Coming soon: upload dishes, prices and photos',
     'resenas-proximamente': 'Coming soon: moderate customer reviews',
     'eventos-proximamente': 'Coming soon: publish dinner shows, tastings, etc.',
-
-    // Partner
     'section-qr': '📱 My Custom QR',
     'qr-desc': 'This QR takes users to the app with your code integrated',
     'btn-copiar-url': '📋 Copy URL',
     'url-copiada': 'URL copied',
-
-    // Embajador
     'tab-stats': ' Statistics',
-    'tab-restaurantes': '🏪 My Restaurants',
+    'tab-restaurantes-emb': '🏪 My Restaurants',
     'tab-comision': '💰 My Commission',
-    'tab-mis-restaurantes': '🏪 My Restaurants',
     'stat-restaurantes-label': 'Registered restaurants',
     'stat-cubiertos-label': 'Covers attended',
     'stat-comision-label': 'Accumulated commission',
     'stat-reservas-label': 'Reservations generated',
     'sin-comisiones': 'No commissions yet',
     'sin-restaurantes-emb': 'You haven\'t brought restaurants yet',
-    'sin-restaurantes-partner': 'No restaurants with your code yet. Share your QR so restaurants register with your code.',
+    'sin-restaurantes-partner': 'No restaurants with your code yet',
     'total-acumulado': 'Total accumulated',
     'codigo-embajador-desc': 'Share this code with restaurants. Earn <strong>$0.50 USD</strong> per cover attended.',
     'codigo-partner-desc': 'Use this code in your publications, magazines, radios. Earn <strong>$0.50 USD</strong> per cover attended.',
     'btn-compartir-codigo': '📱 Share code via WhatsApp',
-
-    // Footer
     'footer-privacidad': '📋 Privacy Policy',
-    'footer-terminos': '📄 Terms and Conditions',
+    'footer-terminos': ' Terms and Conditions',
     'footer-copy': '© 2026 Sabores Costeros. All rights reserved.',
-
-    // WhatsApp share messages
-    'whatsapp-share-cliente': 'Check out this coastal restaurant app! 🍽️ Discover the best spots and win free dinners. Download now:',
+    'whatsapp-share-cliente': 'Check out this coastal restaurant app! 🌊️ Discover the best spots and win free dinners. Download now:',
     'whatsapp-share-reserva': 'I made a reservation at {restaurante}! 🍽️ Code: {codigo}. Use Sabores Costeros to discover the best coastal restaurants 🌊',
     'whatsapp-share-codigo': 'Join Sabores Costeros! 🌊🍽️ Use my code {codigo} when signing up. Discover the best coastal restaurants and win free dinners',
-
-    // Misc
     'personas': 'people',
     'confirmar': 'Confirm',
     'cancelar': 'Cancel',
@@ -762,13 +663,10 @@ export function getIdiomaActual() {
   return idiomaActual;
 }
 
-// Aplicar traducciones a todos los elementos con data-i18n
 export function applyTranslations() {
-  // Traducir textContent
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const clave = el.getAttribute('data-i18n');
     const traduccion = t(clave);
-    // Solo reemplazar si hay traducción disponible
     if (traduccion && traduccion !== clave) {
       if (traduccion.includes('<')) {
         el.innerHTML = traduccion;
@@ -778,7 +676,6 @@ export function applyTranslations() {
     }
   });
   
-  // Traducir placeholders
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const clave = el.getAttribute('data-i18n-placeholder');
     const traduccion = t(clave);
@@ -787,21 +684,17 @@ export function applyTranslations() {
     }
   });
   
-  // Actualizar botones de idioma activos
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   const btnActivo = document.getElementById('btn-' + idiomaActual);
   if (btnActivo) btnActivo.classList.add('active');
 
-  // Actualizar selects de idioma
   document.querySelectorAll('#selector-idioma').forEach(sel => {
     sel.value = idiomaActual;
   });
 
-  // Actualizar el atributo lang del html
   document.documentElement.lang = idiomaActual;
 }
 
-// ========== UTILIDADES ==========
 export function showAlert(message, type = 'info') {
   const colors = {
     success: '#28A745',
@@ -850,19 +743,16 @@ export function formatDate(timestamp) {
   }
 }
 
-// Compartir por WhatsApp
 export function compartirWhatsApp(mensaje, url) {
   const texto = encodeURIComponent(mensaje + '\n' + url);
   window.open(`https://wa.me/?text=${texto}`, '_blank');
 }
 
-// Abrir Google Maps
 export function abrirGoogleMaps(direccion) {
   const query = encodeURIComponent(direccion);
   window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
 }
 
-// CSS animation
 const style = document.createElement('style');
 style.textContent = `
   @keyframes slideIn {

@@ -1,4 +1,3 @@
-// Panel Embajador - Sabores Costeros
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { t } from './utils.js';
@@ -8,17 +7,15 @@ const userId = sessionStorage.getItem('userId');
 const miCodigo = sessionStorage.getItem('userCodigo');
 if (!miCodigo) window.location.href = '/index.html';
 
-document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || t('nav-user-loading');
+document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || 'Embajador';
 document.getElementById('mi-codigo').textContent = miCodigo;
 document.getElementById('mi-url').textContent = `https://sabores-costeros.vercel.app/?embajador=${miCodigo}`;
 
-// ========== GENERAR QR REAL ==========
 function generarQR() {
   const url = `https://sabores-costeros.vercel.app/?embajador=${miCodigo}`;
   const qrContainer = document.getElementById('mi-qr');
   if (!qrContainer) return;
   
-  // Usar la API de qrserver.com (gratuita y confiable)
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=10&data=${encodeURIComponent(url)}`;
   qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="width:250px;height:250px;border-radius:8px;">`;
 }
@@ -116,16 +113,13 @@ loadStats();
 loadRestaurantes();
 loadComisiones();
 
-// Generar QR después de un delay
 setTimeout(generarQR, 500);
 
-// Funciones globales para el QR
 window.copiarURL = function() {
   const url = document.getElementById('mi-url').textContent;
   navigator.clipboard.writeText(url).then(() => {
     alert('URL copiada: ' + url);
   }).catch(() => {
-    // Fallback para navegadores que no soportan clipboard API
     const input = document.createElement('input');
     input.value = url;
     document.body.appendChild(input);
@@ -141,7 +135,7 @@ window.compartirURLWhatsApp = function() {
   const idioma = sessionStorage.getItem('idioma') || 'es';
   const mensajes = {
     es: `¡Sumate a Sabores Costeros! 🌊🍽️ Descubrí los mejores restaurantes de la costa y participá por cenas gratis para 4 personas. Entrá acá: ${url}`,
-    pt: `Junte-se ao Sabores Costeros! ️ Descubra os melhores restaurantes da costa e participe de jantares grátis para 4 pessoas. Entre aqui: ${url}`,
+    pt: `Junte-se ao Sabores Costeros! 🍽️ Descubra os melhores restaurantes da costa e participe de jantares grátis para 4 pessoas. Entre aqui: ${url}`,
     en: `Join Sabores Costeros! 🌊️ Discover the best coastal restaurants and win free dinners for 4. Enter here: ${url}`
   };
   const texto = encodeURIComponent(mensajes[idioma] || mensajes.es);

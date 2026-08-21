@@ -1,4 +1,3 @@
-// Sistema de autenticación - Sabores Costeros
 import { auth, db } from './firebase-config.js';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -9,7 +8,6 @@ const btnRegister = document.getElementById('btn-register');
 const errorDivLogin = document.getElementById('login-error');
 const errorDivRegister = document.getElementById('register-error');
 
-// ========== LOGIN ==========
 btnLogin?.addEventListener('click', async () => {
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
@@ -43,7 +41,6 @@ btnLogin?.addEventListener('click', async () => {
       throw new Error('Cuenta inactiva');
     }
 
-    // Guardar sesión
     sessionStorage.setItem('userId', user.uid);
     sessionStorage.setItem('userEmail', userData.email);
     sessionStorage.setItem('userName', `${userData.nombre} ${userData.apellido || ''}`);
@@ -51,7 +48,6 @@ btnLogin?.addEventListener('click', async () => {
     sessionStorage.setItem('userCodigo', userData.codigo || '');
     sessionStorage.setItem('userEmbajadorCodigo', userData.embajadorCodigo || '');
 
-    // Redirección según rol
     let destino = '/pages/cliente.html';
     if (userData.role === 'fundador' || userData.role === 'admin') destino = '/pages/admin.html';
     else if (userData.role === 'restaurante') destino = '/pages/restaurante.html';
@@ -75,7 +71,6 @@ btnLogin?.addEventListener('click', async () => {
   }
 });
 
-// ========== REGISTRO ==========
 btnRegister?.addEventListener('click', async () => {
   const nombre = document.getElementById('reg-nombre').value.trim();
   const apellido = document.getElementById('reg-apellido').value.trim();
@@ -99,16 +94,13 @@ btnRegister?.addEventListener('click', async () => {
       throw new Error('Contraseña débil');
     }
 
-    // Generar código único
     const codigo = role === 'embajador' 
       ? (codigoEmbajador || 'EMB-' + Math.random().toString(36).substring(2, 6).toUpperCase())
       : null;
 
-    // Crear usuario en Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Capturar partner y embajador de la URL si viene de un link
     const urlParams = new URLSearchParams(window.location.search);
     const partnerCodigo = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
     const embajadorCodigo = urlParams.get('embajador') || sessionStorage.getItem('lastEmbajador') || null;
@@ -116,7 +108,6 @@ btnRegister?.addEventListener('click', async () => {
     if (partnerCodigo) sessionStorage.setItem('lastPartner', partnerCodigo);
     if (embajadorCodigo) sessionStorage.setItem('lastEmbajador', embajadorCodigo);
 
-    // Guardar datos en Firestore
     await setDoc(doc(db, 'usuarios', user.uid), {
       nombre,
       apellido,
@@ -131,7 +122,6 @@ btnRegister?.addEventListener('click', async () => {
       createdAt: serverTimestamp()
     });
 
-    // Guardar sessionStorage
     sessionStorage.setItem('userId', user.uid);
     sessionStorage.setItem('userEmail', email);
     sessionStorage.setItem('userName', `${nombre} ${apellido}`);
@@ -139,7 +129,6 @@ btnRegister?.addEventListener('click', async () => {
     sessionStorage.setItem('userCodigo', codigo || '');
     sessionStorage.setItem('userEmbajadorCodigo', codigoEmbajador || embajadorCodigo || '');
 
-    // Redirección
     let destino = '/pages/cliente.html';
     if (role === 'restaurante') destino = '/pages/restaurante.html';
     else if (role === 'embajador') destino = '/pages/embajador.html';
@@ -161,12 +150,10 @@ btnRegister?.addEventListener('click', async () => {
   }
 });
 
-// Verificar sesión activa - solo en index.html
 auth.onAuthStateChanged((user) => {
   if (user && window.location.pathname === '/index.html') {
     const role = sessionStorage.getItem('userRole');
     if (role) {
-      // Ya hay sesión - redirigir al panel correspondiente
       let destino = '/pages/cliente.html';
       if (role === 'fundador' || role === 'admin') destino = '/pages/admin.html';
       else if (role === 'restaurante') destino = '/pages/restaurante.html';

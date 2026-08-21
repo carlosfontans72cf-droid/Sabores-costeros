@@ -18,14 +18,12 @@
       <h2 class="app-title">Sabores Costeros</h2>
       <p class="app-subtitle" id="subtitle" data-i18n="app-subtitle">Descubrí los mejores restaurantes de la costa</p>
 
-      <!-- Selector de idioma -->
       <div class="language-selector">
-        <button onclick="cambiarIdioma('es')" class="lang-btn active" id="btn-es">🇸 ES</button>
-        <button onclick="cambiarIdioma('pt')" class="lang-btn" id="btn-pt">🇷 PT</button>
+        <button onclick="cambiarIdioma('es')" class="lang-btn active" id="btn-es">🇪 ES</button>
+        <button onclick="cambiarIdioma('pt')" class="lang-btn" id="btn-pt">🇧 PT</button>
         <button onclick="cambiarIdioma('en')" class="lang-btn" id="btn-en">🇺🇸 EN</button>
       </div>
 
-      <!-- Formulario de Login -->
       <div id="login-form">
         <div class="form-group">
           <label id="label-email" data-i18n="label-email">Email</label>
@@ -35,7 +33,7 @@
         <div class="form-group" style="position: relative;">
           <label id="label-password" data-i18n="label-password">Contraseña</label>
           <input type="password" id="password" class="form-control" data-i18n-placeholder="placeholder-password" placeholder="Contraseña" style="padding-right:42px;">
-          <button type="button" class="btn-toggle-password" onclick="togglePassword()"></button>
+          <button type="button" class="btn-toggle-password" onclick="togglePassword()">👁</button>
         </div>
 
         <div id="login-error" class="error-message"></div>
@@ -50,7 +48,6 @@
         </p>
       </div>
 
-      <!-- Formulario de Registro -->
       <div id="register-form" style="display:none;">
         <div class="form-group">
           <label id="label-nombre" data-i18n="label-nombre">Nombre</label>
@@ -76,7 +73,7 @@
           <label data-i18n="label-role">Quiero registrarme como:</label>
           <select id="reg-role" class="form-control">
             <option value="cliente" data-i18n="role-cliente">🌊 Turista / Cliente</option>
-            <option value="restaurante" data-i18n="role-restaurante">🏪 Dueño de restaurante</option>
+            <option value="restaurante" data-i18n="role-restaurante"> Dueño de restaurante</option>
             <option value="embajador" data-i18n="role-embajador">🌟 Embajador (Promotor)</option>
           </select>
         </div>
@@ -100,7 +97,7 @@
         <p class="legal-text">
           <span data-i18n="legal-text">Al registrarte, aceptás nuestra</span>
           <a href="/pages/politica-privacidad.html" target="_blank" data-i18n="footer-privacidad">Política de Privacidad</a>
-          <span data-i18n="legal-text-y"> y </span>
+          y
           <a href="/pages/terminos-condiciones.html" target="_blank" data-i18n="footer-terminos">Términos y Condiciones</a>
         </p>
       </div>
@@ -110,12 +107,10 @@
   <script type="module">
     import { applyTranslations, cambiarIdioma as cambiarIdiomaMod } from '/js/utils.js';
 
-    // Hacer cambiarIdioma disponible globalmente para los onclick inline
     window.cambiarIdioma = function(idioma) {
       cambiarIdiomaMod(idioma);
     };
 
-    // Aplicar traducciones al cargar la página
     applyTranslations();
   </script>
 
@@ -140,7 +135,6 @@
       document.getElementById('login-form').style.display = 'block';
     }
 
-    // Mostrar/ocultar campo de código embajador
     document.getElementById('reg-role')?.addEventListener('change', (e) => {
       const grupo = document.getElementById('codigo-promotor-group');
       if (e.target.value === 'embajador') {
@@ -150,7 +144,6 @@
       }
     });
 
-    // Activar idioma guardado al cargar
     const idiomaGuardado = sessionStorage.getItem('idioma');
     if (idiomaGuardado) {
       document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -159,5 +152,5 @@
   </script>
 
   <script type="module" src="/js/auth.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e391a17d6b8bea',t:'MTc4NzI1MTY3MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

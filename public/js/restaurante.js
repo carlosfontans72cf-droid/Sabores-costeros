@@ -1,4 +1,3 @@
-// Panel Restaurante - Sabores Costeros
 import { db } from './firebase-config.js';
 import { collection, getDocs, addDoc, doc, updateDoc, query, where, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { showAlert, generarCodigoReserva, t } from './utils.js';
@@ -14,14 +13,12 @@ if (userRole !== 'restaurante') {
 
 document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || 'Restaurante';
 
-// Capturar partner/embajador de la URL
 const urlParams = new URLSearchParams(window.location.search);
 const partnerCodigoURL = urlParams.get('partner') || sessionStorage.getItem('lastPartner') || null;
 const embajadorCodigoURL = urlParams.get('embajador') || sessionStorage.getItem('lastEmbajador') || null;
 if (partnerCodigoURL) sessionStorage.setItem('lastPartner', partnerCodigoURL);
 if (embajadorCodigoURL) sessionStorage.setItem('lastEmbajador', embajadorCodigoURL);
 
-// Cargar datos del usuario para ver si tiene partnerReferido o embajadorReferido
 let userPartnerCodigo = partnerCodigoURL || null;
 let userEmbajadorCodigo = embajadorCodigoURL || sessionStorage.getItem('userEmbajadorCodigo') || null;
 
@@ -42,7 +39,6 @@ async function cargarReferidosDelUsuario() {
   }
 }
 
-// ========== COMISIONES (cargadas desde config) ==========
 let comisiones = {
   total: 2.00,
   fundador: 1.00,
@@ -71,7 +67,6 @@ async function loadComisionesConfig() {
   }
 }
 
-// ========== CARGAR DATOS DEL RESTAURANTE ==========
 async function loadRestaurante() {
   try {
     const q = query(collection(db, 'restaurantes'), where('dueñoId', '==', userId));
@@ -94,13 +89,11 @@ async function loadRestaurante() {
   }
 }
 
-// ========== GUARDAR PERFIL ==========
 document.getElementById('btn-save-perfil')?.addEventListener('click', async () => {
   const id = document.getElementById('restaurante-id').value;
   const nombre = document.getElementById('res-nombre').value.trim();
   const direccion = document.getElementById('res-direccion').value.trim();
   
-  // Validar campos obligatorios
   if (!nombre) {
     return showAlert('El nombre del restaurante es obligatorio', 'warning');
   }
@@ -143,7 +136,6 @@ document.getElementById('btn-save-perfil')?.addEventListener('click', async () =
   }
 });
 
-// ========== RESERVAS RECIBIDAS ==========
 async function loadReservas() {
   const cont = document.getElementById('lista-reservas');
   if (!cont) return;
@@ -236,7 +228,6 @@ window.confirmarAsistencia = async (reservaId, codigo, personas, embajadorCodigo
   }
 };
 
-// ========== INICIALIZACIÓN ==========
 cargarReferidosDelUsuario().then(() => {
   loadComisionesConfig();
   loadRestaurante();
