@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+
+# Credenciales - NUNCA commitear
+*serviceAccount*.json
+*firebase-adminsdk*.json
+.env
+.env.local
+.env.*.local
+
+# Vercel / Firebase
+.vercel
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/

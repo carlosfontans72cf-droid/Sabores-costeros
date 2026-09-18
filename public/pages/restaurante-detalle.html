@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurante - Sabores Costeros</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <meta name="theme-color" content="#48CAE4">
+  <style>
+    .rd-back { padding:15px 20px; }
+    .rd-back a { color:#023E8A; text-decoration:none; font-weight:600; }
+
+    .rd-galeria { position:relative; width:100%; max-width:900px; margin:0 auto; }
+    .rd-galeria-principal { width:100%; height:320px; object-fit:cover; border-radius:16px; background:#f0f0f0; }
+    .rd-galeria-placeholder { width:100%; height:320px; border-radius:16px; background:linear-gradient(135deg,#48CAE4,#0077B6); display:flex; align-items:center; justify-content:center; color:white; font-size:5rem; }
+    .rd-galeria-thumbs { display:flex; gap:8px; margin-top:10px; overflow-x:auto; padding-bottom:4px; }
+    .rd-galeria-thumbs img { width:80px; height:60px; object-fit:cover; border-radius:8px; cursor:pointer; opacity:0.6; flex-shrink:0; border:2px solid transparent; }
+    .rd-galeria-thumbs img.activa { opacity:1; border-color:#FFD700; }
+
+    .rd-header-info { max-width:900px; margin:20px auto 0; padding:0 20px; }
+    .rd-header-info h1 { color:#722F37; margin:0 0 8px 0; font-size:1.8rem; }
+    .rd-meta { display:flex; gap:14px; flex-wrap:wrap; color:#666; font-size:0.95rem; margin-bottom:10px; }
+    .rd-estado-abierto { color:#28A745; font-weight:700; }
+    .rd-estado-cerrado { color:#DC3545; font-weight:700; }
+
+    .rd-chips { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+    .rd-chip { background:#E3F2FD; color:#023E8A; padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:600; }
+
+    .rd-section { max-width:900px; margin:24px auto; padding:0 20px; }
+    .rd-section h2 { color:#023E8A; font-size:1.3rem; margin-bottom:12px; }
+
+    .rd-horarios { background:white; border-radius:12px; padding:16px 20px; box-shadow:0 2px 10px rgba(0,0,0,0.06); }
+    .rd-horarios-fila { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f0f0f0; font-size:0.92rem; }
+    .rd-horarios-fila:last-child { border-bottom:none; }
+    .rd-horarios-fila.hoy { font-weight:700; color:#023E8A; }
+
+    .rd-menu-categoria { margin-bottom:22px; }
+    .rd-menu-categoria h3 { color:#722F37; font-size:1.05rem; margin-bottom:10px; border-bottom:2px solid #FFD700; padding-bottom:4px; display:inline-block; }
+    .rd-plato { display:flex; gap:12px; padding:12px; background:white; border-radius:10px; margin-bottom:8px; box-shadow:0 1px 6px rgba(0,0,0,0.06); align-items:center; }
+    .rd-plato img { width:64px; height:64px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+    .rd-plato .rd-plato-foto-vacia { width:64px; height:64px; border-radius:8px; background:#48CAE4; display:flex; align-items:center; justify-content:center; color:white; font-size:1.4rem; flex-shrink:0; }
+    .rd-plato-info { flex:1; }
+    .rd-plato-info h4 { margin:0 0 3px 0; color:#333; font-size:0.98rem; }
+    .rd-plato-info p { margin:0; color:#666; font-size:0.85rem; }
+    .rd-plato-precio { font-weight:700; color:#009C3B; font-size:1.05rem; white-space:nowrap; }
+
+    .rd-resenas-resumen { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+    .rd-resenas-promedio { font-size:2.2rem; font-weight:800; color:#023E8A; }
+    .rd-estrellas { color:#FFD700; font-size:1.2rem; letter-spacing:2px; }
+    .rd-resena-card { background:white; border-radius:10px; padding:14px; margin-bottom:10px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+    .rd-resena-card .rd-resena-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+    .rd-resena-card .rd-resena-nombre { font-weight:700; color:#333; }
+    .rd-resena-card p { margin:0; color:#555; font-size:0.9rem; }
+
+    .rd-reserva-box { max-width:900px; margin:24px auto 40px; padding:0 20px; }
+    .rd-reserva-card { background:#F8F9FA; border-radius:16px; padding:24px; }
+    .rd-cta-flotante { position:fixed; bottom:0; left:0; right:0; background:white; box-shadow:0 -4px 16px rgba(0,0,0,0.1); padding:12px 20px; display:none; z-index:500; }
+    .rd-cta-flotante.visible { display:flex; gap:10px; }
+    @media (max-width:640px) {
+      .rd-galeria-principal, .rd-galeria-placeholder { height:220px; }
+      body { padding-bottom:70px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <h1>🍽️ Sabores Costeros</h1>
+    <div>
+      <span class="user-info" id="user-info">Cargando...</span>
+      <button class="btn btn-sm btn-danger" onclick="volverAtras()" style="margin-left:10px;">← Volver</button>
+    </div>
+  </nav>
+
+  <div id="rd-contenido">
+    <p style="text-align:center; padding:60px 20px; color:#666;">Cargando restaurante...</p>
+  </div>
+
+  <div class="rd-cta-flotante" id="rd-cta-flotante">
+    <button class="btn btn-success btn-block" id="btn-cta-reservar">📅 Reservar mesa</button>
+  </div>
+
+  <script type="module" src="/js/restaurante-detalle.js"></script>
+  <script>
+    function volverAtras() {
+      if (document.referrer && document.referrer.includes(location.host)) {
+        history.back();
+      } else {
+        window.location.href = '/pages/cliente.html';
+      }
+    }
+    document.getElementById('user-info').textContent = sessionStorage.getItem('userName') || '';
+  </script>
+</body>
+</html>

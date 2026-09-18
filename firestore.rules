@@ -1,0 +1,245 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- HELPERS ----------
+
+    function estaLogueado() {
+      return request.auth != null;
+    }
+
+    function miDoc() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    function miRol() {
+      return estaLogueado() ? miDoc().role : 'anonimo';
+    }
+
+    function miCodigo() {
+      return estaLogueado() ? miDoc().get('codigo', '') : '';
+    }
+
+    function estoyActivo() {
+      return estaLogueado() && miDoc().get('activo', false) == true;
+    }
+
+    function esAdmin() {
+      return estoyActivo() && (miRol() == 'admin' || miRol() == 'fundador');
+    }
+
+    function esDuenioDe(restauranteId) {
+      return estoyActivo() &&
+             get(/databases/$(database)/documents/restaurantes/$(restauranteId))
+               .data['dueñoId'] == request.auth.uid;
+    }
+
+    // Campos que el usuario NUNCA puede tocar por su cuenta
+    function noCambia(campos) {
+      return !request.resource.data.diff(resource.data).affectedKeys()
+               .hasAny(campos.toSet());
+    }
+
+
+    // ---------- USUARIOS ----------
+    match /usuarios/{uid} {
+
+      // Cada uno lee su propio doc. El admin lee todos (necesario para
+      // el listado de gestión de usuarios).
+      allow get: if estaLogueado() && (request.auth.uid == uid || esAdmin());
+      allow list: if esAdmin();
+
+      // Alta durante el registro: solo tu propio doc, y NO podés
+      // autoasignarte un rol privilegiado.
+      allow create: if estaLogueado()
+                    && request.auth.uid == uid
+                    && request.resource.data.role in ['cliente', 'restaurante', 'embajador']
+                    && request.resource.data.activo == true
+                    && request.resource.data.email == request.auth.token.email
+                    // el restaurante nace sin aprobar
+                    && (request.resource.data.role != 'restaurante'
+                        || request.resource.data.aprobado == false);
+
+      // El usuario edita su perfil pero no su rol, estado ni código.
+      allow update: if esAdmin()
+                    || (estoyActivo()
+                        && request.auth.uid == uid
+                        && noCambia(['role', 'activo', 'aprobado', 'codigo']));
+
+      // Nadie borra usuarios desde el cliente.
+      allow delete: if false;
+    }
+
+
+    // ---------- RESTAURANTES ----------
+    match /restaurantes/{restauranteId} {
+
+      // Público: solo los aprobados y activos.
+      // La app DEBE consultar con where('aprobado','==',true)
+      // y where('activo','==',true), si no la query falla.
+      allow get, list: if request.auth != null && (
+                          esAdmin()
+                          || (resource.data.aprobado == true && resource.data.activo == true)
+                          || resource.data['dueñoId'] == request.auth.uid
+                          || resource.data.get('embajadorCodigo', '') == miCodigo()
+                          || resource.data.get('partnerCodigo', '') == miCodigo()
+                       );
+
+      // Un dueño de restaurante crea el suyo, siempre sin aprobar.
+      allow create: if estoyActivo()
+                    && miRol() == 'restaurante'
+                    && request.resource.data['dueñoId'] == request.auth.uid
+                    && request.resource.data.aprobado == false;
+
+      // El dueño edita sus datos pero NO puede autoaprobarse
+      // ni cambiar a quién le corresponde la comisión.
+      allow update: if esAdmin()
+                    || (estoyActivo()
+                        && resource.data['dueñoId'] == request.auth.uid
+                        && noCambia(['aprobado', 'dueñoId', 'embajadorCodigo', 'partnerCodigo']));
+
+      allow delete: if esAdmin();
+    }
+
+
+    // ---------- MENÚS ----------
+    match /menus/{platoId} {
+      allow get, list: if estaLogueado();
+
+      allow create: if estoyActivo()
+                    && esDuenioDe(request.resource.data.restauranteId);
+
+      allow update, delete: if esAdmin()
+                            || (estoyActivo() && esDuenioDe(resource.data.restauranteId));
+    }
+
+
+    // ---------- RESERVAS ----------
+    match /reservas/{reservaId} {
+
+      // La ve el cliente que la hizo, el restaurante y el admin.
+      allow get, list: if estaLogueado() && (
+                          esAdmin()
+                          || resource.data.usuarioId == request.auth.uid
+                          || esDuenioDe(resource.data.restauranteId)
+                       );
+
+      // El cliente crea su reserva. No puede nacer ya "asistida"
+      // (eso lo metería gratis en el sorteo y generaría comisión falsa).
+      allow create: if estoyActivo()
+                    && request.resource.data.usuarioId == request.auth.uid
+                    && request.resource.data.estado == 'confirmada'
+                    && request.resource.data.mesaConfirmada == false
+                    && request.resource.data.personas is int
+                    && request.resource.data.personas > 0
+                    && request.resource.data.personas <= 20;
+
+      allow update: if esAdmin()
+                    // El restaurante confirma la asistencia.
+                    || (estoyActivo()
+                        && esDuenioDe(resource.data.restauranteId)
+                        && request.resource.data.estado in ['asistida', 'cancelada']
+                        && noCambia(['usuarioId', 'restauranteId', 'codigo', 'personas']))
+                    // El cliente solo puede cancelar una reserva suya.
+                    || (estoyActivo()
+                        && resource.data.usuarioId == request.auth.uid
+                        && resource.data.estado == 'confirmada'
+                        && request.resource.data.estado == 'cancelada'
+                        && noCambia(['usuarioId', 'restauranteId', 'codigo', 'personas']))
+                    // El cliente marca que ya dejó su reseña, para no
+                    // mostrarle el botón de nuevo. Solo puede pasar de
+                    // sin marcar a marcado, sobre una reserva ya asistida
+                    // y sin tocar ningún otro campo.
+                    || (estoyActivo()
+                        && resource.data.usuarioId == request.auth.uid
+                        && resource.data.estado == 'asistida'
+                        && resource.data.get('resenaDejada', false) == false
+                        && request.resource.data.resenaDejada == true
+                        && noCambia(['usuarioId', 'restauranteId', 'codigo', 'personas', 'estado']));
+
+      allow delete: if esAdmin();
+    }
+
+
+    // ---------- PAGOS / COMISIONES ----------
+    // Esto es plata, y ahora lo escribe exclusivamente la Cloud Function
+    // "onReservaAsistida" (functions/index.js) usando el Admin SDK, que
+    // ignora estas reglas. Por eso nadie puede escribir acá desde el
+    // navegador: ni el restaurante, ni el embajador, ni el admin.
+    // Si en algún momento se cae la función, un dueño podría inflar sus
+    // propias comisiones creando el documento a mano, así que se cierra
+    // del todo en vez de confiar en el rol.
+    match /pagos/{pagoId} {
+
+      allow get, list: if estaLogueado() && (
+                          esAdmin()
+                          || (miCodigo() != '' && resource.data.get('embajadorCodigo', '') == miCodigo())
+                          || (miCodigo() != '' && resource.data.get('partnerCodigo', '') == miCodigo())
+                       );
+
+      allow create: if false;
+
+      // Marcar como pagado sigue siendo tarea manual del admin.
+      allow update: if esAdmin();
+      allow delete: if false;
+    }
+
+
+    // ---------- RESEÑAS ----------
+    match /resenas/{resenaId} {
+      allow get: if true;
+
+      // La condición "resource.data.oculta == false" hace que Firestore
+      // rechace por completo cualquier consulta que no incluya
+      // where('oculta','==',false): si alguien intenta listar sin ese
+      // filtro para ver también las ocultas, la query entera falla en
+      // vez de devolver datos que no debería. El dueño del restaurante
+      // es la excepción: puede ver también las suyas ocultas, para
+      // saber si le dejaron algo ofensivo.
+      allow list: if resource.data.oculta == false
+                  || esAdmin()
+                  || esDuenioDe(resource.data.restauranteId);
+
+      allow create: if estoyActivo()
+                    && request.resource.data.usuarioId == request.auth.uid
+                    && request.resource.data.puntaje is number
+                    && request.resource.data.puntaje >= 1
+                    && request.resource.data.puntaje <= 5
+                    // El cliente siempre crea con oculta:false. Es la
+                    // Cloud Function "moderarResena" (Admin SDK, ignora
+                    // estas reglas) la que la oculta después si detecta
+                    // lenguaje ofensivo.
+                    && request.resource.data.oculta == false;
+
+      // Nadie edita una reseña ya publicada (evita que alguien la limpie
+      // de malas palabras después de que el filtro ya la vio). El admin
+      // sí puede, para moderación manual.
+      allow update: if esAdmin();
+
+      allow delete: if esAdmin()
+                    || (estoyActivo() && resource.data.usuarioId == request.auth.uid);
+    }
+
+
+    // ---------- CONFIGURACIÓN DE COMISIONES ----------
+    match /configuracion/{docId} {
+      allow get, list: if estaLogueado();
+      allow write: if esAdmin();
+    }
+
+
+    // ---------- CONTADORES PÚBLICOS (sorteo, stats) ----------
+    // Documentos agregados que se escriben desde Cloud Functions.
+    match /publico/{docId} {
+      allow get, list: if true;
+      allow write: if false;
+    }
+
+
+    // ---------- TODO LO DEMÁS ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

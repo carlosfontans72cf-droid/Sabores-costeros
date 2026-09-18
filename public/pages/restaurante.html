@@ -106,6 +106,41 @@
         </div>
         <button id="btn-save-perfil" class="btn btn-success">💾 Guardar Perfil</button>
       </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;margin-bottom:15px;">🏷️ Servicios</h3>
+        <p style="color:#666;margin-bottom:12px;">Marcá lo que ofrece tu restaurante. Aparece como chips en tu ficha pública.</p>
+        <div id="servicios-checks" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px;">
+          <label><input type="checkbox" value="wifi"> 📶 WiFi</label>
+          <label><input type="checkbox" value="estacionamiento"> 🅿️ Estacionamiento</label>
+          <label><input type="checkbox" value="terraza"> 🌤️ Terraza</label>
+          <label><input type="checkbox" value="petFriendly"> 🐾 Pet friendly</label>
+          <label><input type="checkbox" value="vistaAlMar"> 🌊 Vista al mar</label>
+          <label><input type="checkbox" value="apto_celiaco"> 🌾 Apto celíaco</label>
+          <label><input type="checkbox" value="vegano"> 🥦 Opciones veganas</label>
+          <label><input type="checkbox" value="accesible"> ♿ Accesible</label>
+          <label><input type="checkbox" value="tarjetas"> 💳 Acepta tarjetas</label>
+          <label><input type="checkbox" value="reservaGrupos"> 👥 Grupos grandes</label>
+          <label><input type="checkbox" value="musicaEnVivo"> 🎵 Música en vivo</label>
+          <label><input type="checkbox" value="aireLibre"> 🍃 Aire libre</label>
+        </div>
+        <button id="btn-guardar-servicios" class="btn btn-primary" style="margin-top:15px;">💾 Guardar servicios</button>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;margin-bottom:15px;">🕐 Horarios</h3>
+        <div id="horarios-form" style="display:grid; gap:10px;"></div>
+        <button id="btn-guardar-horarios" class="btn btn-primary" style="margin-top:15px;">💾 Guardar horarios</button>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#023E8A;margin-bottom:15px;">🖼️ Galería de fotos</h3>
+        <p style="color:#666;margin-bottom:12px;">La primera foto es la de portada. Podés subir varias.</p>
+        <div id="galeria-preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;"></div>
+        <input type="file" id="galeria-input" accept="image/*" multiple style="margin-bottom:8px;">
+        <br>
+        <button class="btn btn-primary" id="btn-subir-galeria" style="font-size:0.85rem;padding:8px 16px;">📤 Agregar fotos</button>
+      </div>
     </div>
 
     <div id="tab-reservas" class="tab-content">
@@ -126,6 +161,15 @@
             <label>Precio (USD)</label>
             <input type="number" id="plato-precio" class="form-control" placeholder="15.00" step="0.01" min="0">
           </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <select id="plato-categoria" class="form-control">
+              <option value="Entradas">Entradas</option>
+              <option value="Principales" selected>Principales</option>
+              <option value="Postres">Postres</option>
+              <option value="Bebidas">Bebidas</option>
+            </select>
+          </div>
           <div class="form-group" style="grid-column: span 2;">
             <label>Descripción</label>
             <input type="text" id="plato-descripcion" class="form-control" placeholder="Ej: 500gr de asado con guarnición">
@@ -143,9 +187,8 @@
 
     <div id="tab-resenas" class="tab-content">
       <h2 class="section-title">⭐ Reseñas</h2>
-      <div class="card">
-        <p style="color:#666;">Próximamente: moderar reseñas de clientes</p>
-      </div>
+      <div id="resenas-resumen" class="card" style="background:#E3F2FD; border-left:4px solid #023E8A;"></div>
+      <div id="lista-resenas-dueno"></div>
     </div>
 
     <div id="tab-eventos" class="tab-content">

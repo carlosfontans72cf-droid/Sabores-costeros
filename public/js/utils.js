@@ -729,6 +729,38 @@ export function generarCodigoReserva() {
   return codigo;
 }
 
+// ========== FILTRO DE LENGUAJE OFENSIVO ==========
+// Aviso inmediato en el navegador para que la persona pueda corregir el
+// texto antes de enviarlo. Esto es solo una ayuda de UX: cualquiera puede
+// desactivar JavaScript y saltárselo, así que la verificación que de
+// verdad importa corre en el servidor (Cloud Function "moderarResena"
+// en functions/index.js). Si agregás palabras acá, agregalas también ahí.
+const PALABRAS_OFENSIVAS = [
+  'puta', 'puto', 'putas', 'putos', 'hijoputa', 'hdp',
+  'mierda', 'concha de tu madre', 'ctm',
+  'pendejo', 'pendeja', 'gilipollas', 'imbecil', 'imbécil',
+  'idiota', 'estupido', 'estúpido', 'estupida', 'estúpida',
+  'carajo', 'verga', 'pelotudo', 'pelotuda',
+  'forro', 'forra', 'garcha', 'boludazo',
+  'maricon', 'maricón', 'trolo',
+  'zorra', 'perra', 'guarra', 'guarro',
+  'negro de mierda', 'sudaca de mierda',
+  'fuck', 'fucking', 'shit', 'bitch', 'asshole'
+];
+
+function normalizarTexto(texto) {
+  return String(texto || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // saca acentos
+    .replace(/(.)\1{2,}/g, '$1$1') // "puutaaa" -> "puuta" (colapsa repeticiones largas)
+    .replace(/[^a-z0-9\s]/g, ' '); // saca puntuación, así "p.u.t.a" no se escapa
+}
+
+export function contieneLenguajeOfensivo(texto) {
+  const normalizado = normalizarTexto(texto);
+  return PALABRAS_OFENSIVAS.some(palabra => normalizado.includes(normalizarTexto(palabra)));
+}
+
 export function formatDate(timestamp) {
   if (!timestamp) return '—';
   try {
